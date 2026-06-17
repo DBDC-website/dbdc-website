@@ -17,7 +17,7 @@ export default function MainNav({ locale, items, className }: MainNavProps) {
 
   return (
     <nav aria-label="Main navigation" className={className}>
-      <ul className="flex items-center gap-0.5">
+      <ul className="flex items-center gap-2">
         {items.map((item) => {
           const href = `/${locale}${item.href}`;
           const isActive = pathname === href || pathname.startsWith(`${href}/`);
@@ -28,7 +28,7 @@ export default function MainNav({ locale, items, className }: MainNavProps) {
                 href={href}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                  'rounded-md px-4 py-2.5 text-base font-medium transition-colors',
                   isActive
                     ? 'text-brand-800'
                     : 'text-stone-600 hover:bg-brand-50 hover:text-brand-800',

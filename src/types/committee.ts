@@ -5,5 +5,11 @@ export interface Committee {
   name: string;
   abbreviation: string;
   summary: string;
-  responsibilities: string[];
+  objectives: string[];
+  currentChairmen: string[];
+  pastChairmen: string[];
+  pastWork: string[];
+  currentWork?: string[];
+  organization?: string[];
+  members?: string[];
 }

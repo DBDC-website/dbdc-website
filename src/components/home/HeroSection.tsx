@@ -32,7 +32,7 @@ export default function HeroSection({ locale }: HeroSectionProps) {
             id="hero-heading"
             className="mt-5 text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
           >
-            Building and caring for the Diocese with stewardship and craft
+            Welcome to Diocesan Building and Development Commission
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-stone-200">
             {siteConfig.description}
@@ -42,12 +42,12 @@ export default function HeroSection({ locale }: HeroSectionProps) {
               Explore our projects
             </Button>
             <Button
-              href={`/${locale}/about`}
+              href={`/${locale}/committees`}
               variant="outline"
               size="lg"
               className="border-white/40 text-white hover:border-white hover:bg-white/10"
             >
-              About the Commission
+              View committees
             </Button>
           </div>
         </div>

@@ -14,29 +14,22 @@ export default function Header({ locale }: HeaderProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <Container size="wide">
-        <div className="flex h-16 items-center justify-between gap-4 lg:h-20">
+        <div className="flex h-20 items-center justify-between gap-6 lg:h-24">
           <Link
             href={`/${locale}`}
-            className="flex items-center gap-3"
-            aria-label={`${siteConfig.shortName} home`}
+            className="flex items-center gap-4"
+            aria-label={`${siteConfig.name} home`}
           >
             <span
-              className="flex h-11 w-11 items-center justify-center rounded-md bg-brand-800 text-sm font-bold tracking-wide text-white"
-              aria-hidden="true"
+              className="font-serif text-xl font-semibold tracking-[0.18em] text-brand-900 sm:text-2xl"
             >
               DBDC
             </span>
-            <span className="hidden flex-col leading-tight sm:flex">
-              <span className="font-serif text-base font-semibold text-brand-900">
-                {siteConfig.shortName}
-              </span>
-              <span className="text-xs text-stone-500">{siteConfig.tagline}</span>
-            </span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 lg:gap-4">
             <MainNav locale={locale} items={mainNav} className="hidden lg:block" />
-            <div className="mx-2 hidden h-6 w-px bg-stone-200 lg:block" aria-hidden="true" />
+            <div className="mx-3 hidden h-8 w-px bg-stone-200 lg:block" aria-hidden="true" />
             <div className="hidden lg:block">
               <LanguageSwitcher locale={locale} />
             </div>

@@ -47,9 +47,9 @@ export default function MobileNav({ locale, items }: MobileNavProps) {
         aria-label="Open menu"
         aria-expanded={open}
         aria-controls="mobile-menu"
-        className="inline-flex items-center justify-center rounded-md p-2 text-brand-800 hover:bg-brand-50"
+        className="inline-flex items-center justify-center rounded-md p-2.5 text-brand-800 hover:bg-brand-50"
       >
-        <Menu className="h-6 w-6" aria-hidden="true" />
+        <Menu className="h-7 w-7" aria-hidden="true" />
       </button>
 
       {open ? (
@@ -65,7 +65,7 @@ export default function MobileNav({ locale, items }: MobileNavProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            className="absolute right-0 top-0 flex h-full w-full max-w-xs flex-col bg-white shadow-xl"
+            className="absolute right-0 top-0 flex h-full w-full max-w-sm flex-col bg-white shadow-xl"
           >
             <div className="flex items-center justify-between border-b border-stone-200 px-4 py-4">
               <span className="font-serif text-lg font-semibold text-brand-900">
@@ -81,8 +81,8 @@ export default function MobileNav({ locale, items }: MobileNavProps) {
               </button>
             </div>
 
-            <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-2 py-4">
-              <ul className="flex flex-col gap-1">
+            <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-3 py-5">
+              <ul className="flex flex-col gap-2">
                 {items.map((item, index) => {
                   const href = `/${locale}${item.href}`;
                   const isActive =
@@ -96,7 +96,7 @@ export default function MobileNav({ locale, items }: MobileNavProps) {
                         onClick={() => setOpen(false)}
                         aria-current={isActive ? 'page' : undefined}
                         className={cn(
-                          'block rounded-md px-4 py-3 text-base font-medium',
+                          'block rounded-md px-5 py-3.5 text-lg font-medium',
                           isActive
                             ? 'bg-brand-50 text-brand-800'
                             : 'text-stone-700 hover:bg-brand-50 hover:text-brand-800',

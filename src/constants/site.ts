@@ -10,12 +10,10 @@ export const siteConfig = {
 
 /** Primary navigation. Paths are locale-relative; the locale prefix is added at render time. */
 export const mainNav: NavItem[] = [
-  { href: '/about', label: 'About Us' },
   { href: '/projects', label: 'Selected Projects' },
   { href: '/parish-school', label: 'Parish & School' },
   { href: '/consultants-contractors', label: 'Consultants & Contractors' },
   { href: '/articles', label: 'Articles' },
-  { href: '/contact', label: 'Contact' },
 ];
 
 /**
