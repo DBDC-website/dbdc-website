@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import SkipLink from '@/components/layout/SkipLink';
 import { isValidLocale, locales, type Locale } from '@/constants/i18n';
 
 export function generateStaticParams() {
@@ -22,9 +23,12 @@ export default async function LocaleLayout({
 
   return (
     <>
+      <SkipLink />
       <Header locale={locale as Locale} />
-      <main className="flex-1">{children}</main>
-      <Footer />
+      <main id="main-content" className="flex-1">
+        {children}
+      </main>
+      <Footer locale={locale as Locale} />
     </>
   );
 }

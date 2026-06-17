@@ -1,28 +1,57 @@
-export default function HeroSection() {
+import Button from '@/components/ui/Button';
+import Container from '@/components/ui/Container';
+import type { Locale } from '@/constants/i18n';
+import { siteConfig } from '@/constants/site';
+
+type HeroSectionProps = {
+  locale: Locale;
+};
+
+export default function HeroSection({ locale }: HeroSectionProps) {
   return (
     <section
-      className="relative flex min-h-[70vh] items-center justify-center bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(30, 41, 59, 0.65), rgba(30, 41, 59, 0.65)), url('/images/hero-diocesan-buildings.jpg')",
-      }}
+      className="relative isolate overflow-hidden bg-brand-900"
       aria-labelledby="hero-heading"
     >
-      <div className="relative z-10 mx-auto max-w-4xl px-4 text-center text-white">
-        <p className="text-sm font-medium uppercase tracking-widest text-white/80">
-          Catholic Diocese of Hong Kong
-        </p>
-        <h1
-          id="hero-heading"
-          className="mt-4 text-3xl font-bold leading-tight md:text-5xl"
-        >
-          Welcome to the Diocesan Building and Development Commission
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
-          Supporting the planning, development, and maintenance of diocesan and
-          parish properties across Hong Kong.
-        </p>
-      </div>
+      {/* Layered gradient reads as intentional even before a hero photo is added. */}
+      <div
+        className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-950 via-brand-900 to-brand-800"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_20%,rgba(210,167,60,0.18),transparent_55%)]"
+        aria-hidden="true"
+      />
+
+      <Container size="wide">
+        <div className="flex min-h-[68vh] max-w-3xl flex-col justify-center py-20 text-white">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-300">
+            {siteConfig.tagline}
+          </p>
+          <h1
+            id="hero-heading"
+            className="mt-5 text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
+          >
+            Building and caring for the Diocese with stewardship and craft
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-stone-200">
+            {siteConfig.description}
+          </p>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Button href={`/${locale}/projects`} variant="secondary" size="lg">
+              Explore our projects
+            </Button>
+            <Button
+              href={`/${locale}/about`}
+              variant="outline"
+              size="lg"
+              className="border-white/40 text-white hover:border-white hover:bg-white/10"
+            >
+              About the Commission
+            </Button>
+          </div>
+        </div>
+      </Container>
     </section>
   );
 }

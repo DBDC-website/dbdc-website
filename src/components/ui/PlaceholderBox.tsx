@@ -1,0 +1,45 @@
+import { cn } from '@/lib/cn';
+
+type PlaceholderBoxProps = {
+  /** Short label describing what will live here (e.g. "360° Virtual Tour"). */
+  label: string;
+  /** Optional supporting line. */
+  description?: string;
+  /** Aspect ratio utility class, e.g. "aspect-video". */
+  aspect?: string;
+  icon?: React.ReactNode;
+  className?: string;
+};
+
+/**
+ * A clearly-labelled placeholder for content arriving in a later sprint
+ * (virtual tours, maps, embeds, forms). Communicates intent without faking data.
+ */
+export default function PlaceholderBox({
+  label,
+  description,
+  aspect = 'aspect-video',
+  icon,
+  className,
+}: PlaceholderBoxProps) {
+  return (
+    <div
+      role="img"
+      aria-label={`${label} placeholder`}
+      className={cn(
+        'flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-300 bg-stone-50 p-8 text-center',
+        aspect,
+        className,
+      )}
+    >
+      {icon ? <div className="mb-3 text-brand-400">{icon}</div> : null}
+      <p className="font-medium text-stone-700">{label}</p>
+      {description ? (
+        <p className="mt-1 max-w-sm text-sm text-stone-500">{description}</p>
+      ) : null}
+      <span className="mt-3 inline-flex items-center rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-medium text-stone-600">
+        Coming soon
+      </span>
+    </div>
+  );
+}

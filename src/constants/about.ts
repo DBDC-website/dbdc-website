@@ -64,18 +64,3 @@ export const memberGroups: MemberGroup[] = [
 ];
 
 export const administrator = 'Mr. Tam Sze-lam, Patrick';
-
-export type CommitteeLink = {
-  name: string;
-  slug: string;
-};
-
-export const committees: CommitteeLink[] = [
-  { name: 'Research and Development Committee', slug: 'research-and-development' },
-  { name: 'Selection Committee', slug: 'selection' },
-  { name: 'Works Committee', slug: 'works' },
-  {
-    name: 'Catholic Building Professional Advisory Group',
-    slug: 'cabpag',
-  },
-];
