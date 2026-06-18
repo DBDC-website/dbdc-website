@@ -1,8 +1,8 @@
 import type { Committee, CommitteeSlug } from '@/types/committee';
 
 /**
- * The three committees and the advisory group under the DBDC.
- * Placeholder details for Sprint 1 — to be refined with final content.
+ * Committee content for Sprint 1.
+ * Each committee exposes only the subsections defined in the user requirements.
  */
 export const committees: Committee[] = [
   {
@@ -11,28 +11,41 @@ export const committees: Committee[] = [
     name: 'Research and Development Committee',
     summary:
       'Studies the pastoral and community-service needs of the Diocese and formulates building development plans to meet them.',
-    objectives: [
-      'Research diocesan pastoral and community-service needs.',
-      'Formulate and prioritise building development proposals.',
-      'Advise the Commission on long-term development strategy.',
+    sections: [
+      {
+        title: 'Objectives',
+        content: {
+          kind: 'list',
+          items: [
+            'Research and study on the Diocese’s pastoral and community service needs.',
+            'Formulation of building development plans to meet such needs.',
+            'Presentation of recommendations to the Commission and the Bishop.',
+          ],
+        },
+      },
+      {
+        title: 'Current and Past Chairmen',
+        content: {
+          kind: 'list',
+          items: [
+            'Current Chairman: Placeholder Name (to be confirmed)',
+            'Past Chairman: Placeholder Name (2018–2020)',
+            'Past Chairman: Placeholder Name (2016–2018)',
+          ],
+        },
+      },
+      {
+        title: 'Past Work',
+        content: {
+          kind: 'list',
+          items: [
+            'Completed parish development needs assessment framework.',
+            'Prepared recommendations for long-term diocesan facility planning.',
+            'Reviewed priority proposals for parish and school facility upgrades.',
+          ],
+        },
+      },
     ],
-    currentChairmen: ['Rev. Placeholder Name (Current Chairman)'],
-    pastChairmen: [
-      'Fr. Placeholder Name (2020–2022)',
-      'Mr. Placeholder Name (2018–2020)',
-    ],
-    pastWork: [
-      'Completed parish development needs assessment framework.',
-      'Prepared recommendations for long-term diocesan facility planning.',
-    ],
-    currentWork: [
-      'Reviewing priority proposals for parish and school facility upgrades.',
-      'Updating planning criteria for future development submissions.',
-    ],
-    organization: [
-      'The committee includes clergy and lay professionals with planning and development expertise.',
-    ],
-    members: ['Member list placeholder (to be provided by DBDC Office).'],
   },
   {
     slug: 'sc',
@@ -40,16 +53,25 @@ export const committees: Committee[] = [
     name: 'Selection Committee',
     summary:
       'Oversees the selection of consultants and contractors to ensure fair, transparent, and quality-driven procurement.',
-    objectives: [
-      'Review and shortlist consultants and contractors.',
-      'Recommend appointments to the Commission.',
-      'Uphold transparency and fairness in selection.',
-    ],
-    currentChairmen: ['Mr. Placeholder Name (Current Chairman)'],
-    pastChairmen: ['Sr. Placeholder Name (2019–2021)'],
-    pastWork: [
-      'Reviewed consultant and contractor panel renewal exercises.',
-      'Enhanced evaluation criteria for tender and selection review.',
+    sections: [
+      {
+        title: 'Objectives',
+        content: {
+          kind: 'list',
+          items: [
+            'Review and shortlist consultants and contractors for diocesan projects.',
+            'Recommend appointments to the Commission in a fair and transparent manner.',
+            'Uphold quality and integrity in the selection process.',
+          ],
+        },
+      },
+      {
+        title: 'Current Chairman',
+        content: {
+          kind: 'list',
+          items: ['Placeholder Name (to be confirmed)'],
+        },
+      },
     ],
   },
   {
@@ -58,34 +80,119 @@ export const committees: Committee[] = [
     name: 'Works Committee',
     summary:
       'Supervises the implementation of approved projects, monitoring quality, programme, and budget.',
-    objectives: [
-      'Monitor construction progress and quality.',
-      'Review project budgets and variations.',
-      'Assess the performance of appointed professionals.',
-    ],
-    currentChairmen: ['Mr. Placeholder Name (Current Chairman)'],
-    pastChairmen: ['Mr. Placeholder Name (2017–2020)'],
-    pastWork: [
-      'Supervised major parish renovation works and post-completion review.',
-      'Issued site supervision and reporting recommendations.',
+    sections: [
+      {
+        title: 'Objectives',
+        content: {
+          kind: 'list',
+          items: [
+            'Monitor construction progress and quality on approved projects.',
+            'Review project budgets, variations, and programme milestones.',
+            'Assess the performance of appointed consultants and contractors.',
+          ],
+        },
+      },
+      {
+        title: 'Current Chairman',
+        content: {
+          kind: 'list',
+          items: ['Placeholder Name (to be confirmed)'],
+        },
+      },
     ],
   },
   {
     slug: 'cabpag',
-    abbreviation: 'CaBPAG',
+    abbreviation: 'CABPAG',
     name: 'Catholic Building Professional Advisory Group',
     summary:
       'A group of Catholic building professionals providing voluntary technical advice to the Commission.',
-    objectives: [
-      'Provide professional and technical guidance.',
-      'Support parishes with specialist expertise.',
-      'Advise on industry standards and best practice.',
-    ],
-    currentChairmen: ['Group Convener: Placeholder Name'],
-    pastChairmen: ['Past Convener: Placeholder Name (2018–2021)'],
-    pastWork: [
-      'Provided advisory support on technical feasibility and maintenance strategy.',
-      'Contributed professional input to heritage and conservation proposals.',
+    sections: [
+      {
+        title: 'History and Background',
+        content: {
+          kind: 'list',
+          items: [
+            'The Catholic Building Professional Advisory Group (CaBPAG) was established to provide voluntary professional advice to the DBDC.',
+            'Members are Catholic building professionals who contribute their expertise to support parishes and diocesan organisations.',
+          ],
+        },
+      },
+      {
+        title: 'Objectives',
+        content: {
+          kind: 'list',
+          items: [
+            'Provide professional and technical guidance to the Commission.',
+            'Support parishes with specialist building and development expertise.',
+            'Advise on industry standards and best practice.',
+          ],
+        },
+      },
+      {
+        title: 'Roles and Function',
+        content: {
+          kind: 'list',
+          items: [
+            'Offer advisory input on technical feasibility and design matters.',
+            'Support review of maintenance and conservation proposals.',
+            'Assist parishes on specialist technical questions referred by the DBDC.',
+          ],
+        },
+      },
+      {
+        title: 'Organization',
+        content: {
+          kind: 'list',
+          items: [
+            'The group operates under the DBDC and is convened by a designated chairperson.',
+            'Members are drawn from relevant building and development professions.',
+          ],
+        },
+      },
+      {
+        title: 'Membership',
+        content: {
+          kind: 'list',
+          items: [
+            'Membership comprises Catholic professionals in architecture, engineering, surveying, and related fields.',
+            'Full member list to be published when confirmed by the DBDC Office.',
+          ],
+        },
+      },
+      {
+        title: 'Recruitment',
+        content: {
+          kind: 'list',
+          items: [
+            'Recruitment of new members is conducted periodically based on professional needs.',
+            'Application details and eligibility criteria will be published here.',
+          ],
+        },
+      },
+      {
+        title: 'Q & A',
+        content: {
+          kind: 'faq',
+          items: [
+            {
+              question: 'Who can join CaBPAG?',
+              answer:
+                'Catholic building professionals with relevant qualifications and experience may apply when recruitment is open.',
+            },
+            {
+              question: 'Is membership paid?',
+              answer:
+                'Membership is voluntary. Members contribute their professional expertise on an advisory basis.',
+            },
+            {
+              question: 'How are enquiries handled?',
+              answer:
+                'Parishes and schools should contact the DBDC Office first. Technical matters may be referred to CaBPAG as appropriate.',
+            },
+          ],
+        },
+      },
     ],
   },
 ];

@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import { Menu } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import type { Locale } from '@/constants/i18n';
 import { mainNav, siteConfig } from '@/constants/site';
 import LanguageSwitcher from './LanguageSwitcher';
 import MainNav from './MainNav';
-import MobileNav from './MobileNav';
+import { MOBILE_MENU_TOGGLE_ID } from './MobileMenuOverlay';
 
 type HeaderProps = {
   locale: Locale;
@@ -12,28 +13,34 @@ type HeaderProps = {
 
 export default function Header({ locale }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-40 border-b border-stone-200 bg-white">
       <Container size="wide">
-        <div className="flex h-20 items-center justify-between gap-6 lg:h-24">
+        <div className="flex h-16 items-center justify-between gap-4 lg:h-20">
           <Link
             href={`/${locale}`}
-            className="flex items-center gap-4"
+            className="inline-flex shrink-0 items-center"
             aria-label={`${siteConfig.name} home`}
           >
-            <span
-              className="font-serif text-xl font-semibold tracking-[0.18em] text-brand-900 sm:text-2xl"
-            >
+            <span className="font-serif text-xl font-semibold tracking-[0.18em] text-brand-900">
               DBDC
             </span>
           </Link>
 
-          <div className="flex items-center gap-3 lg:gap-4">
-            <MainNav locale={locale} items={mainNav} className="hidden lg:block" />
-            <div className="mx-3 hidden h-8 w-px bg-stone-200 lg:block" aria-hidden="true" />
-            <div className="hidden lg:block">
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <div className="hidden lg:contents">
+              <MainNav locale={locale} items={mainNav} />
+              <div className="mx-3 h-8 w-px bg-stone-200" aria-hidden="true" />
               <LanguageSwitcher locale={locale} />
             </div>
-            <MobileNav locale={locale} items={mainNav} />
+
+            <label
+              htmlFor={MOBILE_MENU_TOGGLE_ID}
+              className="inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-brand-800 hover:bg-brand-50 active:bg-brand-100 lg:hidden"
+              aria-label="Open menu"
+              aria-controls="mobile-menu"
+            >
+              <Menu className="pointer-events-none h-7 w-7" aria-hidden="true" />
+            </label>
           </div>
         </div>
       </Container>
