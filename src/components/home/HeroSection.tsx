@@ -30,9 +30,11 @@ export default function HeroSection({ locale }: HeroSectionProps) {
           </p>
           <h1
             id="hero-heading"
-            className="mt-5 text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl"
+            className="mt-5 text-4xl font-semibold leading-tight text-white [text-wrap:wrap] sm:text-5xl lg:text-6xl"
           >
-            Welcome to Diocesan Building and Development Commission
+            Welcome to
+            <br />
+            {siteConfig.name}
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-stone-200">
             {siteConfig.description}
