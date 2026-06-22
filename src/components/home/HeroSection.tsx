@@ -1,28 +1,19 @@
-export default function HeroSection() {
+import HeroParallaxBackground from '@/components/home/HeroParallaxBackground';
+import HeroContent from '@/components/home/HeroContent';
+import type { Locale } from '@/constants/i18n';
+
+type HeroSectionProps = {
+  locale: Locale;
+};
+
+export default function HeroSection({ locale }: HeroSectionProps) {
   return (
     <section
-      className="relative flex min-h-[70vh] items-center justify-center bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(30, 41, 59, 0.65), rgba(30, 41, 59, 0.65)), url('/images/hero-diocesan-buildings.jpg')",
-      }}
+      className="relative isolate overflow-hidden bg-brand-900"
       aria-labelledby="hero-heading"
     >
-      <div className="relative z-10 mx-auto max-w-4xl px-4 text-center text-white">
-        <p className="text-sm font-medium uppercase tracking-widest text-white/80">
-          Catholic Diocese of Hong Kong
-        </p>
-        <h1
-          id="hero-heading"
-          className="mt-4 text-3xl font-bold leading-tight md:text-5xl"
-        >
-          Welcome to the Diocesan Building and Development Commission
-        </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
-          Supporting the planning, development, and maintenance of diocesan and
-          parish properties across Hong Kong.
-        </p>
-      </div>
+      <HeroParallaxBackground />
+      <HeroContent locale={locale} />
     </section>
   );
 }

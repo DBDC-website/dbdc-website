@@ -1,30 +1,35 @@
 'use client';
 
 import { localeLabels, locales, type Locale } from '@/constants/i18n';
+import { cn } from '@/lib/cn';
 
 type LanguageSwitcherProps = {
   locale: Locale;
 };
 
+/**
+ * Display-only language indicator for Sprint 1. Functional switching
+ * (with real translations) is wired up in Sprint 2 alongside i18n content.
+ */
 export default function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
   return (
     <div
-      className="flex items-center gap-1 text-sm"
+      className="flex items-center gap-1.5 text-sm"
       aria-label="Language selection (coming soon)"
     >
       {locales.map((code, index) => (
-        <span key={code} className="flex items-center gap-1">
+        <span key={code} className="flex items-center gap-1.5">
           {index > 0 && (
-            <span className="text-gray-300" aria-hidden="true">
+            <span className="text-gold-200" aria-hidden="true">
               |
             </span>
           )}
           <span
-            className={
+            className={cn(
               code === locale
-                ? 'font-semibold text-gray-900'
-                : 'text-gray-400'
-            }
+                ? 'font-semibold text-brand-950'
+                : 'text-brand-800/45',
+            )}
             aria-current={code === locale ? 'true' : undefined}
           >
             {localeLabels[code]}

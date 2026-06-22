@@ -1,14 +1,19 @@
+export type ProjectStatus =
+  | 'Completed'
+  | 'In Progress'
+  | 'Planning'
+  | 'Upcoming';
+
 export interface Project {
   id: number;
+  slug: string;
   title: string;
   description: string;
   location: string;
-  images: string[];
-}
-
-export interface FeaturedProject {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
+  year: string;
+  category: string;
+  status: ProjectStatus;
+  featured: boolean;
+  /** Alt text for the (future) project image. Authored now for accessibility. */
+  imageAlt: string;
 }

@@ -1,32 +1,44 @@
-import Link from 'next/link';
-import type { Locale } from '@/constants/i18n';
+'use client';
 
-const navItems = [
-  { href: '/projects', label: 'Projects' },
-  { href: '/partners', label: 'Partners' },
-  { href: '/consultants', label: 'Consultants & Contractors' },
-  { href: '/committee', label: 'Committee' },
-  { href: '/contact', label: 'Contact' },
-] as const;
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import type { Locale } from '@/constants/i18n';
+import type { NavItem } from '@/types/navigation';
+import { cn } from '@/lib/cn';
 
 type MainNavProps = {
   locale: Locale;
+  items: NavItem[];
+  className?: string;
 };
 
-export default function MainNav({ locale }: MainNavProps) {
+export default function MainNav({ locale, items, className }: MainNavProps) {
+  const pathname = usePathname();
+
   return (
-    <nav aria-label="Main navigation">
-      <ul className="flex flex-col gap-2 md:flex-row md:items-center md:gap-6">
-        {navItems.map((item) => (
-          <li key={item.href}>
-            <Link
-              href={`/${locale}${item.href}`}
-              className="text-sm font-medium text-gray-700 transition-colors hover:text-gray-900"
-            >
-              {item.label}
-            </Link>
-          </li>
-        ))}
+    <nav aria-label="Main navigation" className={className}>
+      <ul className="flex items-center gap-2">
+        {items.map((item) => {
+          const href = `/${locale}${item.href}`;
+          const isActive = pathname === href || pathname.startsWith(`${href}/`);
+
+          return (
+            <li key={item.href}>
+              <Link
+                href={href}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'rounded-md px-4 py-2.5 text-base font-medium transition-colors',
+                  isActive
+                    ? 'text-brand-950'
+                    : 'text-brand-900/85 hover:bg-gold-100/55 hover:text-brand-950',
+                )}
+              >
+                {item.label}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   );

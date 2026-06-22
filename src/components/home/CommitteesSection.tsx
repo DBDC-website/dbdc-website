@@ -1,5 +1,9 @@
 import Link from 'next/link';
-import { committees } from '@/constants/about';
+import AnimatedSection from '@/components/ui/AnimatedSection';
+import SectionHeading from '@/components/ui/SectionHeading';
+import ScrollReveal from '@/components/motion/ScrollReveal';
+import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
+import { committees } from '@/constants/committees';
 import type { Locale } from '@/constants/i18n';
 
 type CommitteesSectionProps = {
@@ -8,26 +12,33 @@ type CommitteesSectionProps = {
 
 export default function CommitteesSection({ locale }: CommitteesSectionProps) {
   return (
-    <section className="border-t border-gray-200 py-16" aria-labelledby="committees-heading">
-      <h2
-        id="committees-heading"
-        className="text-2xl font-bold text-gray-900 md:text-3xl"
-      >
-        Committees
-      </h2>
+    <AnimatedSection
+      id="committees"
+      tone="sage"
+      spacing="generous"
+      aria-labelledby="committees-heading"
+    >
+      <ScrollReveal>
+        <SectionHeading
+          id="committees-heading"
+          title="Committees"
+          className="[&_h2]:text-4xl [&_h2]:sm:text-5xl"
+        />
+        <div className="mt-4 h-px w-16 bg-gold-400" aria-hidden="true" />
+      </ScrollReveal>
 
-      <ul className="mt-8 space-y-3">
+      <StaggerChildren as="ul" className="mt-10 space-y-4">
         {committees.map((committee) => (
-          <li key={committee.slug}>
+          <StaggerItem key={committee.slug} as="li">
             <Link
-              href={`/${locale}/committee#${committee.slug}`}
-              className="text-base font-medium text-blue-800 underline decoration-blue-800/30 underline-offset-4 transition-colors hover:text-blue-900 hover:decoration-blue-900"
+              href={`/${locale}/committees/${committee.slug}`}
+              className="group inline-flex text-lg font-medium text-brand-800 underline decoration-brand-300/60 underline-offset-[6px] transition-colors hover:text-brand-900 hover:decoration-gold-500 sm:text-xl"
             >
-              {committee.name}
+              {committee.name} ({committee.abbreviation})
             </Link>
-          </li>
+          </StaggerItem>
         ))}
-      </ul>
-    </section>
+      </StaggerChildren>
+    </AnimatedSection>
   );
 }

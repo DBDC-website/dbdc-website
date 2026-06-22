@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * DBDC design system (Tailwind v4, CSS-first).
+ * Reverent light aesthetic: warm cream bases, soft blue (brand navy),
+ * gentle sage green, and gold heritage highlights.
+ * Single controlled light theme (no auto dark mode) for predictable contrast.
+ */
+@theme {
+  /* Warm cream — sacred, airy page backgrounds */
+  --color-cream-50: #faf8f4;
+  --color-cream-100: #f5f1e8;
+  --color-cream-200: #ebe4d4;
+
+  /* Soft sage — gentle green accent */
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e4ece6;
+  --color-sage-200: #c8d9cc;
+  --color-sage-300: #a8c4b0;
+  --color-sage-400: #8fb39a;
+
+  /* Logo-inspired sky — soft blue tint for glass surfaces */
+  --color-sky-50: #f0f7ff;
+  --color-sky-100: #e3effc;
+  --color-sky-200: #c7d9f5;
+
+  /* Primary: diocesan navy */
+  --color-brand-50: #f3f6fb;
+  --color-brand-100: #e5ecf6;
+  --color-brand-200: #c7d6ea;
+  --color-brand-300: #9bb3d6;
+  --color-brand-400: #6987ba;
+  --color-brand-500: #45659e;
+  --color-brand-600: #344f83;
+  --color-brand-700: #2b4069;
+  --color-brand-800: #233351;
+  --color-brand-900: #1b2740;
+  --color-brand-950: #111a2c;
+
+  /* Accent: restrained brass / gold */
+  --color-gold-50: #fbf7ec;
+  --color-gold-100: #f5ebcc;
+  --color-gold-200: #ecd699;
+  --color-gold-300: #e0bd60;
+  --color-gold-400: #d2a73c;
+  --color-gold-500: #b88c2a;
+  --color-gold-600: #966e22;
+  --color-gold-700: #745420;
+  --color-gold-800: #5f441f;
+  --color-gold-900: #51391d;
+
+  /* Typography: serif for display headings, sans for body. Wired via next/font. */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: var(--font-lora), ui-serif, Georgia, Cambria, "Times New Roman",
+    serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: var(--color-cream-50);
+    color: var(--color-stone-800);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    color: var(--color-brand-900);
+    text-wrap: balance;
+  }
+
+  /* Visible, consistent keyboard focus across the whole site (WCAG 2.4.7). */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Respect users who prefer reduced motion (WCAG 2.3.3). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
