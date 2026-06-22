@@ -20,15 +20,15 @@ export default function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
       {locales.map((code, index) => (
         <span key={code} className="flex items-center gap-1.5">
           {index > 0 && (
-            <span className="text-stone-300" aria-hidden="true">
+            <span className="text-gold-200" aria-hidden="true">
               |
             </span>
           )}
           <span
             className={cn(
               code === locale
-                ? 'font-semibold text-brand-800'
-                : 'text-stone-400',
+                ? 'font-semibold text-brand-950'
+                : 'text-brand-800/45',
             )}
             aria-current={code === locale ? 'true' : undefined}
           >

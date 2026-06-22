@@ -1,9 +1,14 @@
-export interface Article {
-  slug: string;
+/** A downloadable article PDF listed on the Related Articles page. */
+export interface ArticlePdf {
+  /** Roman numeral label, e.g. "I", "II". */
+  label: string;
   title: string;
-  excerpt: string;
-  category: string;
-  /** ISO 8601 date string (machine-readable for <time>). */
+  author: string;
+  /** Display date, e.g. "Sep 2011". */
   date: string;
-  readingTimeMinutes: number;
+  /**
+   * Path under /public, e.g. "/documents/articles/my-article.pdf".
+   * Files in public/ are served at the site root.
+   */
+  href: string;
 }

@@ -17,7 +17,7 @@ export const aboutDbdc = {
     'To deal with individual parish projects, Project Task Forces comprising Parish Priests and representatives of Parish Council, Diocesan Liturgy Commission and DBDC are also formed when required. The daily operation of the Commission is managed by a DBDC Office headed by the Administrator with 6 full-time staff. The Office is tasked to implement the decisions of the Commission and provide professional and technical support in the development, maintenance and repair of buildings of the Diocese.',
   ],
   membersIntro:
-    'Members of the Commission are appointed by the Bishop of Hong Kong for a term of two years, renewable on expiry. The current membership comprises:',
+    'Members of the Commission are appointed by the Bishop of Hong Kong for a term of two years, renewable on expiry.',
 };
 
 export type MemberGroup = {

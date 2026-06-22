@@ -2,11 +2,28 @@
 
 /*
  * DBDC design system (Tailwind v4, CSS-first).
- * Brand direction: institutional + heritage. Deep diocesan navy as primary,
- * restrained brass/gold accent for stewardship, warm stone neutrals.
+ * Reverent light aesthetic: warm cream bases, soft blue (brand navy),
+ * gentle sage green, and gold heritage highlights.
  * Single controlled light theme (no auto dark mode) for predictable contrast.
  */
 @theme {
+  /* Warm cream — sacred, airy page backgrounds */
+  --color-cream-50: #faf8f4;
+  --color-cream-100: #f5f1e8;
+  --color-cream-200: #ebe4d4;
+
+  /* Soft sage — gentle green accent */
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e4ece6;
+  --color-sage-200: #c8d9cc;
+  --color-sage-300: #a8c4b0;
+  --color-sage-400: #8fb39a;
+
+  /* Logo-inspired sky — soft blue tint for glass surfaces */
+  --color-sky-50: #f0f7ff;
+  --color-sky-100: #e3effc;
+  --color-sky-200: #c7d9f5;
+
   /* Primary: diocesan navy */
   --color-brand-50: #f3f6fb;
   --color-brand-100: #e5ecf6;
@@ -46,7 +63,7 @@
   }
 
   body {
-    background-color: #ffffff;
+    background-color: var(--color-cream-50);
     color: var(--color-stone-800);
     font-family: var(--font-sans);
     text-rendering: optimizeLegibility;

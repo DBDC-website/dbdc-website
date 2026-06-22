@@ -1,26 +1,26 @@
 import type { Metadata } from 'next';
+import ArticlePdfList from '@/components/articles/ArticlePdfList';
 import PageHeader from '@/components/ui/PageHeader';
-import Section from '@/components/ui/Section';
-import ArticleExplorer from '@/components/articles/ArticleExplorer';
-import { articleCategories, articles } from '@/constants/articles';
+import PageSection from '@/components/ui/PageSection';
+import { articlePdfs } from '@/constants/articles';
 
 export const metadata: Metadata = {
   title: 'Related Articles',
   description:
-    'News, guidance, and stories from the Diocesan Building and Development Commission.',
+    'Research articles and papers on diocesan building, laity involvement, and church development.',
 };
 
 export default function ArticlesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Insights"
+        eyebrow="Research"
         title="Related Articles"
-        description="News, guidance, and stories on diocesan building, heritage, and development. Placeholder content for now."
+        description="Published papers and research on Catholic church building and laity involvement in Hong Kong."
       />
-      <Section>
-        <ArticleExplorer articles={articles} categories={articleCategories} />
-      </Section>
+      <PageSection>
+        <ArticlePdfList articles={articlePdfs} />
+      </PageSection>
     </>
   );
 }

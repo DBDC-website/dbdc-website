@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Lora } from 'next/font/google';
+import SmoothScroll from '@/components/motion/SmoothScroll';
 import './globals.css';
 
 const inter = Inter({
@@ -35,7 +36,9 @@ export default function RootLayout({
       className={`${inter.variable} ${lora.variable}`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-screen flex-col antialiased">{children}</body>
+      <body className="flex min-h-screen flex-col antialiased">
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

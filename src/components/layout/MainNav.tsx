@@ -30,8 +30,8 @@ export default function MainNav({ locale, items, className }: MainNavProps) {
                 className={cn(
                   'rounded-md px-4 py-2.5 text-base font-medium transition-colors',
                   isActive
-                    ? 'text-brand-800'
-                    : 'text-stone-600 hover:bg-brand-50 hover:text-brand-800',
+                    ? 'text-brand-950'
+                    : 'text-brand-900/85 hover:bg-gold-100/55 hover:text-brand-950',
                 )}
               >
                 {item.label}

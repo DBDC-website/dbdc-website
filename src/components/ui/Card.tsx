@@ -18,9 +18,9 @@ export default function Card({
   return (
     <Tag
       className={cn(
-        'rounded-xl border border-stone-200 bg-white shadow-sm',
+        'rounded-xl border border-cream-200/90 bg-white/90 shadow-sm shadow-brand-900/[0.04]',
         interactive &&
-          'transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md',
+          'transition-all duration-300 hover:-translate-y-1 hover:border-gold-200/80 hover:shadow-md hover:shadow-brand-900/[0.06]',
         className,
       )}
     >

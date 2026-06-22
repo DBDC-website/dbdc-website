@@ -1,5 +1,5 @@
 import PageHeader from '@/components/ui/PageHeader';
-import Section from '@/components/ui/Section';
+import PageSection from '@/components/ui/PageSection';
 
 type LegalPageContentProps = {
   title: string;
@@ -9,14 +9,14 @@ type LegalPageContentProps = {
 export default function LegalPageContent({ title, body }: LegalPageContentProps) {
   return (
     <>
-      <PageHeader title={title} />
-      <Section containerSize="narrow">
-        <div className="space-y-4 text-base leading-relaxed text-stone-700">
+      <PageHeader eyebrow="Legal" title={title} />
+      <PageSection containerSize="narrow">
+        <div className="space-y-5 text-base leading-relaxed text-stone-700 sm:text-lg sm:leading-relaxed">
           {body.map((paragraph) => (
             <p key={paragraph.slice(0, 48)}>{paragraph}</p>
           ))}
         </div>
-      </Section>
+      </PageSection>
     </>
   );
 }

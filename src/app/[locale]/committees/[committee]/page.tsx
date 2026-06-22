@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommitteeSectionAccordion from '@/components/committees/CommitteeSectionAccordion';
+import ScrollReveal from '@/components/motion/ScrollReveal';
 import PageHeader from '@/components/ui/PageHeader';
-import Section from '@/components/ui/Section';
+import AnimatedSection from '@/components/ui/AnimatedSection';
 import { committees, getCommittee } from '@/constants/committees';
 import { locales, type Locale } from '@/constants/i18n';
 import type { CommitteeSlug } from '@/types/committee';
@@ -44,18 +45,20 @@ export default async function CommitteeDetailPage({
         title={found.name}
         description={found.summary}
       />
-      <Section containerSize="narrow">
-        <Link
-          href={`/${locale as Locale}#committees`}
-          className="text-sm font-medium text-brand-700 hover:underline"
-        >
-          Back to Committees
-        </Link>
+      <AnimatedSection containerSize="narrow" spacing="generous">
+        <ScrollReveal>
+          <Link
+            href={`/${locale as Locale}#committees`}
+            className="inline-flex text-sm font-medium text-brand-800 transition-colors hover:text-brand-950 hover:underline decoration-gold-400/80"
+          >
+            ← Back to Committees
+          </Link>
+        </ScrollReveal>
 
-        <div className="mt-8">
+        <div className="mt-8 lg:mt-10">
           <CommitteeSectionAccordion sections={found.sections} />
         </div>
-      </Section>
+      </AnimatedSection>
     </>
   );
 }

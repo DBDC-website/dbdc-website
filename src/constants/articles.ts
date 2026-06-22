@@ -1,52 +1,44 @@
-import type { Article } from '@/types/article';
+import type { ArticlePdf } from '@/types/article';
 
 /**
- * Placeholder articles for Sprint 1. The list page is built to be
- * search/filter-ready; categories below drive the (future) filter UI.
+ * Related Articles — PDF downloads for Sprint 1.
+ *
+ * HOW TO ADD YOUR PDFs:
+ * 1. Place files in: public/documents/articles/
+ * 2. Update each `href` below to match the filename, e.g.
+ *    "/documents/articles/catholic-laity-involvement-sep-2011.pdf"
+ *
+ * Sprint 2: this array can be replaced by a Supabase query without
+ * changing the page component — see ArticlePdfList.tsx.
  */
-export const articleCategories = [
-  'All',
-  'Projects',
-  'Heritage',
-  'Announcements',
-  'Guidance',
-] as const;
-
-export const articles: Article[] = [
+export const articlePdfs: ArticlePdf[] = [
   {
-    slug: 'preserving-heritage-churches',
-    title: 'Preserving Heritage Churches in a Modern City',
-    excerpt:
-      'How careful conservation balances historic fabric with the needs of today’s parish communities.',
-    category: 'Heritage',
-    date: '2025-11-02',
-    readingTimeMinutes: 5,
+    label: 'I',
+    title: 'Catholic Laity Involvement in Church Building Project',
+    author: 'Ayako Fukushima',
+    date: 'Sep 2011',
+    href: '/documents/articles/catholic-laity-involvement-sep-2011.pdf',
   },
   {
-    slug: 'parish-centre-design-principles',
-    title: 'Design Principles for New Parish Centres',
-    excerpt:
-      'Accessibility, flexibility, and stewardship: the values guiding new community facilities.',
-    category: 'Projects',
-    date: '2025-09-18',
-    readingTimeMinutes: 4,
+    label: 'II',
+    title:
+      'The Building Process and the Laity Involvement of Our Lady of Mount Carmel Church in Wanchai, Hong Kong',
+    author: 'Ayako Fukushima',
+    date: 'June 2013',
+    href: '/documents/articles/mount-carmel-laity-involvement-june-2013.pdf',
   },
   {
-    slug: 'submitting-a-building-request',
-    title: 'A Guide to Submitting a Building Request',
-    excerpt:
-      'A step-by-step overview to help parishes and schools prepare a complete submission.',
-    category: 'Guidance',
-    date: '2025-07-30',
-    readingTimeMinutes: 6,
+    label: 'III',
+    title: 'Catholic Laity Involvement in Church Building Project',
+    author: 'Ayako Fukushima',
+    date: 'Sep 2011',
+    href: '/documents/articles/catholic-laity-involvement-iii.pdf',
   },
   {
-    slug: 'dbdc-annual-update',
-    title: 'DBDC Annual Update',
-    excerpt:
-      'A summary of completed projects, works in progress, and priorities for the year ahead.',
-    category: 'Announcements',
-    date: '2025-06-12',
-    readingTimeMinutes: 3,
+    label: 'IV',
+    title: 'Catholic Laity Involvement in Church Building Project',
+    author: 'Ayako Fukushima',
+    date: 'Sep 2011',
+    href: '/documents/articles/catholic-laity-involvement-iv.pdf',
   },
 ];

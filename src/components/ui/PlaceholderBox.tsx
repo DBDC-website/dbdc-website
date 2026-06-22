@@ -27,17 +27,17 @@ export default function PlaceholderBox({
       role="img"
       aria-label={`${label} placeholder`}
       className={cn(
-        'flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-stone-300 bg-stone-50 p-8 text-center',
+        'flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-gold-200/80 bg-gradient-to-br from-cream-50 via-white to-gold-50/40 p-8 text-center',
         aspect,
         className,
       )}
     >
-      {icon ? <div className="mb-3 text-brand-400">{icon}</div> : null}
-      <p className="font-medium text-stone-700">{label}</p>
+      {icon ? <div className="mb-3 text-brand-500">{icon}</div> : null}
+      <p className="font-medium text-brand-900">{label}</p>
       {description ? (
-        <p className="mt-1 max-w-sm text-sm text-stone-500">{description}</p>
+        <p className="mt-1 max-w-sm text-sm text-stone-600">{description}</p>
       ) : null}
-      <span className="mt-3 inline-flex items-center rounded-full bg-stone-200 px-2.5 py-0.5 text-xs font-medium text-stone-600">
+      <span className="mt-3 inline-flex items-center rounded-full bg-gold-100 px-2.5 py-0.5 text-xs font-medium text-gold-800">
         Coming soon
       </span>
     </div>
