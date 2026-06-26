@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import FeaturedProjectsCarousel from '@/components/home/FeaturedProjectsCarousel';
+import ScrollReveal from '@/components/motion/ScrollReveal';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import SectionHeading from '@/components/ui/SectionHeading';
-import ScrollReveal from '@/components/motion/ScrollReveal';
-import FeaturedProjectsGrid from '@/components/home/FeaturedProjectsGrid';
 import type { Locale } from '@/constants/i18n';
 
 type FeaturedProjectsSectionProps = {
@@ -26,6 +26,7 @@ export default function FeaturedProjectsSection({
             id="featured-projects-heading"
             eyebrow="Our Work"
             title="Featured projects"
+            description="A selection of diocesan building and development initiatives across Hong Kong."
             className="[&_h2]:text-4xl [&_h2]:sm:text-5xl"
           />
           <Link
@@ -39,7 +40,9 @@ export default function FeaturedProjectsSection({
       </ScrollReveal>
 
       <ScrollReveal delay={0.1}>
-        <FeaturedProjectsGrid />
+        <div className="relative -mx-2 sm:-mx-4 lg:-mx-8">
+          <FeaturedProjectsCarousel locale={locale} />
+        </div>
       </ScrollReveal>
     </AnimatedSection>
   );
