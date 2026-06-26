@@ -84,6 +84,32 @@ export const projects: Project[] = [
     featured: false,
     imageAlt: 'Upgraded columbarium facility',
   },
+  {
+    id: 7,
+    slug: 'sai-kung-parish-hall-renovation',
+    title: 'Sai Kung Parish Hall Renovation',
+    description:
+      'Renovation of the parish hall with improved accessibility, updated building services, and flexible community spaces.',
+    location: 'Sai Kung',
+    year: '2025',
+    category: 'Restoration',
+    status: 'Planning',
+    featured: true,
+    imageAlt: 'Parish hall renovation works in Sai Kung',
+  },
+  {
+    id: 8,
+    slug: 'stanley-chapel-extension',
+    title: 'Stanley Chapel Extension',
+    description:
+      'A modest extension to the chapel sacristy and ancillary rooms to support liturgical and pastoral activities.',
+    location: 'Hong Kong Island',
+    year: '2026',
+    category: 'New Build',
+    status: 'Upcoming',
+    featured: true,
+    imageAlt: 'Concept for the Stanley chapel extension',
+  },
 ];
 
 export const featuredProjects: Project[] = projects.filter(

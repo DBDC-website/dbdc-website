@@ -8,6 +8,7 @@ import {
   heroEntranceItemVariants,
 } from '@/lib/motion';
 import type { Locale } from '@/constants/i18n';
+import { donateConfig } from '@/constants/donate';
 import { siteConfig } from '@/constants/site';
 
 type HeroContentProps = {
@@ -48,12 +49,13 @@ export default function HeroContent({ locale }: HeroContentProps) {
           Explore our projects
         </Button>
         <Button
-          href={`/${locale}#committees`}
+          href={donateConfig.url}
+          external
           variant="outline"
           size="lg"
-          className="border-white/50 text-white hover:border-white hover:bg-white/10"
+          className="border-white/50 text-white hover:border-gold-300 hover:bg-white/10"
         >
-          View committees
+          {donateConfig.label}
         </Button>
       </motion.div>
     </>
@@ -83,12 +85,13 @@ export default function HeroContent({ locale }: HeroContentProps) {
                 Explore our projects
               </Button>
               <Button
-                href={`/${locale}#committees`}
+                href={donateConfig.url}
+                external
                 variant="outline"
                 size="lg"
-                className="border-white/50 text-white hover:border-white hover:bg-white/10"
+                className="border-white/50 text-white hover:border-gold-300 hover:bg-white/10"
               >
-                View committees
+                {donateConfig.label}
               </Button>
             </div>
           </div>

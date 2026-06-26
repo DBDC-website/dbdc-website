@@ -5,6 +5,7 @@ import MobileMenuOverlay, {
   MOBILE_MENU_TOGGLE_ID,
 } from '@/components/layout/MobileMenuOverlay';
 import SkipLink from '@/components/layout/SkipLink';
+import FloatingDonateButton from '@/components/layout/FloatingDonateButton';
 import { isValidLocale, locales, type Locale } from '@/constants/i18n';
 import { mainNav } from '@/constants/site';
 
@@ -40,6 +41,7 @@ export default async function LocaleLayout({
       <main id="main-content" className="flex-1 pt-16 lg:pt-[4.75rem]">
         {children}
       </main>
+      <FloatingDonateButton />
       <Footer locale={locale as Locale} />
     </>
   );

@@ -23,6 +23,9 @@ type FeaturedProjectsCarouselProps = {
 const GAP = 24;
 const cinematicEase = [0.16, 1, 0.3, 1] as const;
 
+const projectCount = featuredProjects.length;
+const initialIndex = Math.floor(projectCount / 2);
+
 function CarouselProjectCard({
   project,
   isActive,
@@ -75,12 +78,10 @@ export default function FeaturedProjectsCarousel({
 }: FeaturedProjectsCarouselProps) {
   const reduceMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [cardWidth, setCardWidth] = useState(320);
   const x = useMotionValue(0);
   const [isDragging, setIsDragging] = useState(false);
-
-  const maxIndex = featuredProjects.length - 1;
 
   const measure = useCallback(() => {
     const container = containerRef.current;
@@ -110,11 +111,21 @@ export default function FeaturedProjectsCarousel({
     [cardWidth, step],
   );
 
-  const goTo = useCallback(
-    (index: number) => {
-      setActiveIndex(Math.max(0, Math.min(index, maxIndex)));
-    },
-    [maxIndex],
+  const goTo = useCallback((index: number) => {
+    if (projectCount === 0) return;
+
+    const normalized =
+      ((index % projectCount) + projectCount) % projectCount;
+    setActiveIndex(normalized);
+  }, []);
+
+  const goPrev = useCallback(
+    () => goTo(activeIndex - 1),
+    [activeIndex, goTo],
+  );
+  const goNext = useCallback(
+    () => goTo(activeIndex + 1),
+    [activeIndex, goTo],
   );
 
   useEffect(() => {
@@ -131,9 +142,6 @@ export default function FeaturedProjectsCarousel({
 
     return () => controls.stop();
   }, [activeIndex, cardWidth, getOffsetForIndex, isDragging, reduceMotion, x]);
-
-  const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
-  const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -214,9 +222,8 @@ export default function FeaturedProjectsCarousel({
         <button
           type="button"
           onClick={goPrev}
-          disabled={activeIndex === 0}
           aria-label="Show previous project"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream-200/90 bg-white/90 text-brand-800 shadow-sm transition-[transform,box-shadow,border-color,opacity] duration-300 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream-200/90 bg-white/90 text-brand-800 shadow-sm transition-[transform,box-shadow,border-color,opacity] duration-300 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md"
         >
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -242,9 +249,8 @@ export default function FeaturedProjectsCarousel({
         <button
           type="button"
           onClick={goNext}
-          disabled={activeIndex === maxIndex}
           aria-label="Show next project"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream-200/90 bg-white/90 text-brand-800 shadow-sm transition-[transform,box-shadow,border-color,opacity] duration-300 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream-200/90 bg-white/90 text-brand-800 shadow-sm transition-[transform,box-shadow,border-color,opacity] duration-300 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md"
         >
           <ChevronRight className="h-5 w-5" aria-hidden="true" />
         </button>

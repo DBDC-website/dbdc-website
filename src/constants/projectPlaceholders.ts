@@ -29,6 +29,18 @@ const featuredPlaceholders: Record<number, ProjectPlaceholder> = {
     sublabel: 'Contemporary parish architecture',
     gradient: 'from-brand-100 via-cream-100 to-sage-100',
   },
+  7: {
+    style: 'heritage',
+    label: 'Parish hall',
+    sublabel: 'Community space · renovation',
+    gradient: 'from-cream-200 via-gold-100 to-brand-100',
+  },
+  8: {
+    style: 'construction',
+    label: 'Chapel extension',
+    sublabel: 'New ancillary works',
+    gradient: 'from-brand-100 via-sage-100 to-cream-200',
+  },
 };
 
 const categoryFallbacks: Record<string, ProjectPlaceholder> = {
