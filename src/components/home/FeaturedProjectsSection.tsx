@@ -5,13 +5,16 @@ import ScrollReveal from '@/components/motion/ScrollReveal';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import SectionHeading from '@/components/ui/SectionHeading';
 import type { Locale } from '@/constants/i18n';
+import type { Project } from '@/types/project';
 
 type FeaturedProjectsSectionProps = {
   locale: Locale;
+  projects: Project[];
 };
 
 export default function FeaturedProjectsSection({
   locale,
+  projects,
 }: FeaturedProjectsSectionProps) {
   return (
     <AnimatedSection
@@ -39,11 +42,17 @@ export default function FeaturedProjectsSection({
         </div>
       </ScrollReveal>
 
-      <ScrollReveal delay={0.1}>
-        <div className="relative -mx-2 sm:-mx-4 lg:-mx-8">
-          <FeaturedProjectsCarousel locale={locale} />
-        </div>
-      </ScrollReveal>
+      {projects.length > 0 ? (
+        <ScrollReveal delay={0.1}>
+          <div className="relative -mx-2 sm:-mx-4 lg:-mx-8">
+            <FeaturedProjectsCarousel locale={locale} projects={projects} />
+          </div>
+        </ScrollReveal>
+      ) : (
+        <p className="mt-10 text-sm text-stone-600">
+          Featured projects will appear here once they are published in the CMS.
+        </p>
+      )}
     </AnimatedSection>
   );
 }

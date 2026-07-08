@@ -3,7 +3,7 @@ import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 import ExperienceCards from '@/components/projects/ExperienceCards';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';
-import { projects } from '@/constants/projects';
+import { getPublishedProjects } from '@/lib/projects';
 
 export const metadata: Metadata = {
   title: 'Selected Projects',
@@ -11,7 +11,9 @@ export const metadata: Metadata = {
     'A showcase of diocesan building and development projects, including a 360° virtual tour and the Catholic Heritage website.',
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getPublishedProjects();
+
   return (
     <>
       <PageHeader
@@ -27,7 +29,7 @@ export default function ProjectsPage() {
           eyebrow: 'Showcase',
           title: 'Project showcase',
           description:
-            'Placeholder projects for now — final imagery and details will be added in a later sprint.',
+            'Selected diocesan building and development projects from the DBDC portfolio.',
         }}
       >
         <ProjectsGrid projects={projects} />

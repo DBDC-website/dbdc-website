@@ -12,7 +12,13 @@ export const metadata: Metadata = {
     'Registration information and forms for consultants and contractors working with the DBDC.',
 };
 
-export default function ConsultantsContractorsPage() {
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function ConsultantsContractorsPage({ params }: PageProps) {
+  const { locale } = await params;
+
   return (
     <>
       <PageHeader
@@ -29,7 +35,7 @@ export default function ConsultantsContractorsPage() {
           title: 'Registration',
         }}
       >
-        <RegistrationCards />
+        <RegistrationCards locale={locale} />
       </PageSection>
 
       <PageSection

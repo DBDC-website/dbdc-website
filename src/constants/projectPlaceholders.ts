@@ -62,7 +62,7 @@ const defaultPlaceholder: ProjectPlaceholder = {
 export function getProjectPlaceholder(project: Project): ProjectPlaceholder {
   return (
     featuredPlaceholders[project.id] ??
-    categoryFallbacks[project.category] ??
+    (project.natureOfWork ? categoryFallbacks[project.natureOfWork] : undefined) ??
     defaultPlaceholder
   );
 }

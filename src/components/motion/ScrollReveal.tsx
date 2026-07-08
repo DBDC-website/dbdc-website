@@ -29,7 +29,7 @@ export default function ScrollReveal({
       className={cn(className)}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2, margin: '-60px' }}
+      viewport={{ once: true, amount: 'some', margin: '-60px' }}
       variants={{
         hidden: fadeUpVariants.hidden,
         visible: {

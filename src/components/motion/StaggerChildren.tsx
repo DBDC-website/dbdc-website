@@ -35,7 +35,7 @@ export function StaggerChildren({
       className={cn(className)}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.15, margin: '-40px' }}
+      viewport={{ once: true, amount: 'some', margin: '-40px' }}
       variants={staggerContainerVariants}
     >
       {children}

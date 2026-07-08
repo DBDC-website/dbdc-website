@@ -1,0 +1,42 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
+import PageHeader from '@/components/ui/PageHeader';
+import PageSection from '@/components/ui/PageSection';
+import ContractorForm from '@/components/registration/ContractorForm';
+import { type Locale } from '@/constants/i18n';
+
+export const metadata: Metadata = {
+  title: 'Contractor Registration',
+  description:
+    'Register your company with the Diocesan Building and Development Commission list of approved contractors.',
+};
+
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function ContractorRegistrationPage({ params }: PageProps) {
+  const { locale } = await params;
+
+  return (
+    <>
+      <PageHeader
+        eyebrow="Work With Us"
+        title="Contractor Registration"
+        description="Building and specialist contractors can apply to join the DBDC list of approved contractors."
+      />
+
+      <PageSection containerSize="narrow" spacing="default">
+        <Link
+          href={`/${locale as Locale}/consultants-contractors`}
+          className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 transition-colors hover:text-brand-900"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          Back to registration
+        </Link>
+        <ContractorForm />
+      </PageSection>
+    </>
+  );
+}

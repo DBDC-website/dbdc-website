@@ -11,20 +11,21 @@ import {
 } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProjectCard from '@/components/projects/ProjectCard';
-import { featuredProjects } from '@/constants/projects';
 import type { Locale } from '@/constants/i18n';
 import type { Project } from '@/types/project';
 import { cn } from '@/lib/cn';
 
 type FeaturedProjectsCarouselProps = {
   locale: Locale;
+  projects: Project[];
 };
 
 const GAP = 24;
 const cinematicEase = [0.16, 1, 0.3, 1] as const;
 
-const projectCount = featuredProjects.length;
-const initialIndex = Math.floor(projectCount / 2);
+function getInitialIndex(projectCount: number) {
+  return Math.max(0, Math.floor(projectCount / 2));
+}
 
 function CarouselProjectCard({
   project,
@@ -75,13 +76,19 @@ function CarouselProjectCard({
 
 export default function FeaturedProjectsCarousel({
   locale,
+  projects,
 }: FeaturedProjectsCarouselProps) {
+  const projectCount = projects.length;
   const reduceMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
+  const [activeIndex, setActiveIndex] = useState(() => getInitialIndex(projectCount));
   const [cardWidth, setCardWidth] = useState(320);
   const x = useMotionValue(0);
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    setActiveIndex(getInitialIndex(projects.length));
+  }, [projects.length]);
 
   const measure = useCallback(() => {
     const container = containerRef.current;
@@ -97,7 +104,7 @@ export default function FeaturedProjectsCarousel({
     measure();
     window.addEventListener('resize', measure);
     return () => window.removeEventListener('resize', measure);
-  }, [measure]);
+  }, [measure, projects.length]);
 
   const step = cardWidth + GAP;
 
@@ -111,13 +118,16 @@ export default function FeaturedProjectsCarousel({
     [cardWidth, step],
   );
 
-  const goTo = useCallback((index: number) => {
-    if (projectCount === 0) return;
+  const goTo = useCallback(
+    (index: number) => {
+      if (projectCount === 0) return;
 
-    const normalized =
-      ((index % projectCount) + projectCount) % projectCount;
-    setActiveIndex(normalized);
-  }, []);
+      const normalized =
+        ((index % projectCount) + projectCount) % projectCount;
+      setActiveIndex(normalized);
+    },
+    [projectCount],
+  );
 
   const goPrev = useCallback(
     () => goTo(activeIndex - 1),
@@ -197,7 +207,7 @@ export default function FeaturedProjectsCarousel({
           onDragStart={() => setIsDragging(true)}
           onDragEnd={handleDragEnd}
         >
-          {featuredProjects.map((project, index) => (
+          {projects.map((project, index) => (
             <div key={project.id} data-carousel-card className="shrink-0">
               <CarouselProjectCard
                 project={project}
@@ -229,7 +239,7 @@ export default function FeaturedProjectsCarousel({
         </button>
 
         <div className="flex items-center gap-2" aria-live="polite">
-          {featuredProjects.map((project, index) => (
+          {projects.map((project, index) => (
             <button
               key={project.id}
               type="button"
