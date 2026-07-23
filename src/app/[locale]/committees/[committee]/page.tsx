@@ -7,6 +7,10 @@ import PageHeader from '@/components/ui/PageHeader';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import { committees, getCommittee } from '@/constants/committees';
 import { locales, type Locale } from '@/constants/i18n';
+import {
+  getCommitteeMembers,
+  withMembersSection,
+} from '@/lib/committees';
 import type { CommitteeSlug } from '@/types/committee';
 
 type CommitteeDetailProps = {
@@ -38,6 +42,9 @@ export default async function CommitteeDetailPage({
     notFound();
   }
 
+  const members = await getCommitteeMembers(found.slug);
+  const sections = withMembersSection(found.sections, members);
+
   return (
     <>
       <PageHeader
@@ -56,7 +63,7 @@ export default async function CommitteeDetailPage({
         </ScrollReveal>
 
         <div className="mt-8 lg:mt-10">
-          <CommitteeSectionAccordion sections={found.sections} />
+          <CommitteeSectionAccordion sections={sections} />
         </div>
       </AnimatedSection>
     </>

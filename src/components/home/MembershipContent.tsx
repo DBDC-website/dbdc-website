@@ -6,26 +6,21 @@ import { ChevronDown } from 'lucide-react';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
 import Button from '@/components/ui/Button';
-import {
-  administrator,
-  memberGroups,
-  type MemberGroup,
-} from '@/constants/about';
+import type { MemberGroup } from '@/constants/about';
 import { easeOut } from '@/lib/motion';
 import { cn } from '@/lib/cn';
-
-const leadershipGroups = memberGroups.filter(
-  (group) => group.title !== 'Appointed Members',
-);
-
-const appointedMembers =
-  memberGroups.find((group) => group.title === 'Appointed Members')?.members ?? [];
 
 const APPOINTED_MEMBERS_PANEL_ID = 'appointed-members-panel';
 
 /** Shared panel dimensions for Appointed Members and Administrator rows. */
 const membershipPanelClass =
   'flex min-h-[8.75rem] flex-col rounded-2xl p-5 shadow-sm shadow-brand-900/[0.04] backdrop-blur-sm sm:min-h-[9.25rem] sm:p-6';
+
+type MembershipContentProps = {
+  leadershipGroups: MemberGroup[];
+  appointedMembers: string[];
+  administrator: string | null;
+};
 
 function CategoryHeading({
   children,
@@ -50,7 +45,7 @@ function MemberName({ name, className }: { name: string; className?: string }) {
   return (
     <span
       className={cn(
-        'group/name inline-block transition-transform duration-300 ease-out hover:-translate-y-0.5',
+        'group/name inline-flex flex-col transition-transform duration-300 ease-out hover:-translate-y-0.5',
         className,
       )}
     >
@@ -76,9 +71,11 @@ function LeadershipCard({ group }: { group: MemberGroup }) {
   );
 }
 
-function AppointedMembersPanel() {
+function AppointedMembersPanel({ members }: { members: string[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+
+  if (members.length === 0) return null;
 
   return (
     <article
@@ -92,7 +89,7 @@ function AppointedMembersPanel() {
           <div className="min-w-0">
             <CategoryHeading>Appointed Members</CategoryHeading>
             <p className="mt-2 text-sm text-stone-500">
-              {appointedMembers.length} appointed members serving the Commission
+              {members.length} appointed members serving the Commission
             </p>
           </div>
 
@@ -125,7 +122,7 @@ function AppointedMembersPanel() {
             id={APPOINTED_MEMBERS_PANEL_ID}
             className="mt-6 grid gap-x-8 gap-y-3 border-t border-cream-200 pt-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {appointedMembers.map((member) => (
+            {members.map((member) => (
               <li key={member}>
                 <MemberName name={member} />
               </li>
@@ -146,7 +143,7 @@ function AppointedMembersPanel() {
               className="overflow-hidden"
             >
               <ul className="mt-6 grid gap-x-8 gap-y-3 border-t border-cream-200 pt-6 sm:grid-cols-2 lg:grid-cols-3">
-                {appointedMembers.map((member, index) => (
+                {members.map((member, index) => (
                   <motion.li
                     key={member}
                     initial={{ opacity: 0, y: 10 }}
@@ -169,7 +166,9 @@ function AppointedMembersPanel() {
   );
 }
 
-function AdministratorPanel() {
+function AdministratorPanel({ name }: { name: string | null }) {
+  if (!name) return null;
+
   return (
     <ScrollReveal delay={0.08} className="mt-6 lg:mt-8">
       <article
@@ -181,7 +180,7 @@ function AdministratorPanel() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
           <CategoryHeading>Administrator</CategoryHeading>
           <p className="shrink-0 sm:text-right">
-            <MemberName name={administrator} />
+            <MemberName name={name} />
           </p>
         </div>
       </article>
@@ -189,22 +188,28 @@ function AdministratorPanel() {
   );
 }
 
-export default function MembershipContent() {
+export default function MembershipContent({
+  leadershipGroups,
+  appointedMembers,
+  administrator,
+}: MembershipContentProps) {
   return (
     <div className="mt-14 lg:mt-16">
-      <StaggerChildren
-        as="div"
-        className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8"
-      >
-        {leadershipGroups.map((group) => (
-          <StaggerItem key={group.title} className="h-full">
-            <LeadershipCard group={group} />
-          </StaggerItem>
-        ))}
-      </StaggerChildren>
+      {leadershipGroups.length > 0 ? (
+        <StaggerChildren
+          as="div"
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8"
+        >
+          {leadershipGroups.map((group) => (
+            <StaggerItem key={group.title} className="h-full">
+              <LeadershipCard group={group} />
+            </StaggerItem>
+          ))}
+        </StaggerChildren>
+      ) : null}
 
-      <AppointedMembersPanel />
-      <AdministratorPanel />
+      <AppointedMembersPanel members={appointedMembers} />
+      <AdministratorPanel name={administrator} />
     </div>
   );
 }

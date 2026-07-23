@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/cn';
 import type { ProjectPlaceholderStyle } from '@/constants/projectPlaceholders';
@@ -38,60 +41,23 @@ const styleLabelTone: Record<ProjectPlaceholderStyle, string> = {
   modern: 'text-brand-700',
 };
 
-export default function PlaceholderImage({
+function GradientFallback({
   alt,
-  src,
-  gradient = 'from-brand-200 via-cream-100 to-sage-200',
+  gradient,
   label,
   sublabel,
-  style = 'modern',
+  style,
   className,
-  imageClassName,
-  priority = false,
-  fit = 'cover',
-  width,
-  height,
-  overlay = true,
-}: PlaceholderImageProps) {
-  const showLabel = Boolean(label);
-
-  if (src) {
-    if (fit === 'contain') {
-      return (
-        <div className={cn('relative', className)}>
-          <Image
-            src={src}
-            alt={alt}
-            width={width ?? 1200}
-            height={height ?? 800}
-            className={cn('h-auto w-full object-contain', imageClassName)}
-            sizes="(max-width: 1024px) 100vw, 60vw"
-            priority={priority}
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className={cn('relative overflow-hidden', className)}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className={cn('object-cover', imageClassName)}
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority={priority}
-        />
-        {overlay ? (
-          <div
-            className="absolute inset-0 bg-gradient-to-t from-brand-950/30 via-transparent to-cream-50/10"
-            aria-hidden="true"
-          />
-        ) : null}
-      </div>
-    );
-  }
-
+  showLabel,
+}: {
+  alt: string;
+  gradient: string;
+  label?: string;
+  sublabel?: string;
+  style: ProjectPlaceholderStyle;
+  className?: string;
+  showLabel: boolean;
+}) {
   return (
     <div
       role="img"
@@ -121,6 +87,76 @@ export default function PlaceholderImage({
             Placeholder image
           </p>
         </div>
+      ) : null}
+    </div>
+  );
+}
+
+export default function PlaceholderImage({
+  alt,
+  src,
+  gradient = 'from-brand-200 via-cream-100 to-sage-200',
+  label,
+  sublabel,
+  style = 'modern',
+  className,
+  imageClassName,
+  priority = false,
+  fit = 'cover',
+  width,
+  height,
+  overlay = true,
+}: PlaceholderImageProps) {
+  const [failed, setFailed] = useState(false);
+  const showLabel = Boolean(label);
+
+  if (!src || failed) {
+    return (
+      <GradientFallback
+        alt={alt}
+        gradient={gradient}
+        label={label}
+        sublabel={sublabel}
+        style={style}
+        className={className}
+        showLabel={showLabel}
+      />
+    );
+  }
+
+  if (fit === 'contain') {
+    return (
+      <div className={cn('relative', className)}>
+        <Image
+          src={src}
+          alt={alt}
+          width={width ?? 1200}
+          height={height ?? 800}
+          className={cn('h-auto w-full object-contain', imageClassName)}
+          sizes="(max-width: 1024px) 100vw, 60vw"
+          priority={priority}
+          onError={() => setFailed(true)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn('relative overflow-hidden', className)}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className={cn('object-cover', imageClassName)}
+        sizes="(max-width: 768px) 100vw, 50vw"
+        priority={priority}
+        onError={() => setFailed(true)}
+      />
+      {overlay ? (
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-brand-950/30 via-transparent to-cream-50/10"
+          aria-hidden="true"
+        />
       ) : null}
     </div>
   );

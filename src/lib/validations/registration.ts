@@ -122,13 +122,15 @@ const baseRegistrationShape = {
   otherApprovedLists: optionalText,
   publishCompany: z.boolean(),
   auditedAccountsProvided: z.boolean(),
+  signatureUrl: z.string().trim().min(1, 'Please provide your signature'),
+  documentUrls: z.array(z.string().trim().min(1)),
 
   contacts: z
     .array(contactSchema)
     .min(1, 'Add at least one authorised contact'),
-  previousProjects: z
-    .array(previousProjectSchema)
-    .min(3, 'Provide at least three previous projects'),
+  // Portfolio projects are optional in the *UI*, but for validation we accept
+  // an empty array (so users can submit with 0 projects).
+  previousProjects: z.array(previousProjectSchema),
 };
 
 /** Fields common to both registration forms (used to type shared UI sections). */

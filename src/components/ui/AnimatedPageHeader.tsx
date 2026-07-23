@@ -53,7 +53,7 @@ export default function AnimatedPageHeader({
           </>
         ) : (
           <motion.div
-            initial="hidden"
+            initial="visible"
             animate="visible"
             variants={pageHeaderContainerVariants}
           >

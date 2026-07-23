@@ -25,42 +25,43 @@ export type MemberGroup = {
   members: string[];
 };
 
+/**
+ * Fallback membership used only if Supabase is unreachable.
+ * Live data comes from `committee_members` where committee_slug = 'dbdc'.
+ */
 export const memberGroups: MemberGroup[] = [
   {
     title: 'Ex-officio Members',
-    members: ['Most Rev. Joseph Ha, OFM', 'Rev. David Chan'],
+    members: ['Bishop Joseph HA, OFM', 'Rev David CHAN', 'Rev Francis Xavier WONG'],
   },
   {
     title: 'Chairperson',
-    members: ['Mr. Philip Kwok'],
+    members: ['Mr Philip KWOK'],
   },
   {
     title: 'Vice-Chairperson',
-    members: ['Mr. Wong Wai-kwong'],
-  },
-  {
-    title: 'Appointed Members',
-    members: [
-      'Rev. Thomas Law',
-      'Deacon Ip Wai Wing, Julian',
-      'Deacon Lam Sair-ling, Faustus',
-      'Mr. Albert Chan',
-      'Mr. Joseph Chan',
-      'Ms. Teresa Chu',
-      'Mr. Bosco Fung',
-      'Ms. Fung Yin-suen, Ada',
-      'Mr. Stephen Ho',
-      'Mr. Ken Lam',
-      'Dr. Lau Kwok-yu',
-      'Mr. Leung King-wai',
-      'Mr. Leung Sai-ho, Edward',
-      'Mr. Simon Li',
-      'Mrs. Mak Tang Pik-yee, Agnes',
-      'Mr. Wong Po-lung, John',
-      'Ms. Woo Shih-yung, Alice',
-      'Prof. Yeh Gar-on, Anthony',
-    ],
+    members: ['Mr WONG Wai-kwong'],
   },
 ];
 
-export const administrator = 'Mr. Tam Sze-lam, Patrick';
+export const fallbackAppointedMembers: string[] = [
+  'Rev Joseph LIU',
+  'Rev Thomas LAW',
+  'Mr Albert CHAN',
+  'Ms Teresa CHU',
+  'Mr Bosco FUNG',
+  'Ms FUNG Yin-suen, Ada',
+  'Mr HO Kin-wai, Stephen',
+  'Mr HO Tat Hei, Michael',
+  'Mr KWAN Wai-ming, Laurence',
+  'Deacon LAM Sair-ling',
+  'Prof LAU Kwok-yu',
+  'Mr LAW Chi-wai, Alain',
+  'Mr LEUNG Sai-ho, Edward',
+  'Mr Simon LI',
+  'Mrs MAK TANG Pik-yee, Agnes',
+  'Mr WONG Po-lung, John',
+  'Prof Anthony YEH',
+];
+
+export const administrator = 'Mr Patrick TAM';

@@ -1,5 +1,26 @@
 export type CommitteeSlug = 'rdc' | 'sc' | 'wc' | 'cabpag';
 
+/** Slugs stored in `committee_members.committee_slug` (includes main commission). */
+export type CommitteeMemberSlug = CommitteeSlug | 'dbdc';
+
+export type CommitteeMember = {
+  id: number;
+  committeeSlug: CommitteeMemberSlug;
+  name: string;
+  role: string | null;
+  sortOrder: number;
+  active: boolean;
+};
+
+export type CommitteeMemberRow = {
+  id: number;
+  committee_slug: CommitteeMemberSlug;
+  name: string;
+  role: string | null;
+  sort_order: number;
+  active: boolean;
+};
+
 /** A single expandable subsection on a committee detail page. */
 export type CommitteeSection = {
   title: string;

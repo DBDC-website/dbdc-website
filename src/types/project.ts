@@ -8,21 +8,15 @@ export interface ProjectImage {
   sortOrder: number;
 }
 
-/** UI-facing project shape mapped from Supabase `projects` + `project_images`. */
+/** UI-facing project shape mapped from Supabase `projects`. */
 export interface Project {
   id: number;
   slug: string;
   title: string;
   buildingName: string | null;
-  description: string;
   location: string;
-  parish: string | null;
-  deanery: string | null;
-  natureOfWork: string | null;
   year: string;
-  featured: boolean;
   published: boolean;
-  sortOrder: number;
   imageUrl: string | null;
   imageAlt: string;
   images?: ProjectImage[];
@@ -42,14 +36,10 @@ export type ProjectRow = {
   slug: string;
   title: string;
   building_name: string | null;
-  description: string | null;
   address: string | null;
-  parish: string | null;
-  deanery: string | null;
-  nature_of_work: string | null;
   year: number | null;
-  featured: boolean;
   published: boolean;
-  sort_order: number;
+  image_url: string | null;
+  image_alt: string | null;
   project_images?: ProjectImageRow[] | null;
 };

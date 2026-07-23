@@ -1,8 +1,8 @@
 import type { Committee, CommitteeSlug } from '@/types/committee';
 
 /**
- * Committee content for Sprint 1.
- * Each committee exposes only the subsections defined in the user requirements.
+ * Static committee metadata and narrative sections.
+ * Live member lists are loaded from Supabase `committee_members`.
  */
 export const committees: Committee[] = [
   {
@@ -20,17 +20,6 @@ export const committees: Committee[] = [
             'Research and study on the Diocese’s pastoral and community service needs.',
             'Formulation of building development plans to meet such needs.',
             'Presentation of recommendations to the Commission and the Bishop.',
-          ],
-        },
-      },
-      {
-        title: 'Current and Past Chairmen',
-        content: {
-          kind: 'list',
-          items: [
-            'Current Chairman: Placeholder Name (to be confirmed)',
-            'Past Chairman: Placeholder Name (2018–2020)',
-            'Past Chairman: Placeholder Name (2016–2018)',
           ],
         },
       },
@@ -65,13 +54,6 @@ export const committees: Committee[] = [
           ],
         },
       },
-      {
-        title: 'Current Chairman',
-        content: {
-          kind: 'list',
-          items: ['Placeholder Name (to be confirmed)'],
-        },
-      },
     ],
   },
   {
@@ -92,18 +74,11 @@ export const committees: Committee[] = [
           ],
         },
       },
-      {
-        title: 'Current Chairman',
-        content: {
-          kind: 'list',
-          items: ['Placeholder Name (to be confirmed)'],
-        },
-      },
     ],
   },
   {
     slug: 'cabpag',
-    abbreviation: 'CABPAG',
+    abbreviation: 'CaBPAG',
     name: 'Catholic Building Professional Advisory Group',
     summary:
       'A group of Catholic building professionals providing voluntary technical advice to the Commission.',
@@ -147,16 +122,6 @@ export const committees: Committee[] = [
           items: [
             'The group operates under the DBDC and is convened by a designated chairperson.',
             'Members are drawn from relevant building and development professions.',
-          ],
-        },
-      },
-      {
-        title: 'Membership',
-        content: {
-          kind: 'list',
-          items: [
-            'Membership comprises Catholic professionals in architecture, engineering, surveying, and related fields.',
-            'Full member list to be published when confirmed by the DBDC Office.',
           ],
         },
       },

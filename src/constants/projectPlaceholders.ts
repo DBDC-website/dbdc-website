@@ -9,7 +9,7 @@ export type ProjectPlaceholder = {
   gradient: string;
 };
 
-/** Visual placeholder config for featured homepage cards — replace with photography later. */
+/** Visual fallback when a project has no photography yet. */
 const featuredPlaceholders: Record<number, ProjectPlaceholder> = {
   1: {
     style: 'heritage',
@@ -43,15 +43,6 @@ const featuredPlaceholders: Record<number, ProjectPlaceholder> = {
   },
 };
 
-const categoryFallbacks: Record<string, ProjectPlaceholder> = {
-  Restoration: featuredPlaceholders[1],
-  Conservation: featuredPlaceholders[1],
-  'New Build': featuredPlaceholders[2],
-  Refurbishment: featuredPlaceholders[3],
-  Education: featuredPlaceholders[3],
-  Facilities: featuredPlaceholders[2],
-};
-
 const defaultPlaceholder: ProjectPlaceholder = {
   style: 'modern',
   label: 'Project image',
@@ -60,9 +51,5 @@ const defaultPlaceholder: ProjectPlaceholder = {
 };
 
 export function getProjectPlaceholder(project: Project): ProjectPlaceholder {
-  return (
-    featuredPlaceholders[project.id] ??
-    (project.natureOfWork ? categoryFallbacks[project.natureOfWork] : undefined) ??
-    defaultPlaceholder
-  );
+  return featuredPlaceholders[project.id] ?? defaultPlaceholder;
 }

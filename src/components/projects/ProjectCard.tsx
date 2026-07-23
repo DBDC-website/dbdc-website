@@ -7,7 +7,7 @@ import type { Project } from '@/types/project';
 
 export default function ProjectCard({ project }: { project: Project }) {
   const placeholder = getProjectPlaceholder(project);
-  const badgeLabel = project.natureOfWork ?? 'Project';
+  const badgeLabel = project.buildingName ?? 'Project';
 
   return (
     <Card
@@ -35,9 +35,6 @@ export default function ProjectCard({ project }: { project: Project }) {
         <h3 className="mt-3 line-clamp-2 text-lg font-semibold leading-snug text-brand-900 sm:text-xl">
           {project.title}
         </h3>
-        <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-stone-600 sm:text-base">
-          {project.description}
-        </p>
         {project.location ? (
           <p className="mt-5 flex shrink-0 items-center gap-1.5 text-xs text-stone-500">
             <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />

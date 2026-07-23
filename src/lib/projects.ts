@@ -1,63 +1,66 @@
 import { supabase } from '@/lib/supabaseClient';
-import type { Project, ProjectImageRow, ProjectRow } from '@/types/project';
+import type { Project, ProjectRow } from '@/types/project';
 
-const PROJECT_SELECT = `
-  *,
-  project_images (
-    id,
-    project_id,
-    image_url,
-    caption,
-    image_type,
-    sort_order
-  )
+/** Max projects shown in the homepage carousel (featured column was removed). */
+const FEATURED_LIMIT = 8;
+
+/** List/card views only need the primary image on `projects` — skip gallery join. */
+const PROJECT_LIST_SELECT = `
+  id,
+  slug,
+  title,
+  building_name,
+  address,
+  year,
+  published,
+  image_url,
+  image_alt
 `;
 
-function sortImages(images: ProjectImageRow[]): ProjectImageRow[] {
-  return [...images].sort((a, b) => a.sort_order - b.sort_order);
-}
+/** Encode path segments so filenames with `()` etc. work with Next/Image. */
+export function normalizeStorageUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
 
-function pickPrimaryImage(images: ProjectImageRow[]): ProjectImageRow | undefined {
-  const sorted = sortImages(images);
-  return sorted.find((image) => image.image_type === 'gallery') ?? sorted[0];
+  try {
+    const parsed = new URL(url);
+    parsed.pathname = parsed.pathname
+      .split('/')
+      .map((segment) => {
+        if (!segment) return segment;
+        try {
+          return encodeURIComponent(decodeURIComponent(segment));
+        } catch {
+          return encodeURIComponent(segment);
+        }
+      })
+      .join('/');
+    return parsed.toString();
+  } catch {
+    return url;
+  }
 }
 
 export function mapProjectRow(row: ProjectRow): Project {
-  const images = sortImages(row.project_images ?? []);
-  const primary = pickPrimaryImage(images);
-
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     buildingName: row.building_name,
-    description: row.description ?? '',
-    location: row.address ?? row.parish ?? row.deanery ?? '',
-    parish: row.parish,
-    deanery: row.deanery,
-    natureOfWork: row.nature_of_work,
+    location: row.address ?? '',
     year: row.year?.toString() ?? '',
-    featured: row.featured,
     published: row.published,
-    sortOrder: row.sort_order,
-    imageUrl: primary?.image_url ?? null,
-    imageAlt: primary?.caption ?? row.building_name ?? row.title,
-    images: images.map((image) => ({
-      id: image.id,
-      imageUrl: image.image_url,
-      caption: image.caption,
-      imageType: image.image_type,
-      sortOrder: image.sort_order,
-    })),
+    imageUrl: normalizeStorageUrl(row.image_url),
+    imageAlt: row.image_alt ?? row.building_name ?? row.title,
   };
 }
 
 export async function getPublishedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from('projects')
-    .select(PROJECT_SELECT)
+    .select(PROJECT_LIST_SELECT)
     .eq('published', true)
-    .order('sort_order', { ascending: true });
+    .order('year', { ascending: false, nullsFirst: false })
+    .order('id', { ascending: true });
 
   if (error) {
     console.error('Failed to fetch published projects:', error);
@@ -67,13 +70,15 @@ export async function getPublishedProjects(): Promise<Project[]> {
   return (data as ProjectRow[] | null)?.map(mapProjectRow) ?? [];
 }
 
+/** Homepage carousel — published projects, capped for display. */
 export async function getFeaturedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from('projects')
-    .select(PROJECT_SELECT)
+    .select(PROJECT_LIST_SELECT)
     .eq('published', true)
-    .eq('featured', true)
-    .order('sort_order', { ascending: true });
+    .order('year', { ascending: false, nullsFirst: false })
+    .order('id', { ascending: true })
+    .limit(FEATURED_LIMIT);
 
   if (error) {
     console.error('Failed to fetch featured projects:', error);

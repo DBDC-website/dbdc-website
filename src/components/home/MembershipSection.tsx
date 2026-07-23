@@ -2,9 +2,30 @@ import AnimatedSection from '@/components/ui/AnimatedSection';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import MembershipContent from '@/components/home/MembershipContent';
-import { aboutDbdc } from '@/constants/about';
+import {
+  aboutDbdc,
+  administrator as fallbackAdministrator,
+  fallbackAppointedMembers,
+  memberGroups,
+} from '@/constants/about';
+import { getCommitteeMembers, groupDbdcMembers } from '@/lib/committees';
 
-export default function MembershipSection() {
+export default async function MembershipSection() {
+  const members = await getCommitteeMembers('dbdc');
+  const fromDb = groupDbdcMembers(members);
+
+  const leadershipGroups =
+    fromDb.leadershipGroups.length > 0
+      ? fromDb.leadershipGroups
+      : memberGroups;
+  const appointedMembers =
+    fromDb.appointedMembers.length > 0
+      ? fromDb.appointedMembers
+      : fallbackAppointedMembers;
+  const administrator =
+    fromDb.administrator ??
+    (members.length === 0 ? fallbackAdministrator : null);
+
   return (
     <AnimatedSection
       id="membership"
@@ -33,7 +54,11 @@ export default function MembershipSection() {
           </p>
         </ScrollReveal>
 
-        <MembershipContent />
+        <MembershipContent
+          leadershipGroups={leadershipGroups}
+          appointedMembers={appointedMembers}
+          administrator={administrator}
+        />
       </div>
     </AnimatedSection>
   );

@@ -17,6 +17,7 @@ import {
   ContactsSection,
   PreviousProjectsSection,
   RemarksSection,
+  SignatureAndDocumentsSection,
 } from '@/components/registration/SharedSections';
 import {
   CheckboxField,
@@ -52,6 +53,8 @@ const defaultValues: ConsultantRegistrationValues = {
   otherApprovedLists: '',
   publishCompany: false,
   auditedAccountsProvided: false,
+  signatureUrl: '',
+  documentUrls: [],
   natureOfBusiness: [],
   aacsbListed: false,
   aacsbDate: '',
@@ -69,7 +72,8 @@ const defaultValues: ConsultantRegistrationValues = {
     otherRegNo: '',
   },
   contacts: [{ name: '', position: '', telephone: '', signatureName: '' }],
-  previousProjects: [{ ...emptyProject }, { ...emptyProject }, { ...emptyProject }],
+  // Projects are optional (user can add 0..n previous projects).
+  previousProjects: [],
 };
 
 export default function ConsultantForm() {
@@ -213,6 +217,7 @@ export default function ConsultantForm() {
 
         <ContactsSection />
         <PreviousProjectsSection employerLabel="Name of Employer" />
+        <SignatureAndDocumentsSection />
         <RemarksSection />
 
         {submitError ? (
