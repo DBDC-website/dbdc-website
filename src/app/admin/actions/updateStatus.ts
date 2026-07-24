@@ -3,26 +3,12 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import {
-  isAdminEmail,
   isRegistrationStatus,
   isRegistrationType,
   type RegistrationStatus,
   type RegistrationType,
 } from '@/constants/admin';
-import { createClient } from '@/lib/supabase/server';
-
-async function requireAdmin() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user || !isAdminEmail(user.email)) {
-    redirect('/admin/login?error=unauthorized');
-  }
-
-  return supabase;
-}
+import { requireAdmin } from '@/lib/admin/requireAdmin';
 
 function tableFor(type: RegistrationType) {
   return type === 'consultant'

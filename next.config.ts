@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      // Admin project image uploads (max 8MB validated in action)
+      bodySizeLimit: '9mb',
+    },
+  },
   images: {
     remotePatterns: [
       {

@@ -25,7 +25,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   } = await supabase.auth.getUser();
 
   if (user && isAdminEmail(user.email)) {
-    redirect('/admin/registrations');
+    redirect('/admin');
   }
 
   const { error } = await searchParams;
