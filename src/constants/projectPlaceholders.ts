@@ -46,7 +46,7 @@ const featuredPlaceholders: Record<number, ProjectPlaceholder> = {
 const defaultPlaceholder: ProjectPlaceholder = {
   style: 'modern',
   label: 'Project image',
-  sublabel: 'Church or diocesan building',
+  sublabel: 'Church or Diocesan building',
   gradient: 'from-brand-200 via-cream-100 to-sage-200',
 };
 

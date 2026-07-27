@@ -16,6 +16,17 @@ function closeMenu(toggleId: string) {
   if (toggle) toggle.checked = false;
 }
 
+function resolveHref(locale: Locale, href: string) {
+  if (href.startsWith('http') || href.startsWith('/documents/')) {
+    return href;
+  }
+  if (href.includes('#')) {
+    const [path, hash] = href.split('#');
+    return `/${locale}${path}#${hash}`;
+  }
+  return `/${locale}${href}`;
+}
+
 export default function MobileMenuPanel({
   locale,
   items,
@@ -37,16 +48,34 @@ export default function MobileMenuPanel({
       </div>
 
       <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-3 py-5">
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-1">
           {items.map((item) => (
             <li key={item.href}>
               <Link
-                href={`/${locale}${item.href}`}
+                href={resolveHref(locale, item.href)}
                 onClick={() => closeMenu(toggleId)}
-                className="block rounded-md px-5 py-3.5 text-lg font-medium text-brand-900 transition-colors hover:bg-gold-100/55 hover:text-brand-950"
+                className="block rounded-md px-5 py-3 text-lg font-bold text-brand-900 transition-colors hover:bg-gold-100/55 hover:text-brand-950"
               >
                 {item.label}
               </Link>
+              {item.children && item.children.length > 0 ? (
+                <ul className="mb-2 ml-3 space-y-0.5 border-l border-gold-200/70 pl-3">
+                  {item.children.map((child) => (
+                    <li key={`${child.href}-${child.label}`}>
+                      <Link
+                        href={resolveHref(locale, child.href)}
+                        onClick={() => closeMenu(toggleId)}
+                        {...(child.external
+                          ? { target: '_blank', rel: 'noopener noreferrer' }
+                          : {})}
+                        className="block rounded-md px-3 py-2 text-sm font-bold text-brand-800/85 transition-colors hover:bg-gold-100/45 hover:text-brand-950"
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </li>
           ))}
         </ul>

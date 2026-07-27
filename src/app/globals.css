@@ -37,6 +37,11 @@
   --color-brand-900: #1b2740;
   --color-brand-950: #111a2c;
 
+  /* Logo mark blue (cupped-hands icon) */
+  --color-logo-blue: #00a0dc;
+  /* Logo wordmark grey */
+  --color-logo-grey: #5a5a5a;
+
   /* Accent: restrained brass / gold */
   --color-gold-50: #fbf7ec;
   --color-gold-100: #f5ebcc;

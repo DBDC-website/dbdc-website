@@ -30,7 +30,7 @@ export default async function MembershipSection() {
     <AnimatedSection
       id="membership"
       tone="default"
-      spacing="generous"
+      spacing="default"
       aria-labelledby="membership-heading"
     >
       <div
@@ -49,7 +49,7 @@ export default async function MembershipSection() {
             className="mt-5 h-px w-20 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent"
             aria-hidden="true"
           />
-          <p className="mt-8 max-w-3xl text-lg leading-relaxed text-stone-700 sm:text-xl">
+          <p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-700 sm:mt-6 sm:text-lg">
             {aboutDbdc.membersIntro}
           </p>
         </ScrollReveal>

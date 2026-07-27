@@ -29,7 +29,7 @@ export default function FeaturedProjectsSection({
             id="featured-projects-heading"
             eyebrow="Our Work"
             title="Featured projects"
-            description="A selection of diocesan building and development initiatives across Hong Kong."
+            description="A selection of Diocesan building and development initiatives across Hong Kong."
             className="[&_h2]:text-4xl [&_h2]:sm:text-5xl"
           />
           <Link

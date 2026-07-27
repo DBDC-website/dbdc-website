@@ -1,30 +1,73 @@
 import type { NavItem } from '@/types/navigation';
+import { articlePdfs } from '@/constants/articles';
 
 export const siteConfig = {
   name: 'Diocesan Building and Development Commission',
   shortName: 'DBDC',
   tagline: 'Catholic Diocese of Hong Kong',
   description:
-    'Supporting the planning, development, and maintenance of diocesan and parish properties across Hong Kong.',
+    'Supporting the planning, development, and maintenance of Diocesan properties across Hong Kong.',
 };
 
 /** Primary navigation. Paths are locale-relative; the locale prefix is added at render time. */
 export const mainNav: NavItem[] = [
-  { href: '/projects', label: 'Selected Projects' },
-  { href: '/parish-school', label: 'Parish & School' },
-  { href: '/consultants-contractors', label: 'Consultants & Contractors' },
-  { href: '/articles', label: 'Articles' },
+  {
+    href: '/projects',
+    label: 'Selected Projects',
+    children: [
+      {
+        href: '/projects#project-showcase-heading',
+        label: 'Project showcase',
+      },
+      {
+        href: '/projects#experiences-heading',
+        label: 'Featured experiences',
+      },
+    ],
+  },
+  {
+    href: '/parish-school',
+    label: 'Parish & School',
+    children: [
+      { href: '/parish-school#preamble-heading', label: 'Preamble' },
+      {
+        href: '/parish-school#faq-heading',
+        label: 'Frequently Asked Questions',
+      },
+      {
+        href: '/parish-school#contact-heading',
+        label: 'Need further assistance?',
+      },
+      { href: '/parish-school#gov-links-heading', label: 'Useful links' },
+    ],
+  },
+  {
+    href: '/consultants-contractors',
+    label: 'Consultants & Contractors',
+  },
+  {
+    href: '/articles',
+    label: 'Articles',
+    children: [
+      { href: '/articles', label: 'All articles' },
+      ...articlePdfs.map((article) => ({
+        href: article.href,
+        label: `Article ${article.label}`,
+        external: true as const,
+      })),
+    ],
+  },
 ];
 
 /**
  * Contact details shown in the footer on every page.
- * Placeholder values for Sprint 1 — to be confirmed by the DBDC Office.
  */
 export const contactInfo = {
-  organisation: 'DBDC Office',
-  address: ['Catholic Diocese Centre', '16 Caine Road', 'Central, Hong Kong'],
-  email: 'dbdc@catholic.org.hk',
-  phone: '+852 0000 0000',
-  officeHours: 'Monday – Friday, 9:00 – 17:00',
-  isPlaceholder: true,
+  organisation: 'DBDC OFFICE',
+  address: ['9/F, Catholic Diocese Centre', '16 Caine Road', 'Central, Hong Kong'],
+  email: 'office@hkdbdc.org.hk',
+  phone: '+852 2526 3200',
+  fax: '+852 2526 1127',
+  officeHours: ['Monday – Friday: 9:00-17:30', 'Saturday: 9:00-12:00'],
+  isPlaceholder: false,
 };

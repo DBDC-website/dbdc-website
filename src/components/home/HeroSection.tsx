@@ -9,11 +9,13 @@ type HeroSectionProps = {
 export default function HeroSection({ locale }: HeroSectionProps) {
   return (
     <section
-      className="relative isolate overflow-hidden bg-brand-900"
+      className="relative overflow-hidden bg-brand-900"
       aria-labelledby="hero-heading"
     >
       <HeroParallaxBackground />
-      <HeroContent locale={locale} />
+      <div className="relative z-10">
+        <HeroContent locale={locale} />
+      </div>
     </section>
   );
 }

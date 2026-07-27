@@ -35,6 +35,28 @@ function toNullable(value?: string): string | null {
 }
 
 function mapConsultantRegistration(data: ConsultantRegistrationValues) {
+  const natureOfBusiness = [...data.natureOfBusiness];
+  if (data.natureOfBusinessOther?.trim()) {
+    natureOfBusiness.push(`Others: ${data.natureOfBusinessOther.trim()}`);
+  }
+
+  const professionalDetails = {
+    ...data.professionalDetails,
+    natureOfBusinessOther: toNullable(data.natureOfBusinessOther),
+    auditedAccountDocumentUrls: data.auditedAccountDocumentUrls,
+    businessRegistrationDocumentUrls: data.businessRegistrationDocumentUrls,
+  };
+
+  const allDocumentUrls = [
+    ...data.businessRegistrationDocumentUrls,
+    ...data.auditedAccountDocumentUrls,
+    ...data.professionalDetails.aacsbDocumentUrls,
+    ...data.professionalDetails.eacsbDocumentUrls,
+    ...data.professionalDetails.otherApprovedListEntries.flatMap(
+      (entry) => entry.documentUrls,
+    ),
+  ];
+
   return {
     company_name: data.companyName.trim(),
     registered_address: toNullable(data.registeredAddress),
@@ -42,7 +64,7 @@ function mapConsultantRegistration(data: ConsultantRegistrationValues) {
     fax: toNullable(data.fax),
     email: toNullable(data.email),
     website: toNullable(data.website),
-    nature_of_business: data.natureOfBusiness,
+    nature_of_business: natureOfBusiness,
     scope_of_services: toNullable(data.scopeOfServices),
     business_registration_no: toNullable(data.businessRegistrationNo),
     registration_date: toNullable(data.registrationDate),
@@ -51,18 +73,43 @@ function mapConsultantRegistration(data: ConsultantRegistrationValues) {
     capital_available: toMoney(data.capitalAvailable),
     aacsb_listed: data.aacsbListed,
     aacsb_date: toNullable(data.aacsbDate),
-    housing_dept_approved: data.housingDeptApproved,
-    housing_dept_approved_date: toNullable(data.housingDeptApprovedDate),
-    other_approved_lists: toNullable(data.otherApprovedLists),
-    professional_details: data.professionalDetails,
+    housing_dept_approved: data.eacsbListed,
+    housing_dept_approved_date: toNullable(data.eacsbDate),
+    other_approved_lists: JSON.stringify(
+      data.professionalDetails.otherApprovedListEntries,
+    ),
+    professional_details: professionalDetails,
     publish_company: data.publishCompany,
     audited_accounts_provided: data.auditedAccountsProvided,
-    signature_url: toNullable(data.signatureUrl),
-    document_urls: data.documentUrls,
+    signature_url: data.contacts[0]?.signatureUrl ?? null,
+    document_urls: allDocumentUrls,
   };
 }
 
 function mapContractorRegistration(data: ContractorRegistrationValues) {
+  const natureOfBusiness = [...data.natureOfBusiness];
+  if (data.natureOfBusinessOther?.trim()) {
+    natureOfBusiness.push(`Others: ${data.natureOfBusinessOther.trim()}`);
+  }
+
+  const professionalDetails = {
+    ...data.professionalDetails,
+    natureOfBusinessOther: toNullable(data.natureOfBusinessOther),
+    auditedAccountDocumentUrls: data.auditedAccountDocumentUrls,
+    businessRegistrationDocumentUrls: data.businessRegistrationDocumentUrls,
+    buildingsDeptDocumentUrls: data.buildingsDeptDocumentUrls,
+  };
+
+  const allDocumentUrls = [
+    ...data.businessRegistrationDocumentUrls,
+    ...data.buildingsDeptDocumentUrls,
+    ...data.auditedAccountDocumentUrls,
+    ...data.professionalDetails.devbDocumentUrls,
+    ...data.professionalDetails.otherApprovedListEntries.flatMap(
+      (entry) => entry.documentUrls,
+    ),
+  ];
+
   return {
     company_name: data.companyName.trim(),
     registered_address: toNullable(data.registeredAddress),
@@ -70,25 +117,27 @@ function mapContractorRegistration(data: ContractorRegistrationValues) {
     fax: toNullable(data.fax),
     email: toNullable(data.email),
     website: toNullable(data.website),
-    nature_of_business: data.natureOfBusiness,
+    nature_of_business: natureOfBusiness,
     scope_of_services: toNullable(data.scopeOfServices),
     business_registration_no: toNullable(data.businessRegistrationNo),
     registration_date: toNullable(data.registrationDate),
     capital_authorized: toMoney(data.capitalAuthorized),
     capital_issued: toMoney(data.capitalIssued),
     capital_available: toMoney(data.capitalAvailable),
-    asd_wb_approved: data.asdWbApproved,
-    asd_wb_date: toNullable(data.asdWbDate),
-    housing_dept_approved: data.housingDeptApproved,
-    housing_dept_date: toNullable(data.housingDeptDate),
+    asd_wb_approved: data.devbApproved,
+    asd_wb_date: toNullable(data.devbDate),
+    housing_dept_approved: false,
+    housing_dept_date: null,
     buildings_dept_reg_no: toNullable(data.buildingsDeptRegNo),
     buildings_dept_date: toNullable(data.buildingsDeptDate),
-    other_approved_lists: toNullable(data.otherApprovedLists),
-    professional_details: data.professionalDetails,
+    other_approved_lists: JSON.stringify(
+      data.professionalDetails.otherApprovedListEntries,
+    ),
+    professional_details: professionalDetails,
     publish_company: data.publishCompany,
     audited_accounts_provided: data.auditedAccountsProvided,
-    signature_url: toNullable(data.signatureUrl),
-    document_urls: data.documentUrls,
+    signature_url: data.contacts[0]?.signatureUrl ?? null,
+    document_urls: allDocumentUrls,
   };
 }
 
@@ -97,7 +146,8 @@ function mapContacts(contacts: ConsultantRegistrationValues['contacts']) {
     name: contact.name.trim(),
     position: toNullable(contact.position),
     telephone: toNullable(contact.telephone),
-    signature_name: toNullable(contact.signatureName),
+    signature_name: null,
+    signature_url: toNullable(contact.signatureUrl),
   }));
 }
 

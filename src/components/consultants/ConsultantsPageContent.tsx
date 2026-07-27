@@ -1,6 +1,6 @@
 'use client';
 
-import { Download, FileText, UserCheck, HardHat } from 'lucide-react';
+import { UserCheck, HardHat } from 'lucide-react';
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -51,35 +51,3 @@ export function RegistrationCards({ locale }: { locale: string }) {
   );
 }
 
-export function FormsCards() {
-  return (
-    <StaggerChildren as="div" className="grid gap-8 lg:gap-10">
-      <StaggerItem>
-        <Card className="h-full border-cream-200/90 bg-white/90 p-6 shadow-sm shadow-brand-900/[0.04] sm:p-8">
-          <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-gold-100 text-gold-700">
-              <Download className="h-6 w-6" aria-hidden="true" />
-            </span>
-            <h3 className="text-lg font-semibold text-brand-900 sm:text-xl">
-              Download forms
-            </h3>
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-stone-600 sm:text-base">
-            Printable registration and submission forms (PDF) will be available
-            for download.
-          </p>
-          <ul className="mt-5 space-y-2 text-sm text-stone-600">
-            <li className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-gold-600" aria-hidden="true" />
-              Consultant registration form (coming soon)
-            </li>
-            <li className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-gold-600" aria-hidden="true" />
-              Contractor registration form (coming soon)
-            </li>
-          </ul>
-        </Card>
-      </StaggerItem>
-    </StaggerChildren>
-  );
-}

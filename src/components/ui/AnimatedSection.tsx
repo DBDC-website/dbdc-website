@@ -13,6 +13,10 @@ type AnimatedSectionProps = {
   containerSize?: 'default' | 'narrow' | 'wide';
   bleed?: boolean;
   withBackground?: boolean;
+  /** Replaces the default parallax photo when provided. */
+  backdrop?: React.ReactNode;
+  /** Overrides the tone wash over the backdrop. */
+  overlayClassName?: string;
   'aria-labelledby'?: string;
   id?: string;
 };
@@ -51,6 +55,8 @@ export default function AnimatedSection({
   containerSize = 'default',
   bleed = false,
   withBackground = true,
+  backdrop,
+  overlayClassName,
   id,
   ...rest
 }: AnimatedSectionProps) {
@@ -68,12 +74,17 @@ export default function AnimatedSection({
       )}
       {...rest}
     >
-      {withBackground && tone !== 'brand' ? (
+      {backdrop ? (
+        <div className="absolute inset-0 z-0">{backdrop}</div>
+      ) : withBackground && tone !== 'brand' ? (
         <SectionParallaxBackground sectionRef={sectionRef} />
       ) : null}
 
       <div
-        className={cn('absolute inset-0 z-0', toneOverlayMap[tone])}
+        className={cn(
+          'absolute inset-0 z-0',
+          overlayClassName ?? toneOverlayMap[tone],
+        )}
         aria-hidden="true"
       />
 

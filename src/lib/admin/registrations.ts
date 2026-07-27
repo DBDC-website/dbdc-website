@@ -20,6 +20,7 @@ export type AdminContact = {
   position: string | null;
   telephone: string | null;
   signatureName: string | null;
+  signatureUrl: string | null;
 };
 
 export type AdminPreviousProject = {
@@ -166,7 +167,7 @@ export async function getRegistrationDetail(
   const [{ data: contacts }, { data: projects }] = await Promise.all([
     supabase
       .from(contactsTableFor(type))
-      .select('id, name, position, telephone, signature_name')
+      .select('id, name, position, telephone, signature_name, signature_url')
       .eq('registration_id', id)
       .order('id', { ascending: true }),
     supabase
@@ -208,6 +209,7 @@ export async function getRegistrationDetail(
       position: contact.position,
       telephone: contact.telephone,
       signatureName: contact.signature_name,
+      signatureUrl: contact.signature_url,
     })),
     previousProjects: (projects ?? []).map((project) => ({
       id: project.id,

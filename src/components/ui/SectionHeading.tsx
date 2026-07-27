@@ -48,6 +48,7 @@ export default function SectionHeading({
         id={id}
         className={cn(
           'mt-3 text-3xl font-semibold leading-tight sm:text-4xl',
+          id && 'scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36',
           isInverse && 'text-white',
         )}
       >

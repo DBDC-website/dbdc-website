@@ -29,7 +29,7 @@ export const committees: Committee[] = [
           kind: 'list',
           items: [
             'Completed parish development needs assessment framework.',
-            'Prepared recommendations for long-term diocesan facility planning.',
+            'Prepared recommendations for long-term Diocesan facility planning.',
             'Reviewed priority proposals for parish and school facility upgrades.',
           ],
         },
@@ -48,7 +48,7 @@ export const committees: Committee[] = [
         content: {
           kind: 'list',
           items: [
-            'Review and shortlist consultants and contractors for diocesan projects.',
+            'Review and shortlist consultants and contractors for Diocesan projects.',
             'Recommend appointments to the Commission in a fair and transparent manner.',
             'Uphold quality and integrity in the selection process.',
           ],
@@ -89,7 +89,7 @@ export const committees: Committee[] = [
           kind: 'list',
           items: [
             'The Catholic Building Professional Advisory Group (CaBPAG) was established to provide voluntary professional advice to the DBDC.',
-            'Members are Catholic building professionals who contribute their expertise to support parishes and diocesan organisations.',
+            'Members are Catholic building professionals who contribute their expertise to support parishes and Diocesan organisations.',
           ],
         },
       },

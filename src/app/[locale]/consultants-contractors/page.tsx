@@ -1,15 +1,12 @@
 import type { Metadata } from 'next';
-import {
-  FormsCards,
-  RegistrationCards,
-} from '@/components/consultants/ConsultantsPageContent';
+import { RegistrationCards } from '@/components/consultants/ConsultantsPageContent';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 
 export const metadata: Metadata = {
   title: 'Consultants & Contractors',
   description:
-    'Registration information and forms for consultants and contractors working with the DBDC.',
+    'Registration information and online applications for consultants and contractors working with the DBDC.',
 };
 
 type PageProps = {
@@ -24,7 +21,7 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
       <PageHeader
         eyebrow="Work With Us"
         title="Consultants & Contractors"
-        description="Registration information, downloadable forms, and online applications for consultants and contractors."
+        description="Registration information and online applications for consultants and contractors."
       />
 
       <PageSection
@@ -36,19 +33,6 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
         }}
       >
         <RegistrationCards locale={locale} />
-      </PageSection>
-
-      <PageSection
-        tone="cream"
-        aria-labelledby="forms-heading"
-        heading={{
-          id: 'forms-heading',
-          eyebrow: 'Resources',
-          title: 'Forms',
-          description: 'Downloadable and online forms will be made available here.',
-        }}
-      >
-        <FormsCards />
       </PageSection>
     </>
   );

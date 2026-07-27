@@ -7,7 +7,7 @@ import { articlePdfs } from '@/constants/articles';
 export const metadata: Metadata = {
   title: 'Related Articles',
   description:
-    'Research articles and papers on diocesan building, laity involvement, and church development.',
+    'Research articles and papers on Diocesan building, laity involvement, and church development.',
 };
 
 export default function ArticlesPage() {

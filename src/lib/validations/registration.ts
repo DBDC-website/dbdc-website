@@ -3,10 +3,6 @@ import { z } from 'zod';
 /**
  * Validation schemas for the consultant and contractor registration forms.
  *
- * These mirror the Supabase tables created in Sprint 2:
- *   - consultant_registrations / consultant_contacts / consultant_previous_projects
- *   - contractor_registrations / contractor_contacts / contractor_previous_projects
- *
  * Scalar fields are kept as strings on the client (matching native inputs) and
  * converted to numbers / dates / null inside the server action.
  */
@@ -37,10 +33,15 @@ const optionalMoney = z
     'Enter a valid amount (numbers only)',
   );
 
-// --- Selectable options (surfaced in the UI) --------------------------------
+const documentUrlsSchema = z.array(z.string().trim().min(1));
 
-// Options below mirror the DBDC Consultant / Contractor Listing Forms
-// (D/DBDC Minor/Form/21).
+const otherApprovedListEntrySchema = z.object({
+  listName: optionalText,
+  listedDate: optionalDate,
+  documentUrls: documentUrlsSchema,
+});
+
+// --- Selectable options (surfaced in the UI) --------------------------------
 
 export const CONSULTANT_NATURE_OPTIONS = [
   'Architecture',
@@ -55,34 +56,32 @@ export const CONSULTANT_NATURE_OPTIONS = [
   'Others',
 ] as const;
 
+/** † = Registered under Buildings Department (not a required-field marker). */
 export const CONTRACTOR_NATURE_OPTIONS = [
-  'Building Contractor',
-  'B.S. Contractor',
-  'Civil Contractor',
+  { label: 'General Building contractor', value: 'General Building contractor', bdRegistered: true },
+  { label: 'Electrical contractor', value: 'Electrical contractor', bdRegistered: false },
+  { label: 'Air-conditioning contractor', value: 'Air-conditioning contractor', bdRegistered: false },
+  { label: 'Demolition contractor', value: 'Demolition contractor', bdRegistered: true },
+  { label: 'Lift & escalator contractor', value: 'Lift & escalator contractor', bdRegistered: false },
+  { label: 'Repair & maintenance contractor', value: 'Repair & maintenance contractor', bdRegistered: false },
+  { label: 'Ground investigation contractor', value: 'Ground investigation contractor', bdRegistered: true },
+  { label: 'Ventilation contractor', value: 'Ventilation contractor', bdRegistered: true },
+  { label: 'Interior fitting out contractor', value: 'Interior fitting out contractor', bdRegistered: false },
+  { label: 'Foundation contractor', value: 'Foundation contractor', bdRegistered: true },
+  { label: 'Fire services contractor', value: 'Fire services contractor', bdRegistered: false },
+  { label: 'Site formation / geotechnical contractor', value: 'Site formation / geotechnical contractor', bdRegistered: true },
+  { label: 'Plumbing & drainage contractor', value: 'Plumbing & drainage contractor', bdRegistered: false },
+  { label: 'Landscaping / horticulture contractor', value: 'Landscaping / horticulture contractor', bdRegistered: false },
+  { label: 'Others (please specify)', value: 'Others', bdRegistered: false },
+] as const;
+
+export const CONTRACTOR_MINOR_WORKS_OPTIONS = [
   'Minor Works I',
   'Minor Works II',
   'Minor Works III',
-  'Others',
 ] as const;
 
-export const CONSULTANT_PROFESSIONAL_OPTIONS = [
-  { key: 'authorizedPerson', label: 'Authorised Person (I / II / III)' },
-  { key: 'registeredStructuralEngineer', label: 'Registered Structural Engineer' },
-  { key: 'registeredGeotechnicalEngineer', label: 'Registered Geotechnical Engineer' },
-  { key: 'authorizedLandSurveyor', label: 'Authorised Land Surveyor' },
-  { key: 'registeredInspector', label: 'Registered Inspector (R.I.)' },
-  { key: 'registeredEnergyAssessor', label: 'Registered Energy Assessor (REA)' },
-] as const;
-
-export const CONTRACTOR_PROFESSIONAL_OPTIONS = [
-  { key: 'authorizedPerson', label: 'Authorized Person (A.P.)' },
-  { key: 'architect', label: 'Architect' },
-  { key: 'siteEngineer', label: 'Site Engineer' },
-  { key: 'buildingSurveyor', label: 'Building Surveyor' },
-  { key: 'quantitySurveyor', label: 'Quantity Surveyor' },
-  { key: 'registeredInspector', label: 'Registered Inspector (R.I.)' },
-  { key: 'registeredEnergyAssessor', label: 'Registered Energy Assessor (REA)' },
-] as const;
+export const AUTHORIZED_PERSON_CATEGORIES = ['I', 'II', 'III'] as const;
 
 // --- Shared child collections ----------------------------------------------
 
@@ -90,7 +89,7 @@ const contactSchema = z.object({
   name: z.string().trim().min(1, 'Contact name is required').max(200),
   position: optionalText,
   telephone: optionalText,
-  signatureName: optionalText,
+  signatureUrl: z.string().trim().min(1, 'Please provide a signature'),
 });
 
 const previousProjectSchema = z.object({
@@ -119,17 +118,15 @@ const baseRegistrationShape = {
   capitalIssued: optionalMoney,
   capitalAvailable: optionalMoney,
 
-  otherApprovedLists: optionalText,
+  businessRegistrationDocumentUrls: documentUrlsSchema,
+
   publishCompany: z.boolean(),
   auditedAccountsProvided: z.boolean(),
-  signatureUrl: z.string().trim().min(1, 'Please provide your signature'),
-  documentUrls: z.array(z.string().trim().min(1)),
+  auditedAccountDocumentUrls: documentUrlsSchema,
 
   contacts: z
     .array(contactSchema)
     .min(1, 'Add at least one authorised contact'),
-  // Portfolio projects are optional in the *UI*, but for validation we accept
-  // an empty array (so users can submit with 0 projects).
   previousProjects: z.array(previousProjectSchema),
 };
 
@@ -137,29 +134,38 @@ const baseRegistrationShape = {
 export const baseRegistrationSchema = z.object(baseRegistrationShape);
 export type BaseRegistrationValues = z.infer<typeof baseRegistrationSchema>;
 
+const otherRegisteredProfessionalSchema = z.object({
+  professional: optionalText,
+  no: optionalText,
+});
+
 const consultantProfessionalDetailsSchema = z.object({
-  authorizedPerson: z.boolean(),
-  apRegNo: optionalText,
+  authorizedPersonCategories: z.array(z.enum(AUTHORIZED_PERSON_CATEGORIES)),
+  professionalName: optionalText,
+  professionalNo: optionalText,
   registeredStructuralEngineer: z.boolean(),
   registeredGeotechnicalEngineer: z.boolean(),
   authorizedLandSurveyor: z.boolean(),
   registeredInspector: z.boolean(),
   registeredEnergyAssessor: z.boolean(),
-  otherProfessional: optionalText,
-  otherRegNo: optionalText,
+  otherRegisteredProfessionals: z.array(otherRegisteredProfessionalSchema),
+  aacsbDocumentUrls: documentUrlsSchema,
+  eacsbDocumentUrls: documentUrlsSchema,
+  otherApprovedListEntries: z.array(otherApprovedListEntrySchema),
 });
 
 const contractorProfessionalDetailsSchema = z.object({
   authorizedPerson: z.boolean(),
-  apRegNo: optionalText,
   architect: z.boolean(),
   siteEngineer: z.boolean(),
   buildingSurveyor: z.boolean(),
   quantitySurveyor: z.boolean(),
   registeredInspector: z.boolean(),
   registeredEnergyAssessor: z.boolean(),
-  otherProfessional: optionalText,
-  otherRegNo: optionalText,
+  otherProfessional: z.boolean(),
+  otherProfessionalSpecify: optionalText,
+  devbDocumentUrls: documentUrlsSchema,
+  otherApprovedListEntries: z.array(otherApprovedListEntrySchema),
 });
 
 // --- Consultant schema ------------------------------------------------------
@@ -169,10 +175,11 @@ export const consultantSchema = z.object({
   natureOfBusiness: z
     .array(z.string())
     .min(1, 'Select at least one nature of business'),
+  natureOfBusinessOther: optionalText,
   aacsbListed: z.boolean(),
   aacsbDate: optionalDate,
-  housingDeptApproved: z.boolean(),
-  housingDeptApprovedDate: optionalDate,
+  eacsbListed: z.boolean(),
+  eacsbDate: optionalDate,
   professionalDetails: consultantProfessionalDetailsSchema,
 });
 
@@ -183,12 +190,12 @@ export const contractorSchema = z.object({
   natureOfBusiness: z
     .array(z.string())
     .min(1, 'Select at least one nature of business'),
-  asdWbApproved: z.boolean(),
-  asdWbDate: optionalDate,
-  housingDeptApproved: z.boolean(),
-  housingDeptDate: optionalDate,
+  natureOfBusinessOther: optionalText,
   buildingsDeptRegNo: optionalText,
   buildingsDeptDate: optionalDate,
+  buildingsDeptDocumentUrls: documentUrlsSchema,
+  devbApproved: z.boolean(),
+  devbDate: optionalDate,
   professionalDetails: contractorProfessionalDetailsSchema,
 });
 
@@ -196,3 +203,7 @@ export type ConsultantRegistrationValues = z.infer<typeof consultantSchema>;
 export type ContractorRegistrationValues = z.infer<typeof contractorSchema>;
 export type RegistrationContact = z.infer<typeof contactSchema>;
 export type RegistrationPreviousProject = z.infer<typeof previousProjectSchema>;
+export type OtherApprovedListEntry = z.infer<typeof otherApprovedListEntrySchema>;
+export type OtherRegisteredProfessional = z.infer<
+  typeof otherRegisteredProfessionalSchema
+>;

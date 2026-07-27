@@ -64,10 +64,19 @@ export default async function RegistrationDetailPage({
   const detail = await getRegistrationDetail(typeRaw, id);
   if (!detail) notFound();
 
-  const [signatureSignedUrl, documentLinks] = await Promise.all([
-    createSignedAssetUrl(detail.signatureUrl),
+  const [documentLinks, contactSignatureUrls] = await Promise.all([
     createSignedAssetUrls(detail.documentUrls),
+    Promise.all(
+      detail.contacts.map(async (contact) => ({
+        id: contact.id,
+        url: await createSignedAssetUrl(contact.signatureUrl),
+      })),
+    ),
   ]);
+
+  const contactSignatureMap = new Map(
+    contactSignatureUrls.map((item) => [item.id, item.url]),
+  );
 
   return (
     <div className="space-y-8">
@@ -178,22 +187,17 @@ export default async function RegistrationDetailPage({
               />
               <Field label="AACSB date" value={detail.aacsbDate} />
               <Field
-                label="Housing Dept. approved date"
+                label="EACSB listed date"
                 value={detail.housingDeptApprovedDate}
               />
             </>
           ) : (
             <>
               <Field
-                label="ASD / WB approved"
+                label="DevB approved"
                 value={detail.asdWbApproved ? 'Yes' : 'No'}
               />
-              <Field label="ASD / WB date" value={detail.asdWbDate} />
-              <Field
-                label="Housing Dept. approved"
-                value={detail.housingDeptApproved ? 'Yes' : 'No'}
-              />
-              <Field label="Housing Dept. date" value={detail.housingDeptDate} />
+              <Field label="DevB date" value={detail.asdWbDate} />
               <Field
                 label="Buildings Dept. reg. no."
                 value={detail.buildingsDeptRegNo}
@@ -213,19 +217,34 @@ export default async function RegistrationDetailPage({
           <p className="mt-3 text-sm text-stone-600">No contacts provided.</p>
         ) : (
           <ul className="mt-4 space-y-3">
-            {detail.contacts.map((contact) => (
+            {detail.contacts.map((contact) => {
+              const contactSignatureUrl = contactSignatureMap.get(contact.id);
+              return (
               <li
                 key={contact.id}
                 className="rounded-lg border border-cream-100 bg-cream-50/70 px-4 py-3 text-sm"
               >
                 <p className="font-medium text-brand-900">{contact.name}</p>
                 <p className="text-stone-600">
-                  {[contact.position, contact.telephone, contact.signatureName]
+                  {[contact.position, contact.telephone]
                     .filter(Boolean)
                     .join(' · ') || '—'}
                 </p>
+                {contactSignatureUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={contactSignatureUrl}
+                    alt={`Signature for ${contact.name}`}
+                    className="mt-3 max-h-32 rounded-md border border-cream-200 bg-white object-contain p-2"
+                  />
+                ) : contact.signatureUrl ? (
+                  <p className="mt-2 text-xs text-stone-500">
+                    Signature on file, but preview unavailable.
+                  </p>
+                ) : null}
               </li>
-            ))}
+            );
+            })}
           </ul>
         )}
       </section>
@@ -267,29 +286,9 @@ export default async function RegistrationDetailPage({
 
       <section className="rounded-xl border border-cream-200 bg-white p-5 shadow-sm sm:p-6">
         <h2 className="text-lg font-semibold text-brand-900">
-          Signature & documents
+          Supporting documents
         </h2>
         <div className="mt-4 space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
-              Signature
-            </p>
-            {signatureSignedUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={signatureSignedUrl}
-                alt="Submitted signature"
-                className="mt-2 max-h-48 rounded-md border border-cream-200 bg-white object-contain p-2"
-              />
-            ) : (
-              <p className="mt-2 text-sm text-stone-600">
-                {detail.signatureUrl
-                  ? 'Signature on file, but a preview URL could not be created.'
-                  : 'No signature uploaded.'}
-              </p>
-            )}
-          </div>
-
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
               Documents

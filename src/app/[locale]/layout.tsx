@@ -38,7 +38,7 @@ export default async function LocaleLayout({
       <SkipLink />
       <Header locale={locale as Locale} />
       <MobileMenuOverlay locale={locale as Locale} items={mainNav} />
-      <main id="main-content" className="flex-1 pt-16 lg:pt-[4.75rem]">
+      <main id="main-content" className="flex-1 pt-[4.75rem] sm:pt-[5.25rem] lg:pt-[5.75rem]">
         {children}
       </main>
       <FloatingDonateButton />

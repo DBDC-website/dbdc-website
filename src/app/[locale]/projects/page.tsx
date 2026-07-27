@@ -8,7 +8,7 @@ import { getPublishedProjects } from '@/lib/projects';
 export const metadata: Metadata = {
   title: 'Selected Projects',
   description:
-    'A showcase of diocesan building and development projects, including a 360° virtual tour and the Catholic Heritage website.',
+    'A showcase of Diocesan building and development projects, including a 360° virtual tour and the Catholic Heritage website.',
 };
 
 export default async function ProjectsPage() {
@@ -29,7 +29,7 @@ export default async function ProjectsPage() {
           eyebrow: 'Showcase',
           title: 'Project showcase',
           description:
-            'Selected diocesan building and development projects from the DBDC portfolio.',
+            'Selected Diocesan building and development projects from the DBDC portfolio.',
         }}
       >
         <ProjectsGrid projects={projects} />
@@ -43,7 +43,7 @@ export default async function ProjectsPage() {
           eyebrow: 'Explore Further',
           title: 'Featured experiences',
           description:
-            'Step inside diocesan buildings virtually or explore the Catholic Heritage archive online.',
+            'Step inside Diocesan buildings virtually or explore the Catholic Heritage archive online.',
         }}
       >
         <ExperienceCards />

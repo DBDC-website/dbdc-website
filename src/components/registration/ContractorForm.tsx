@@ -1,41 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2 } from 'lucide-react';
 import {
   contractorSchema,
   CONTRACTOR_NATURE_OPTIONS,
-  CONTRACTOR_PROFESSIONAL_OPTIONS,
+  CONTRACTOR_MINOR_WORKS_OPTIONS,
   type ContractorRegistrationValues,
 } from '@/lib/validations/registration';
 import { submitContractorRegistration } from '@/app/actions/registrations';
 import {
+  BusinessRegistrationSection,
   CapitalSection,
   CompanyInfoSection,
   ContactsSection,
   PreviousProjectsSection,
   RemarksSection,
-  SignatureAndDocumentsSection,
+  ScopeOfServicesSection,
 } from '@/components/registration/SharedSections';
+import OtherApprovedListsField from '@/components/registration/OtherApprovedListsField';
+import DocumentUploadField from '@/components/registration/DocumentUploadField';
 import {
   CheckboxField,
   FormSection,
-  TextAreaField,
   TextField,
 } from '@/components/forms/Fields';
 import Button from '@/components/ui/Button';
-
-const emptyProject = {
-  projectName: '',
-  projectAddress: '',
-  contractSum: '',
-  startDate: '',
-  endDate: '',
-  clientName: '',
-  architectEngineer: '',
-};
 
 const defaultValues: ContractorRegistrationValues = {
   companyName: '',
@@ -47,37 +39,176 @@ const defaultValues: ContractorRegistrationValues = {
   scopeOfServices: '',
   businessRegistrationNo: '',
   registrationDate: '',
+  businessRegistrationDocumentUrls: [],
   capitalAuthorized: '',
   capitalIssued: '',
   capitalAvailable: '',
-  otherApprovedLists: '',
   publishCompany: false,
   auditedAccountsProvided: false,
-  signatureUrl: '',
-  documentUrls: [],
+  auditedAccountDocumentUrls: [],
   natureOfBusiness: [],
-  asdWbApproved: false,
-  asdWbDate: '',
-  housingDeptApproved: false,
-  housingDeptDate: '',
+  natureOfBusinessOther: '',
   buildingsDeptRegNo: '',
   buildingsDeptDate: '',
+  buildingsDeptDocumentUrls: [],
+  devbApproved: false,
+  devbDate: '',
   professionalDetails: {
     authorizedPerson: false,
-    apRegNo: '',
     architect: false,
     siteEngineer: false,
     buildingSurveyor: false,
     quantitySurveyor: false,
     registeredInspector: false,
     registeredEnergyAssessor: false,
-    otherProfessional: '',
-    otherRegNo: '',
+    otherProfessional: false,
+    otherProfessionalSpecify: '',
+    devbDocumentUrls: [],
+    otherApprovedListEntries: [],
   },
-  contacts: [{ name: '', position: '', telephone: '', signatureName: '' }],
-  // Projects are optional (user can add 0..n previous projects).
+  contacts: [{ name: '', position: '', telephone: '', signatureUrl: '' }],
   previousProjects: [],
 };
+
+function InHouseProfessionalSection() {
+  const { register, watch } = useFormContext<ContractorRegistrationValues>();
+  const otherSelected = watch('professionalDetails.otherProfessional');
+
+  return (
+    <FormSection
+      title="In-house professional"
+      description="Registered professionals employed by the company."
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        <CheckboxField
+          label="Authorized Person (A.P.)"
+          {...register('professionalDetails.authorizedPerson')}
+        />
+        <CheckboxField
+          label="Architect"
+          {...register('professionalDetails.architect')}
+        />
+        <CheckboxField
+          label="Site Engineer"
+          {...register('professionalDetails.siteEngineer')}
+        />
+        <CheckboxField
+          label="Building Surveyor"
+          {...register('professionalDetails.buildingSurveyor')}
+        />
+        <CheckboxField
+          label="Quantity Surveyor"
+          {...register('professionalDetails.quantitySurveyor')}
+        />
+        <CheckboxField
+          label="Registered Inspector (R.I.) under Section 3(3B) of the Building Ordinance"
+          {...register('professionalDetails.registeredInspector')}
+        />
+        <CheckboxField
+          label="Registered Energy Assessors (REA)"
+          {...register('professionalDetails.registeredEnergyAssessor')}
+        />
+        <CheckboxField
+          label="Others (please specify)"
+          {...register('professionalDetails.otherProfessional')}
+        />
+      </div>
+      {otherSelected ? (
+        <TextField
+          label="Others (please specify):"
+          className="mt-4"
+          {...register('professionalDetails.otherProfessionalSpecify')}
+        />
+      ) : null}
+    </FormSection>
+  );
+}
+
+function BuildingsDepartmentSection() {
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<ContractorRegistrationValues>();
+
+  return (
+    <FormSection
+      title="Building Department registration"
+      description="Buildings Department registration details."
+    >
+      <div className="grid gap-5 sm:grid-cols-2">
+        <TextField
+          label="Buildings Department Registration No."
+          error={errors.buildingsDeptRegNo?.message}
+          {...register('buildingsDeptRegNo')}
+        />
+        <TextField
+          label="Date of Registration / Renewal"
+          type="date"
+          error={errors.buildingsDeptDate?.message}
+          {...register('buildingsDeptDate')}
+        />
+      </div>
+      <div className="mt-5">
+        <DocumentUploadField
+          label="Buildings Department registration"
+          value={watch('buildingsDeptDocumentUrls') ?? []}
+          onChange={(paths) =>
+            setValue('buildingsDeptDocumentUrls', paths, {
+              shouldDirty: true,
+              shouldTouch: true,
+              shouldValidate: true,
+            })
+          }
+        />
+      </div>
+    </FormSection>
+  );
+}
+
+function ApprovedListsSection() {
+  const { register, watch, setValue, formState: { errors } } =
+    useFormContext<ContractorRegistrationValues>();
+
+  return (
+    <FormSection
+      title="Approved lists"
+      description="Indicate the government approved lists your company is included on, with dates where applicable."
+    >
+      <div className="space-y-6">
+        <div className="rounded-lg border border-cream-200 bg-cream-50/50 p-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <CheckboxField
+              label="DevB List of Approved Contractors"
+              {...register('devbApproved')}
+            />
+            <TextField
+              label="Date of listed"
+              type="date"
+              error={errors.devbDate?.message}
+              {...register('devbDate')}
+            />
+          </div>
+          <div className="mt-4">
+            <DocumentUploadField
+              label="DevB list documents"
+              value={watch('professionalDetails.devbDocumentUrls') ?? []}
+              onChange={(paths) =>
+                setValue('professionalDetails.devbDocumentUrls', paths, {
+                  shouldDirty: true,
+                  shouldTouch: true,
+                })
+              }
+            />
+          </div>
+        </div>
+
+        <OtherApprovedListsField name="professionalDetails.otherApprovedListEntries" />
+      </div>
+    </FormSection>
+  );
+}
 
 export default function ContractorForm() {
   const methods = useForm<ContractorRegistrationValues>({
@@ -93,6 +224,8 @@ export default function ContractorForm() {
 
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const natureOfBusiness = methods.watch('natureOfBusiness') ?? [];
+  const othersSelected = natureOfBusiness.includes('Others');
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
@@ -135,102 +268,54 @@ export default function ContractorForm() {
               {errors.natureOfBusiness.message}
             </p>
           ) : null}
+          <p className="mb-4 text-xs text-stone-500">
+            † = Registered under Buildings Department
+          </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {CONTRACTOR_NATURE_OPTIONS.map((option) => (
               <CheckboxField
-                key={option}
-                label={option}
-                value={option}
+                key={option.value}
+                label={
+                  option.bdRegistered ? `${option.label} †` : option.label
+                }
+                value={option.value}
                 {...register('natureOfBusiness')}
               />
             ))}
           </div>
-        </FormSection>
 
-        <CapitalSection />
-
-        <FormSection
-          title="Approved lists"
-          description="Indicate the government approved lists your company is included on, with dates where applicable."
-        >
-          <div className="space-y-5">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <CheckboxField
-                label="ASD / WB List of Approved Contractors"
-                {...register('asdWbApproved')}
-              />
-              <TextField
-                label="ASD / WB registration date"
-                type="date"
-                error={errors.asdWbDate?.message}
-                {...register('asdWbDate')}
-              />
-              <CheckboxField
-                label="Housing Department List of Approved Contractors"
-                {...register('housingDeptApproved')}
-              />
-              <TextField
-                label="Housing Dept. approval date"
-                type="date"
-                error={errors.housingDeptDate?.message}
-                {...register('housingDeptDate')}
-              />
-              <TextField
-                label="Buildings Dept. registration no."
-                error={errors.buildingsDeptRegNo?.message}
-                {...register('buildingsDeptRegNo')}
-              />
-              <TextField
-                label="Buildings Dept. registration date"
-                type="date"
-                error={errors.buildingsDeptDate?.message}
-                {...register('buildingsDeptDate')}
-              />
-            </div>
-            <TextAreaField
-              label="Other approved lists"
-              hint="List any other government or institutional approved lists."
-              error={errors.otherApprovedLists?.message}
-              {...register('otherApprovedLists')}
-            />
-          </div>
-          <div className="mt-6">
-            <p className="mb-3 text-sm font-medium text-brand-900">
-              In-house professionals
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {CONTRACTOR_PROFESSIONAL_OPTIONS.map((option) => (
+          <div className="mt-4">
+            <p className="mb-3 text-sm font-medium text-brand-900">Minor works</p>
+            <div className="flex flex-wrap gap-6">
+              {CONTRACTOR_MINOR_WORKS_OPTIONS.map((category) => (
                 <CheckboxField
-                  key={option.key}
-                  label={option.label}
-                  {...register(`professionalDetails.${option.key}` as const)}
+                  key={category}
+                  label={category.replace('Minor Works ', '')}
+                  value={category}
+                  {...register('natureOfBusiness')}
                 />
               ))}
             </div>
-            <TextField
-              label="Other registered professional"
-              className="mt-4"
-              error={errors.professionalDetails?.otherProfessional?.message}
-              {...register('professionalDetails.otherProfessional')}
-            />
-            <TextField
-              label="Authorised Person registration no."
-              className="mt-4"
-              error={errors.professionalDetails?.apRegNo?.message}
-              {...register('professionalDetails.apRegNo')}
-            />
-            <TextField
-              label="Other professional registration no."
-              className="mt-4"
-              error={errors.professionalDetails?.otherRegNo?.message}
-              {...register('professionalDetails.otherRegNo')}
-            />
           </div>
+
+          {othersSelected ? (
+            <TextField
+              label="Others (please specify):"
+              className="mt-4"
+              error={errors.natureOfBusinessOther?.message}
+              {...register('natureOfBusinessOther')}
+            />
+          ) : null}
         </FormSection>
 
+        <BusinessRegistrationSection />
+        <ScopeOfServicesSection />
+        <BuildingsDepartmentSection />
+        <ApprovedListsSection />
+        <InHouseProfessionalSection />
+        <CapitalSection />
         <ContactsSection />
         <PreviousProjectsSection employerLabel="Name of Architect(s) / Engineer(s)" />
-        <SignatureAndDocumentsSection />
         <RemarksSection />
 
         {submitError ? (

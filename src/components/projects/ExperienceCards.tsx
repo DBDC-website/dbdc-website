@@ -11,7 +11,7 @@ const experiences = [
   {
     title: '360° Virtual Tour',
     description:
-      'Explore selected churches and diocesan buildings through an interactive panoramic tour of DBDC research and development work.',
+      'Explore selected churches and Diocesan buildings through an interactive panoramic tour of DBDC research and development work.',
     href: 'https://dbdc.catholic.org.hk/RDC/home/index.html',
     imageSrc: '/images/virtual-tour.png',
     imageAlt: 'Preview of the DBDC 360° virtual tour',

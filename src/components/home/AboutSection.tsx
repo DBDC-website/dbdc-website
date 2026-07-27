@@ -2,6 +2,7 @@ import AnimatedSection from '@/components/ui/AnimatedSection';
 import SectionHeading from '@/components/ui/SectionHeading';
 import PlaceholderImage from '@/components/ui/PlaceholderImage';
 import ScrollReveal from '@/components/motion/ScrollReveal';
+import AboutMeetBackdrop from '@/components/home/AboutMeetBackdrop';
 import { aboutDbdc } from '@/constants/about';
 import { homeImages } from '@/constants/homeImages';
 
@@ -52,7 +53,14 @@ function OrganizationChart() {
 
 export default function AboutSection() {
   return (
-    <AnimatedSection id="about" tone="default" spacing="generous" aria-labelledby="about-dbdc-heading">
+    <AnimatedSection
+      id="about"
+      tone="default"
+      spacing="generous"
+      aria-labelledby="about-dbdc-heading"
+      backdrop={<AboutMeetBackdrop />}
+      overlayClassName="bg-gradient-to-b from-cream-50/55 via-cream-50/50 to-cream-50/60"
+    >
       <ScrollReveal>
         <SectionHeading
           id="about-dbdc-heading"
@@ -84,11 +92,6 @@ export default function AboutSection() {
           </ScrollReveal>
         </div>
       </div>
-
-      <ScrollReveal delay={0.15} className="mt-14 lg:mt-20">
-        <SubsectionHeading>Scope of work</SubsectionHeading>
-        <NumberedList items={aboutDbdc.scopeOfWork} />
-      </ScrollReveal>
     </AnimatedSection>
   );
 }

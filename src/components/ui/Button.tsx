@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { cn } from '@/lib/cn';
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'cta';
 type Size = 'sm' | 'md' | 'lg';
 
 const base =
@@ -10,6 +10,8 @@ const base =
 const variants: Record<Variant, string> = {
   primary: 'bg-brand-700 text-white hover:bg-brand-800',
   secondary: 'bg-gold-500 text-brand-950 hover:bg-gold-400',
+  /** Logo blue fill + gold/orange label (homepage hero CTA). */
+  cta: 'bg-logo-blue text-gold-500 hover:bg-[#0090c8] hover:text-gold-400 focus-visible:outline-logo-blue',
   outline:
     'border border-brand-300 text-brand-800 hover:border-brand-500 hover:bg-brand-50',
   ghost: 'text-brand-700 hover:bg-brand-50',
