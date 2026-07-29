@@ -12,6 +12,17 @@ export const fadeUpVariants = {
   },
 };
 
+/** Punchier entrance for section titles / descriptions. */
+export const popInVariants = {
+  hidden: { opacity: 0, y: 22, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.7, ease: cinematicEase },
+  },
+};
+
 export const fadeInVariants = {
   hidden: { opacity: 0 },
   visible: {

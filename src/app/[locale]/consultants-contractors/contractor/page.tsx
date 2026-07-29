@@ -25,6 +25,14 @@ export default async function ContractorRegistrationPage({ params }: PageProps) 
         eyebrow="Work With Us"
         title="Contractor Registration"
         description="Building and specialist contractors can apply to join the DBDC list of approved contractors."
+        theme="cathedral"
+        align="center"
+        contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
+        backgroundImage={{
+          src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets/outdoor-bridge.jpg',
+          alt: 'White cross overlooking a coastal bridge',
+          objectPosition: 'center 40%',
+        }}
       />
 
       <PageSection containerSize="narrow" spacing="default">

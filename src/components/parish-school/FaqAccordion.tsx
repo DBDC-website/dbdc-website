@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import FaqAnswerContent from '@/components/parish-school/FaqAnswerContent';
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
+import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import { easeOut } from '@/lib/motion';
 import { cn } from '@/lib/cn';
 import type { FaqItem } from '@/types/parishSchool';
@@ -40,19 +41,21 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
           <StaggerItem key={item.number}>
             <article
               className={cn(
-                'overflow-hidden rounded-2xl border bg-white/90 shadow-sm shadow-brand-900/[0.03] transition-[border-color,box-shadow] duration-300',
+                'relative overflow-hidden rounded-2xl border shadow-sm shadow-brand-900/[0.03] transition-[border-color,box-shadow] duration-300',
                 isOpen
                   ? 'border-gold-300/80 shadow-md shadow-brand-900/[0.06]'
                   : 'border-cream-200/90 hover:border-brand-200/70',
               )}
             >
+              <MosaicHueBackdrop />
+              <span className="absolute inset-0 bg-white/48" aria-hidden="true" />
               <button
                 type="button"
                 id={`${panelId}-trigger`}
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => toggleItem(item.number)}
-                className="flex w-full cursor-pointer items-start gap-4 p-5 text-left sm:gap-5 sm:p-6"
+                className="relative flex w-full cursor-pointer items-start gap-4 p-5 text-left sm:gap-5 sm:p-6"
               >
                 <span
                   className={cn(
@@ -87,7 +90,7 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
                     id={panelId}
                     role="region"
                     aria-labelledby={`${panelId}-trigger`}
-                    className="border-t border-cream-200/90 px-5 pb-5 sm:px-6 sm:pb-6"
+                    className="relative border-t border-cream-200/90 px-5 pb-5 sm:px-6 sm:pb-6"
                   >
                     <div className="pt-4 sm:pt-5">
                       <FaqAnswerContent blocks={item.answer} />
@@ -105,7 +108,7 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease: easeOut }}
-                      className="overflow-hidden border-t border-cream-200/90"
+                      className="relative overflow-hidden border-t border-cream-200/90"
                     >
                       <motion.div
                         initial={{ y: -8 }}

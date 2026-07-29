@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, ExternalLink as ExternalLinkIcon } from 'lucide-react';
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
+import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import Card from '@/components/ui/Card';
 import type { Locale } from '@/constants/i18n';
 import type { ResourceLink } from '@/types/parishSchool';
@@ -20,12 +21,14 @@ export default function GovernmentLinksGrid({ links, locale }: GovernmentLinksGr
           <Card
             as="div"
             interactive
-            className="h-full border-cream-200/90 bg-white/90 shadow-sm shadow-brand-900/[0.04]"
+            className="relative h-full overflow-hidden border-cream-200/90 shadow-sm shadow-brand-900/[0.04]"
           >
+            <MosaicHueBackdrop />
+            <span className="absolute inset-0 bg-white/48" aria-hidden="true" />
             {link.external === false ? (
               <Link
                 href={`/${locale}${link.href}`}
-                className="flex h-full flex-col justify-between gap-3 p-5 sm:p-6"
+                className="relative flex h-full flex-col justify-between gap-3 p-5 sm:p-6"
               >
                 <div className="min-w-0">
                   <span className="font-medium text-brand-900">{link.name}</span>
@@ -43,7 +46,7 @@ export default function GovernmentLinksGrid({ links, locale }: GovernmentLinksGr
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-full flex-col justify-between gap-3 p-5 sm:p-6"
+                className="relative flex h-full flex-col justify-between gap-3 p-5 sm:p-6"
               >
                 <div className="min-w-0">
                   <span className="font-medium text-brand-900">{link.name}</span>

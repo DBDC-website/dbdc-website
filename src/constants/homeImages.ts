@@ -45,19 +45,48 @@ export const homeImages = {
     width: 1944,
     height: 1294,
   },
-  /** About section — two panels that meet in the centre on scroll. */
-  aboutMeet: [
-    {
-      src: `${ASSETS}/indoor-5.jpg`,
-      alt: 'Chapel seating before mural walls',
-      objectPosition: 'center 45%',
-    },
-    {
-      src: `${ASSETS}/indoor-8.jpg`,
-      alt: 'Column with Agnus Dei emblem',
-      objectPosition: 'center 40%',
-    },
-  ],
+  /** About section — single photo split into halves that meet in the centre. */
+  aboutMeet: {
+    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/CC%28CR%29_ren2019_02.jpg',
+    alt: 'Aerial view of a white cathedral with dark green roof in an urban setting',
+    objectPosition: 'center 42%',
+  },
+  /** Default backdrop for homepage Featured projects. */
+  featuredProjects: {
+    src: `${ASSETS}/outdoor-church-3.jpg`,
+    alt: 'Church facade with rose window against blue sky',
+    objectPosition: 'center 35%',
+  },
+  /** Homepage Membership section — full-bleed photo behind the orange panel. */
+  membership: {
+    src: `${ASSETS}/jesus-statue-closeup.jpg`,
+    alt: 'Close-up of a statue of Jesus',
+    objectPosition: 'center 30%',
+  },
+  /** Homepage Committees section backdrop. */
+  committees: {
+    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/SJ%28YT%29_ren2021_02.jpg',
+    alt: 'Fan-ceiling chapel interior with curved wooden pews',
+    objectPosition: 'center 48%',
+  },
+  /** Individual committee detail pages. */
+  committeeDetail: {
+    src: `${ASSETS}/jesus-statue-full.jpg`,
+    alt: 'Full-length statue of Jesus in a chapel interior',
+    objectPosition: 'center 30%',
+  },
+  /** Selected Projects page hero — bright chapel interior with mosaic altar. */
+  projectsHeader: {
+    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/SJ%28FL%29_ext_03.JPG',
+    alt: 'Chapel interior with curved wooden pews and a blue-and-gold mosaic behind the altar',
+    objectPosition: 'center 42%',
+  },
+  /** Parish & School Corner hero — hilltop church facade. */
+  parishSchoolHeader: {
+    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/STCK%28SL%29_ren2019_01.jpg',
+    alt: 'Colorful children playroom mural with space-themed artwork',
+    objectPosition: 'center 46%',
+  },
   renovation: {
     alt: 'Placeholder for renovation site',
     gradient: 'from-sage-100 via-brand-100 to-gold-100',

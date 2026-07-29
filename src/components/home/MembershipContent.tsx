@@ -11,6 +11,12 @@ type MembershipContentProps = {
   administrator: string | null;
 };
 
+/** Same blue → cream → warm-orange gradient family as the site header. */
+const HEADER_HUE_CARD =
+  'border-sky-200/70 bg-gradient-to-br from-[#e8f6fc] via-[#fff8eb] to-[#fde8d4] shadow-sm shadow-brand-900/[0.05]';
+const HEADER_HUE_CHIP =
+  'border-sky-200/75 bg-gradient-to-r from-[#d7f1fb] via-[#fff4df] to-[#fde0c4]';
+
 function CategoryHeading({
   children,
   className,
@@ -21,7 +27,8 @@ function CategoryHeading({
   return (
     <h3
       className={cn(
-        'font-serif text-xs font-semibold uppercase leading-snug tracking-[0.06em] text-brand-900 sm:text-sm',
+        'inline-flex w-fit rounded-md border px-2.5 py-1 font-serif text-xs font-semibold uppercase leading-snug tracking-[0.06em] text-brand-900 shadow-sm sm:text-sm',
+        HEADER_HUE_CHIP,
         className,
       )}
     >
@@ -34,7 +41,7 @@ function MemberName({ name, className }: { name: string; className?: string }) {
   return (
     <span
       className={cn(
-        'text-sm leading-snug text-stone-600 transition-colors duration-200 hover:text-brand-900',
+        'text-sm leading-snug text-stone-700 transition-colors duration-200 hover:text-brand-900',
         className,
       )}
     >
@@ -45,7 +52,12 @@ function MemberName({ name, className }: { name: string; className?: string }) {
 
 function LeadershipCard({ group }: { group: MemberGroup }) {
   return (
-    <article className="flex h-full flex-col rounded-xl border border-cream-200/90 bg-white/80 px-4 py-3.5 shadow-sm shadow-brand-900/[0.03] backdrop-blur-sm transition-[border-color,box-shadow] duration-300 hover:border-brand-200/60 hover:shadow-md hover:shadow-brand-900/[0.05] sm:px-5 sm:py-4">
+    <article
+      className={cn(
+        'flex h-full flex-col rounded-2xl border px-4 py-3.5 transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-md sm:px-5 sm:py-4',
+        HEADER_HUE_CARD,
+      )}
+    >
       <CategoryHeading>{group.title}</CategoryHeading>
       <ul className="mt-2.5 space-y-1.5">
         {group.members.map((member) => (
@@ -63,8 +75,13 @@ function AppointedMembersPanel({ members }: { members: string[] }) {
 
   return (
     <ScrollReveal>
-      <article className="mt-6 rounded-xl border border-cream-200/90 bg-white/80 px-4 py-3.5 shadow-sm shadow-brand-900/[0.03] sm:mt-8 sm:px-5 sm:py-4">
-        <CategoryHeading>Appointed Members</CategoryHeading>
+      <article
+        className={cn(
+          'mt-6 rounded-2xl border px-4 py-3.5 sm:mt-8 sm:px-5 sm:py-4',
+          HEADER_HUE_CARD,
+        )}
+      >
+        <CategoryHeading>Members</CategoryHeading>
         <ul className="mt-3 grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
             <li key={member}>
@@ -82,10 +99,15 @@ function AdministratorPanel({ name }: { name: string | null }) {
 
   return (
     <ScrollReveal delay={0.06} className="mt-4 sm:mt-5">
-      <article className="rounded-xl border border-brand-200/50 bg-gradient-to-br from-white via-cream-50 to-brand-50/40 px-4 py-3.5 shadow-sm shadow-brand-900/[0.04] sm:px-5 sm:py-4">
+      <article
+        className={cn(
+          'rounded-2xl border px-5 py-4 sm:px-6 sm:py-5',
+          HEADER_HUE_CARD,
+        )}
+      >
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <CategoryHeading>Administrator</CategoryHeading>
-          <MemberName name={name} className="sm:text-right" />
+          <MemberName name={name} className="pr-1 sm:pr-2 sm:text-right" />
         </div>
       </article>
     </ScrollReveal>
@@ -98,7 +120,7 @@ export default function MembershipContent({
   administrator,
 }: MembershipContentProps) {
   return (
-    <div className="mt-8 lg:mt-10">
+    <div className="mt-8 pb-3 lg:mt-10 lg:pb-4">
       {leadershipGroups.length > 0 ? (
         <StaggerChildren
           as="div"

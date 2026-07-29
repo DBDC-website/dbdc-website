@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, ExternalLink as ExternalLinkIcon } from 'lucide-react';
 import { Mail, Phone } from 'lucide-react';
+import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import type { ParishSchoolContact as ContactData } from '@/types/parishSchool';
 import type { Locale } from '@/constants/i18n';
 
@@ -14,12 +15,14 @@ export default function ParishSchoolContact({
   locale,
 }: ParishSchoolContactProps) {
   return (
-    <div className="max-w-3xl rounded-2xl border border-brand-200/50 bg-gradient-to-br from-white via-cream-50 to-brand-50/40 p-6 shadow-sm shadow-brand-900/[0.05] sm:p-8">
-      <p className="text-base leading-relaxed text-stone-700 sm:text-lg">
+    <div className="relative max-w-3xl overflow-hidden rounded-2xl border border-brand-200/50 p-6 shadow-sm shadow-brand-900/[0.05] sm:p-8">
+      <MosaicHueBackdrop />
+      <span className="absolute inset-0 bg-white/48" aria-hidden="true" />
+      <p className="relative text-base leading-relaxed text-stone-700 sm:text-lg">
         {contact.intro}
       </p>
 
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+      <div className="relative mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Link
           href={`/${locale}${contact.guidelinesPath}`}
           className="group inline-flex items-center justify-center gap-2 rounded-xl border border-gold-300/80 bg-gold-100/60 px-5 py-3 text-sm font-medium text-brand-900 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-gold-400 hover:shadow-md hover:shadow-brand-900/[0.06] sm:text-base"

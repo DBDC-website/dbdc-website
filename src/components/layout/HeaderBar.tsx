@@ -12,7 +12,9 @@ import { Menu } from 'lucide-react';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import type { Locale } from '@/constants/i18n';
 import { siteConfig } from '@/constants/site';
+import { useSiteChromeHidden } from '@/hooks/useSiteChromeHidden';
 import type { NavItem } from '@/types/navigation';
+import { cn } from '@/lib/cn';
 import LanguageSwitcher from './LanguageSwitcher';
 import MainNav from './MainNav';
 import { MOBILE_MENU_TOGGLE_ID } from './MobileMenuOverlay';
@@ -24,6 +26,7 @@ type HeaderBarProps = {
 
 export default function HeaderBar({ locale, items }: HeaderBarProps) {
   const { scrollY } = useScroll();
+  const chromeHidden = useSiteChromeHidden();
 
   const borderOpacity = useTransform(scrollY, [0, 72], [0.35, 0.88]);
   const shadowStrength = useTransform(scrollY, [0, 72], [0.04, 0.12]);
@@ -33,7 +36,12 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
 
   return (
     <motion.header
-      className="fixed inset-x-0 top-0 z-40 border-b"
+      className={cn(
+        'fixed inset-x-0 top-0 z-40 border-b transition-[transform,opacity] duration-300',
+        chromeHidden
+          ? 'pointer-events-none -translate-y-full opacity-0'
+          : 'translate-y-0 opacity-100',
+      )}
       style={{
         borderBottomColor,
         boxShadow,
@@ -43,12 +51,14 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
 
       <div className="relative mx-auto w-full max-w-[100rem] px-4 sm:px-6 lg:px-10">
         <div className="flex h-[4.75rem] items-center justify-between gap-3 sm:h-[5.25rem] lg:h-[5.75rem]">
-          <Link
-            href={`/${locale}`}
-            className="inline-flex min-w-0 max-w-[min(100%,26rem)] shrink items-center gap-3 rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 sm:max-w-[min(100%,34rem)] lg:max-w-[40rem] lg:gap-4"
-            aria-label={`${siteConfig.name} home`}
-          >
-            <span className="shrink-0 rounded-sm bg-white p-0.5">
+          <div className="inline-flex w-fit max-w-[min(100%,18rem)] shrink items-center gap-3 sm:max-w-[min(100%,22rem)] lg:max-w-[28rem] lg:gap-4">
+            <a
+              href="https://catholic.org.hk/en"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 rounded-sm bg-white p-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
+              aria-label="Catholic Diocese of Hong Kong (opens in a new tab)"
+            >
               <Image
                 src="/logo.png"
                 alt=""
@@ -57,11 +67,15 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
                 className="h-14 w-auto object-contain sm:h-16 lg:h-[4.5rem]"
                 priority
               />
-            </span>
-            <span className="min-w-0 font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey sm:text-sm lg:text-[1.05rem] lg:leading-tight">
+            </a>
+            <Link
+              href={`/${locale}`}
+              className="min-w-0 rounded-md font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm lg:text-[1.05rem] lg:leading-tight"
+              aria-label={`${siteConfig.name} home`}
+            >
               {siteConfig.name}
-            </span>
-          </Link>
+            </Link>
+          </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-2">
             <div className="hidden lg:contents">

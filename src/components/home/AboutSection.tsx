@@ -1,23 +1,24 @@
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import SectionHeading from '@/components/ui/SectionHeading';
-import PlaceholderImage from '@/components/ui/PlaceholderImage';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import AboutMeetBackdrop from '@/components/home/AboutMeetBackdrop';
+import OrganizationChartFlow from '@/components/home/OrganizationChartFlow';
 import { aboutDbdc } from '@/constants/about';
-import { homeImages } from '@/constants/homeImages';
 
 function NumberedList({ items }: { items: string[] }) {
   return (
-    <ol className="mt-6 space-y-5">
+    <ol className="mt-5 space-y-4 sm:mt-6 sm:space-y-5">
       {items.map((item, index) => (
         <li key={item} className="flex gap-4">
           <span
-            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gold-100 text-sm font-semibold text-gold-800"
+            className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-100 text-sm font-semibold text-gold-800"
             aria-hidden="true"
           >
             {index + 1}
           </span>
-          <span className="text-base leading-relaxed text-stone-700">{item}</span>
+          <span className="text-lg font-medium leading-relaxed text-brand-950 sm:text-xl">
+            {item}
+          </span>
         </li>
       ))}
     </ol>
@@ -26,28 +27,9 @@ function NumberedList({ items }: { items: string[] }) {
 
 function SubsectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="text-xl font-semibold text-brand-900 sm:text-2xl">{children}</h3>
-  );
-}
-
-function OrganizationChart() {
-  return (
-    <figure className="w-full">
-      <figcaption className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gold-700">
-        Organization
-      </figcaption>
-      <div className="rounded-2xl border border-cream-200/90 bg-gradient-to-br from-white via-cream-50 to-brand-50/30 p-4 shadow-lg shadow-brand-900/5 ring-1 ring-brand-200/30 sm:p-5 lg:p-6">
-        <PlaceholderImage
-          src={homeImages.about.src}
-          alt={homeImages.about.alt}
-          fit="contain"
-          width={homeImages.about.width}
-          height={homeImages.about.height}
-          overlay={false}
-          className="w-full"
-        />
-      </div>
-    </figure>
+    <h3 className="text-2xl font-semibold text-brand-950 sm:text-3xl">
+      {children}
+    </h3>
   );
 }
 
@@ -58,37 +40,52 @@ export default function AboutSection() {
       tone="default"
       spacing="generous"
       aria-labelledby="about-dbdc-heading"
+      withBackground={false}
       backdrop={<AboutMeetBackdrop />}
-      overlayClassName="bg-gradient-to-b from-cream-50/55 via-cream-50/50 to-cream-50/60"
+      overlayClassName="bg-transparent"
     >
-      <ScrollReveal>
-        <SectionHeading
-          id="about-dbdc-heading"
-          eyebrow="About Us"
-          title="About the DBDC"
-          className="[&_h2]:text-4xl [&_h2]:sm:text-5xl"
-        />
-        <div
-          className="mt-5 h-px w-20 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent"
-          aria-hidden="true"
-        />
-      </ScrollReveal>
-
-      <div className="mt-10 grid gap-10 sm:mt-12 lg:mt-14 lg:grid-cols-12 lg:items-start lg:gap-14 xl:gap-16">
-        <ScrollReveal delay={0.05} className="lg:col-span-5">
-          <OrganizationChart />
+      <div
+        className="relative z-10 px-5 py-8 sm:px-7 sm:py-10 lg:px-9"
+        style={{
+          borderRadius: '3.25rem 1.75rem 3.5rem 2.25rem / 2.75rem 3rem 2rem 3.4rem',
+          background:
+            'radial-gradient(ellipse at 14% 18%, rgba(0,160,220,0.28) 0%, transparent 52%), radial-gradient(ellipse at 88% 16%, rgba(210,167,60,0.34) 0%, transparent 48%), radial-gradient(ellipse at 72% 88%, rgba(232,140,55,0.26) 0%, transparent 52%), radial-gradient(ellipse at 24% 90%, rgba(0,160,220,0.18) 0%, transparent 48%), linear-gradient(145deg, rgba(232,246,252,0.82) 0%, rgba(255,248,235,0.78) 42%, rgba(253,232,212,0.8) 100%)',
+          boxShadow:
+            '0 22px 48px rgba(40, 90, 120, 0.12), inset 0 1px 0 rgba(255, 252, 245, 0.45)',
+        }}
+      >
+        <ScrollReveal>
+          <div className="relative">
+            <div
+              className="pointer-events-none absolute -inset-x-4 -inset-y-6 rounded-full bg-[radial-gradient(ellipse_at_20%_40%,rgba(255,252,245,0.85)_0%,rgba(255,248,235,0.45)_40%,transparent_70%)] sm:-inset-x-8"
+              aria-hidden="true"
+            />
+            <SectionHeading
+              id="about-dbdc-heading"
+              title="About the DBDC"
+              className="relative [&_h2]:text-4xl [&_h2]:font-semibold [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] [&_h2]:sm:text-5xl"
+            />
+            <div
+              className="relative mt-5 h-px w-20 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent"
+              aria-hidden="true"
+            />
+          </div>
         </ScrollReveal>
 
-        <div className="flex flex-col gap-10 lg:col-span-7 lg:gap-12">
-          <ScrollReveal delay={0.08}>
-            <p className="text-lg leading-relaxed text-stone-700 sm:text-xl">
-              {aboutDbdc.intro}
-            </p>
-          </ScrollReveal>
+        <div className="mt-10 space-y-10 sm:mt-12 lg:mt-14 lg:space-y-12">
+          <p className="max-w-4xl text-base font-medium leading-relaxed text-brand-950 sm:text-lg">
+            {aboutDbdc.intro}
+          </p>
 
-          <ScrollReveal delay={0.12}>
+          <div className="max-w-4xl">
             <SubsectionHeading>Objectives</SubsectionHeading>
             <NumberedList items={aboutDbdc.objectives} />
+          </div>
+
+          <ScrollReveal delay={0.14}>
+            <div className="min-h-[28rem] sm:min-h-[32rem] lg:min-h-[40rem]">
+              <OrganizationChartFlow className="size-full" />
+            </div>
           </ScrollReveal>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import type { NavItem } from '@/types/navigation';
-import { articlePdfs } from '@/constants/articles';
 
 export const siteConfig = {
   name: 'Diocesan Building and Development Commission',
@@ -48,14 +47,6 @@ export const mainNav: NavItem[] = [
   {
     href: '/articles',
     label: 'Articles',
-    children: [
-      { href: '/articles', label: 'All articles' },
-      ...articlePdfs.map((article) => ({
-        href: article.href,
-        label: `Article ${article.label}`,
-        external: true as const,
-      })),
-    ],
   },
 ];
 

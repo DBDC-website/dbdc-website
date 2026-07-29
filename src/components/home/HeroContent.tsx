@@ -66,7 +66,7 @@ export default function HeroContent({ locale }: HeroContentProps) {
           </div>
         ) : (
           <motion.div
-            initial="visible"
+            initial="hidden"
             animate="visible"
             variants={heroEntranceContainerVariants}
           >

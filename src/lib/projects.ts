@@ -1,10 +1,7 @@
 import { supabase } from '@/lib/supabaseClient';
 import type { Project, ProjectRow } from '@/types/project';
 
-/** Max projects shown in the homepage carousel (featured column was removed). */
-const FEATURED_LIMIT = 8;
-
-/** List/card views only need the primary image on `projects` — skip gallery join. */
+/** List views with optional gallery images for the showcase lightbox. */
 const PROJECT_LIST_SELECT = `
   id,
   slug,
@@ -15,6 +12,17 @@ const PROJECT_LIST_SELECT = `
   published,
   image_url,
   image_alt
+`;
+
+const PROJECT_SHOWCASE_SELECT = `
+  ${PROJECT_LIST_SELECT},
+  project_images (
+    id,
+    image_url,
+    caption,
+    image_type,
+    sort_order
+  )
 `;
 
 /** Encode path segments so filenames with `()` etc. work with Next/Image. */
@@ -41,6 +49,18 @@ export function normalizeStorageUrl(url: string | null | undefined): string | nu
 }
 
 export function mapProjectRow(row: ProjectRow): Project {
+  const gallery =
+    row.project_images
+      ?.slice()
+      .sort((a, b) => a.sort_order - b.sort_order || a.id - b.id)
+      .map((image) => ({
+        id: image.id,
+        imageUrl: normalizeStorageUrl(image.image_url) ?? image.image_url,
+        caption: image.caption,
+        imageType: image.image_type,
+        sortOrder: image.sort_order,
+      })) ?? [];
+
   return {
     id: row.id,
     slug: row.slug,
@@ -51,13 +71,14 @@ export function mapProjectRow(row: ProjectRow): Project {
     published: row.published,
     imageUrl: normalizeStorageUrl(row.image_url),
     imageAlt: row.image_alt ?? row.building_name ?? row.title,
+    images: gallery,
   };
 }
 
 export async function getPublishedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from('projects')
-    .select(PROJECT_LIST_SELECT)
+    .select(PROJECT_SHOWCASE_SELECT)
     .eq('published', true)
     .order('year', { ascending: false, nullsFirst: false })
     .order('id', { ascending: true });
@@ -70,15 +91,14 @@ export async function getPublishedProjects(): Promise<Project[]> {
   return (data as ProjectRow[] | null)?.map(mapProjectRow) ?? [];
 }
 
-/** Homepage carousel — published projects, capped for display. */
+/** Homepage carousel — all published projects. */
 export async function getFeaturedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from('projects')
     .select(PROJECT_LIST_SELECT)
     .eq('published', true)
     .order('year', { ascending: false, nullsFirst: false })
-    .order('id', { ascending: true })
-    .limit(FEATURED_LIMIT);
+    .order('id', { ascending: true });
 
   if (error) {
     console.error('Failed to fetch featured projects:', error);

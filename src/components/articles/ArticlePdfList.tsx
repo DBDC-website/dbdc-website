@@ -12,7 +12,7 @@ export default function ArticlePdfList({ articles }: ArticlePdfListProps) {
   return (
     <StaggerChildren as="ol" className="max-w-4xl space-y-6">
       {articles.map((article) => (
-        <StaggerItem key={article.href} as="li">
+        <StaggerItem key={article.id} as="li">
           <a
             href={article.href}
             target="_blank"

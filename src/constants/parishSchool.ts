@@ -214,24 +214,35 @@ export const parishSchoolContact: ParishSchoolContact = {
 
 export const governmentLinks: ResourceLink[] = [
   {
-    name: 'Buildings Department',
-    href: 'https://www.bd.gov.hk/english/services/index_mwcs.html',
-    description: 'Minor Works Control System',
+    name: 'Buildings Department - Common Minor Works Items',
+    href: 'https://www.bd.gov.hk/en/building-works/minor-works/minor-works-items/index.html',
   },
   {
-    name: 'Electrical & Mechanical Services Department',
-    href: 'https://www.emsd.gov.hk/en/lifts_and_escalators_safety/publications/guidance_notes_guidelines/index.html',
-    description: 'Lifts and escalators safety guidance',
+    name: 'Buildings Department - Home Page',
+    href: 'https://www.bd.gov.hk/en/index.html',
   },
   {
-    name: 'DBDC — Registered contractors',
-    href: 'https://dbdc.catholic.org.hk/Parish/contractors.html',
-    description: 'Government-registered companies reviewed by the Commission',
+    name: 'Civil Engineering and Development Department - Slope Information System',
+    href: 'https://hkss.cedd.gov.hk/hkss/en/facts-and-figures/slope-information-system/sis/index.html',
   },
   {
-    name: 'DBDC — Parish working guidelines',
-    href: parishGuidelinesPath,
-    description: 'Contractor selection tips and project flow charts',
-    external: false,
+    name: 'Electrical and Mechanical Services Department - Lifts and Escalator Safety',
+    href: 'https://www.emsd.gov.hk/en/lifts_and_escalators_safety/index.html',
+  },
+  {
+    name: 'Electrical and Mechanical Services Department - Electricity Safety',
+    href: 'https://www.emsd.gov.hk/en/electricity_safety/periodic_test_for_fixed_electrical_installations/index.html',
+  },
+  {
+    name: 'Fire Services Department - Fire Protection',
+    href: 'https://www.hkfsd.gov.hk/eng/fire_protection/',
+  },
+  {
+    name: 'Lands Department - Slope Maintenance Responsibility System',
+    href: 'https://www2.slope.landsd.gov.hk/smris/',
+  },
+  {
+    name: 'Town Planning Board - Outline Zoning Plan',
+    href: 'https://www.ozp.tpb.gov.hk/',
   },
 ];

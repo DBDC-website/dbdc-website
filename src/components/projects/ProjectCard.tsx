@@ -1,47 +1,41 @@
-import { MapPin } from 'lucide-react';
-import Card from '@/components/ui/Card';
-import Badge from '@/components/ui/Badge';
 import PlaceholderImage from '@/components/ui/PlaceholderImage';
 import { getProjectPlaceholder } from '@/constants/projectPlaceholders';
 import type { Project } from '@/types/project';
 
 export default function ProjectCard({ project }: { project: Project }) {
   const placeholder = getProjectPlaceholder(project);
-  const badgeLabel = project.buildingName ?? 'Project';
+  const label = project.buildingName ?? 'Project';
 
   return (
-    <Card
-      className="group flex h-full flex-col overflow-hidden border-cream-200/90 bg-white shadow-sm shadow-brand-900/[0.04] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:border-brand-200/80 hover:shadow-lg hover:shadow-brand-900/10"
-    >
-      <div className="relative shrink-0 overflow-hidden">
-        <PlaceholderImage
-          alt={project.imageAlt}
-          src={project.imageUrl ?? undefined}
-          gradient={placeholder.gradient}
-          label={placeholder.label}
-          sublabel={placeholder.sublabel}
-          style={placeholder.style}
-          className="aspect-[16/10] w-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
-        />
-      </div>
+    <div className="group relative h-full overflow-hidden rounded-2xl border border-white/35 bg-brand-900/10 shadow-lg shadow-brand-900/20">
+      <PlaceholderImage
+        alt={project.imageAlt}
+        src={project.imageUrl ?? undefined}
+        gradient={placeholder.gradient}
+        label={placeholder.label}
+        sublabel={placeholder.sublabel}
+        style={placeholder.style}
+        className="aspect-[16/10] w-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+      />
 
-      <div className="flex min-h-0 flex-1 flex-col p-5 sm:p-6">
-        <div className="flex shrink-0 items-center justify-between gap-3">
-          <Badge tone="brand">{badgeLabel}</Badge>
-          {project.year ? (
-            <span className="shrink-0 text-xs text-stone-500">{project.year}</span>
-          ) : null}
-        </div>
-        <h3 className="mt-3 line-clamp-2 text-lg font-semibold leading-snug text-brand-900 sm:text-xl">
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-950/82 via-brand-950/15 to-transparent"
+        aria-hidden="true"
+      />
+
+      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-cream-100/90 sm:text-xs">
+          {label}
+        </p>
+        <h3 className="mt-1.5 line-clamp-2 text-base font-semibold leading-snug text-white sm:text-lg">
           {project.title}
         </h3>
-        {project.location ? (
-          <p className="mt-5 flex shrink-0 items-center gap-1.5 text-xs text-stone-500">
-            <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            {project.location}
+        {project.location || project.year ? (
+          <p className="mt-2 text-xs text-cream-100/90">
+            {[project.location, project.year].filter(Boolean).join(' · ')}
           </p>
         ) : null}
       </div>
-    </Card>
+    </div>
   );
 }

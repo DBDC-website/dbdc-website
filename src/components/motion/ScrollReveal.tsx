@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { fadeUpVariants } from '@/lib/motion';
+import { fadeUpVariants, popInVariants } from '@/lib/motion';
 import { cn } from '@/lib/cn';
 
 type ScrollRevealProps = {
@@ -9,6 +9,13 @@ type ScrollRevealProps = {
   className?: string;
   delay?: number;
   as?: 'div' | 'section' | 'article';
+  /**
+   * When true, plays the entrance once the block enters the viewport.
+   * Defaults to false so existing call sites stay static unless opted in.
+   */
+  animate?: boolean;
+  /** `pop` adds a slight scale for a snappier entrance. */
+  variant?: 'fadeUp' | 'pop';
 };
 
 export default function ScrollReveal({
@@ -16,26 +23,29 @@ export default function ScrollReveal({
   className,
   delay = 0,
   as = 'div',
+  animate = false,
+  variant = 'fadeUp',
 }: ScrollRevealProps) {
   const reduceMotion = useReducedMotion();
   const Tag = as;
+  const base = variant === 'pop' ? popInVariants : fadeUpVariants;
 
-  if (reduceMotion) {
+  if (reduceMotion || !animate) {
     return <Tag className={className}>{children}</Tag>;
   }
 
   return (
     <motion.div
       className={cn(className)}
-      initial="visible"
+      initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 'some', margin: '-60px' }}
+      viewport={{ once: true, amount: 0.12 }}
       variants={{
-        hidden: fadeUpVariants.hidden,
+        hidden: base.hidden,
         visible: {
-          ...fadeUpVariants.visible,
+          ...base.visible,
           transition: {
-            ...fadeUpVariants.visible.transition,
+            ...base.visible.transition,
             delay,
           },
         },

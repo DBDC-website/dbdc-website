@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import type { Locale } from '@/constants/i18n';
 import type { NavChild, NavItem } from '@/types/navigation';
 import { cn } from '@/lib/cn';
@@ -35,14 +35,29 @@ function NavDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
+  const pathname = usePathname();
   const children = item.children ?? [];
+
+  // Close after navigation / soft focus restores to the trigger link.
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Close while the page scrolls so a lingering open menu cannot
+  // intercept clicks meant for the content underneath.
+  useEffect(() => {
+    if (!open) return;
+
+    const close = () => setOpen(false);
+    window.addEventListener('scroll', close, { passive: true });
+    return () => window.removeEventListener('scroll', close);
+  }, [open]);
 
   return (
     <li
       className="relative"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      onFocusCapture={() => setOpen(true)}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
           setOpen(false);
@@ -61,6 +76,23 @@ function NavDropdown({
             ? 'text-logo-grey'
             : 'text-logo-grey/80 hover:bg-white/60 hover:text-logo-grey',
         )}
+        onFocus={(event) => {
+          // Only open for keyboard focus — mouse/programmatic focus was
+          // randomly reopening the menu after route changes.
+          if (event.currentTarget.matches(':focus-visible')) {
+            setOpen(true);
+          }
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            setOpen(false);
+            event.currentTarget.blur();
+          }
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            setOpen(true);
+          }
+        }}
       >
         {item.label}
       </Link>

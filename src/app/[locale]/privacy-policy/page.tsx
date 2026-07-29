@@ -4,13 +4,9 @@ import { privacyPolicyContent } from '@/constants/legal';
 
 export const metadata: Metadata = {
   title: privacyPolicyContent.title,
+  description: privacyPolicyContent.description,
 };
 
 export default function PrivacyPolicyPage() {
-  return (
-    <LegalPageContent
-      title={privacyPolicyContent.title}
-      body={privacyPolicyContent.body}
-    />
-  );
+  return <LegalPageContent content={privacyPolicyContent} />;
 }

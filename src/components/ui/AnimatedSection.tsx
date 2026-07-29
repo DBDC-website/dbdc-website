@@ -17,6 +17,8 @@ type AnimatedSectionProps = {
   backdrop?: React.ReactNode;
   /** Overrides the tone wash over the backdrop. */
   overlayClassName?: string;
+  /** Allow hover lifts / scaled children to paint outside the section. */
+  overflowVisible?: boolean;
   'aria-labelledby'?: string;
   id?: string;
 };
@@ -57,6 +59,7 @@ export default function AnimatedSection({
   withBackground = true,
   backdrop,
   overlayClassName,
+  overflowVisible = false,
   id,
   ...rest
 }: AnimatedSectionProps) {
@@ -67,7 +70,8 @@ export default function AnimatedSection({
       ref={sectionRef}
       id={id}
       className={cn(
-        'relative isolate overflow-hidden',
+        'relative isolate',
+        overflowVisible ? 'overflow-visible' : 'overflow-hidden',
         textToneMap[tone],
         spacingMap[spacing],
         className,

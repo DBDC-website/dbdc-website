@@ -4,13 +4,9 @@ import { picsPageContent } from '@/constants/legal';
 
 export const metadata: Metadata = {
   title: picsPageContent.title,
+  description: picsPageContent.description,
 };
 
 export default function PicsPage() {
-  return (
-    <LegalPageContent
-      title={picsPageContent.title}
-      body={picsPageContent.body}
-    />
-  );
+  return <LegalPageContent content={picsPageContent} />;
 }

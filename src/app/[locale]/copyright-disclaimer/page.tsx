@@ -4,13 +4,9 @@ import { copyrightDisclaimerContent } from '@/constants/legal';
 
 export const metadata: Metadata = {
   title: copyrightDisclaimerContent.title,
+  description: copyrightDisclaimerContent.description,
 };
 
 export default function CopyrightDisclaimerPage() {
-  return (
-    <LegalPageContent
-      title={copyrightDisclaimerContent.title}
-      body={copyrightDisclaimerContent.body}
-    />
-  );
+  return <LegalPageContent content={copyrightDisclaimerContent} />;
 }
