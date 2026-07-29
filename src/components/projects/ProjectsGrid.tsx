@@ -107,7 +107,18 @@ function ProjectTile({
         aria-hidden="true"
       />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4 sm:p-5">
-        <p className="text-sm font-semibold text-white sm:text-base">{project.title}</p>
+        {project.buildingName ? (
+          <p className="text-xs text-cream-100/90">{project.buildingName}</p>
+        ) : null}
+        <p
+          className={
+            project.buildingName
+              ? 'mt-1 text-sm font-semibold text-white sm:text-base'
+              : 'text-sm font-semibold text-white sm:text-base'
+          }
+        >
+          {project.title}
+        </p>
         {project.location || project.year ? (
           <p className="mt-1 text-xs text-cream-100/90">
             {[project.location, project.year].filter(Boolean).join(' · ')}
