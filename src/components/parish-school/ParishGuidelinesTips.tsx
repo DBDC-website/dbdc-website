@@ -23,7 +23,6 @@ function clockPosition(index: number, radius = 38) {
   return {
     x: 50 + radius * Math.cos(angleRad),
     y: 50 + radius * Math.sin(angleRad),
-    delay: index * 0.28,
   };
 }
 
@@ -66,45 +65,19 @@ function TipOval({
         className="relative flex cursor-default items-center justify-center overflow-hidden rounded-[50%] border border-sky-200/80 text-left shadow-lg shadow-brand-900/15 outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
         initial={false}
         animate={
-          reduceMotion
+          hovered
             ? {
-                x: 0,
-                y: 0,
-                rotate: 0,
-                width: hovered ? 280 : 168,
-                height: hovered ? 220 : 118,
+                width: reduceMotion ? 280 : 292,
+                height: reduceMotion ? 220 : 232,
+                scale: reduceMotion ? 1 : 1.02,
               }
-            : hovered
-              ? {
-                  x: 0,
-                  y: 0,
-                  rotate: 0,
-                  width: 292,
-                  height: 232,
-                  scale: 1.02,
-                }
-              : {
-                  x: [0, 7, -5, 4, 0],
-                  y: [0, -9, 6, -4, 0],
-                  rotate: [0, 1.8, -1.5, 1, 0],
-                  width: 168,
-                  height: 118,
-                  scale: 1,
-                }
-        }
-        transition={
-          hovered || reduceMotion
-            ? { duration: 0.4, ease: cinematicEase }
             : {
-                duration: 7.2 + index * 0.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: layout.delay,
-                width: { duration: 0.4, ease: cinematicEase },
-                height: { duration: 0.4, ease: cinematicEase },
-                scale: { duration: 0.35, ease: cinematicEase },
+                width: 168,
+                height: 118,
+                scale: 1,
               }
         }
+        transition={{ duration: 0.4, ease: cinematicEase }}
       >
         <span
           className="absolute inset-0 bg-gradient-to-br from-[#e8f6fc] via-[#fff8eb] to-[#fde8d4]"
