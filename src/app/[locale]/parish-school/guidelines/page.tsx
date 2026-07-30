@@ -41,6 +41,9 @@ export default async function ParishGuidelinesPage({ params }: GuidelinesPagePro
           style={{ objectPosition: pageBackdrop.objectPosition }}
           priority
         />
+        <div className="absolute inset-0 bg-brand-950/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-900/35 via-brand-950/25 to-brand-950/50" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(255,252,245,0.12),transparent_55%)]" />
       </div>
 
       <div className="relative z-10">

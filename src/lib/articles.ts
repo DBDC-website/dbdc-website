@@ -9,7 +9,7 @@ export function mapArticleRow(row: ArticleRow): ArticlePdf {
     id: row.id,
     label: row.label,
     title: row.title,
-    author: row.author,
+    author: row.author?.trim() ? row.author.trim() : null,
     date: row.date,
     href: normalizeStorageUrl(row.pdf_url) ?? row.pdf_url,
     sortOrder: row.sort_order,

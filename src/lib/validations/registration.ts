@@ -23,6 +23,7 @@ const optionalDate = z
   .union([z.literal(''), z.iso.date('Enter a valid date')])
   .optional();
 
+const optionalCapitalText = z.string().trim().max(80).optional();
 const optionalMoney = z
   .string()
   .trim()
@@ -41,37 +42,46 @@ const otherApprovedListEntrySchema = z.object({
   documentUrls: documentUrlsSchema,
 });
 
+const previousProjectUploadEntrySchema = z.object({
+  documentUrls: documentUrlsSchema,
+});
+
 // --- Selectable options (surfaced in the UI) --------------------------------
 
 export const CONSULTANT_NATURE_OPTIONS = [
   'Architecture',
-  'Building Surveyor',
-  'Structural Engineering',
-  'Geotechnical Engineering',
   'Quantity Surveyor',
-  'Building Services Engineering',
   'Heritage',
-  'Land / Topographic Surveyor',
+  'Geotechnical Engineering',
+  'Building Surveyor',
+  'Interior Design',
+  'Structural Engineering',
   'Landscaping / Horticulture',
   'Others',
+  'Building Services Engineering',
+  'Land / Topographic Surveyor',
 ] as const;
 
 /** † = Registered under Buildings Department (not a required-field marker). */
 export const CONTRACTOR_NATURE_OPTIONS = [
   { label: 'General Building contractor', value: 'General Building contractor', bdRegistered: true },
-  { label: 'Electrical contractor', value: 'Electrical contractor', bdRegistered: false },
-  { label: 'Air-conditioning contractor', value: 'Air-conditioning contractor', bdRegistered: false },
   { label: 'Demolition contractor', value: 'Demolition contractor', bdRegistered: true },
-  { label: 'Lift & escalator contractor', value: 'Lift & escalator contractor', bdRegistered: false },
-  { label: 'Repair & maintenance contractor', value: 'Repair & maintenance contractor', bdRegistered: false },
-  { label: 'Ground investigation contractor', value: 'Ground investigation contractor', bdRegistered: true },
-  { label: 'Ventilation contractor', value: 'Ventilation contractor', bdRegistered: true },
-  { label: 'Interior fitting out contractor', value: 'Interior fitting out contractor', bdRegistered: false },
   { label: 'Foundation contractor', value: 'Foundation contractor', bdRegistered: true },
-  { label: 'Fire services contractor', value: 'Fire services contractor', bdRegistered: false },
-  { label: 'Site formation / geotechnical contractor', value: 'Site formation / geotechnical contractor', bdRegistered: true },
-  { label: 'Plumbing & drainage contractor', value: 'Plumbing & drainage contractor', bdRegistered: false },
+  {
+    label: 'Site formation / geotechnical contractor',
+    value: 'Site formation / geotechnical contractor',
+    bdRegistered: true,
+  },
+  { label: 'Ventilation contractor', value: 'Ventilation contractor', bdRegistered: true },
+  { label: 'Ground investigation contractor', value: 'Ground investigation contractor', bdRegistered: true },
+  { label: 'Repair & maintenance contractor', value: 'Repair & maintenance contractor', bdRegistered: false },
+  { label: 'Interior fitting out contractor', value: 'Interior fitting out contractor', bdRegistered: false },
   { label: 'Landscaping / horticulture contractor', value: 'Landscaping / horticulture contractor', bdRegistered: false },
+  { label: 'Air-conditioning contractor', value: 'Air-conditioning contractor', bdRegistered: false },
+  { label: 'Fire services contractor', value: 'Fire services contractor', bdRegistered: false },
+  { label: 'Plumbing & drainage contractor', value: 'Plumbing & drainage contractor', bdRegistered: false },
+  { label: 'Electrical contractor', value: 'Electrical contractor', bdRegistered: false },
+  { label: 'Lift & escalator contractor', value: 'Lift & escalator contractor', bdRegistered: false },
   { label: 'Others (please specify)', value: 'Others', bdRegistered: false },
 ] as const;
 
@@ -114,9 +124,9 @@ const baseRegistrationShape = {
   businessRegistrationNo: optionalText,
   registrationDate: optionalDate,
 
-  capitalAuthorized: optionalMoney,
-  capitalIssued: optionalMoney,
-  capitalAvailable: optionalMoney,
+  capitalAuthorized: optionalCapitalText,
+  capitalIssued: optionalCapitalText,
+  capitalAvailable: optionalCapitalText,
 
   businessRegistrationDocumentUrls: documentUrlsSchema,
 
@@ -128,6 +138,7 @@ const baseRegistrationShape = {
     .array(contactSchema)
     .min(1, 'Add at least one authorised contact'),
   previousProjects: z.array(previousProjectSchema),
+  previousProjectUploads: z.array(previousProjectUploadEntrySchema),
 };
 
 /** Fields common to both registration forms (used to type shared UI sections). */

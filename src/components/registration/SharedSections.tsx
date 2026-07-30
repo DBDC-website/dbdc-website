@@ -19,16 +19,6 @@ const emptyContact = {
   signatureUrl: '',
 };
 
-const emptyProject = {
-  projectName: '',
-  projectAddress: '',
-  contractSum: '',
-  startDate: '',
-  endDate: '',
-  clientName: '',
-  architectEngineer: '',
-};
-
 export function CompanyInfoSection() {
   const {
     register,
@@ -151,7 +141,7 @@ export function CapitalSection() {
   return (
     <FormSection
       title="Company capital"
-      description="Enter amounts in HKD (numbers only)."
+      description="Provide capital amounts in your preferred format (e.g. 2 million)."
     >
       <div className="grid gap-5 sm:grid-cols-3">
         <TextField
@@ -189,8 +179,8 @@ export function ContactsSection() {
 
   return (
     <FormSection
-      title="Principals / Managers"
-      description="Principals or managers authorised to sign documents on behalf of the company."
+      title="Principals / Directors"
+      description="Principals or directors authorised to sign documents on behalf of the company."
     >
       {typeof errors.contacts?.message === 'string' ? (
         <p className="mb-4 text-xs font-medium text-red-600" role="alert">
@@ -269,19 +259,17 @@ export function ContactsSection() {
   );
 }
 
-export function PreviousProjectsSection({
-  employerLabel = 'Architect / Engineer',
-}: {
-  employerLabel?: string;
-}) {
+export function PreviousProjectsSection() {
   const {
-    register,
     control,
+    setValue,
+    register,
+    watch,
     formState: { errors },
   } = useFormContext<BaseRegistrationValues>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'previousProjects',
+    name: 'previousProjectUploads',
   });
 
   return (
@@ -289,86 +277,58 @@ export function PreviousProjectsSection({
       title="Portfolio of major projects"
       description="Major projects carried out in Hong Kong over the past 5 years. Please highlight any experience on Church projects. (Optional)"
     >
-      {typeof errors.previousProjects?.message === 'string' ? (
-        <p className="mb-4 text-xs font-medium text-red-600" role="alert">
-          {errors.previousProjects.message}
-        </p>
-      ) : null}
+      <div className="space-y-4">
+        {fields.map((field, index) => {
+          const uploadedDocuments =
+            watch(`previousProjectUploads.${index}.documentUrls`) ?? [];
 
-      <div className="space-y-6">
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="rounded-lg border border-cream-200 bg-cream-50/60 p-4 sm:p-5"
-          >
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-brand-800">
-                Project {index + 1}
-              </h3>
-              <button
-                type="button"
-                onClick={() => remove(index)}
-                className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-                Remove
-              </button>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <TextField
-                label="Project name"
-                required
-                className="sm:col-span-2"
-                error={errors.previousProjects?.[index]?.projectName?.message}
-                {...register(`previousProjects.${index}.projectName`)}
+          return (
+            <div
+              key={field.id}
+              className="rounded-lg border border-cream-200 bg-cream-50/60 p-4 sm:p-5"
+            >
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-sm font-semibold text-brand-800">
+                  Project upload {index + 1}
+                </p>
+                {fields.length > 1 ? (
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="inline-flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                    Remove
+                  </button>
+                ) : null}
+              </div>
+              <DocumentUploadField
+                label="Portfolio documents"
+                value={uploadedDocuments}
+                onChange={(paths) =>
+                  setValue(`previousProjectUploads.${index}.documentUrls`, paths, {
+                    shouldDirty: true,
+                    shouldTouch: true,
+                    shouldValidate: true,
+                  })
+                }
               />
-              <TextField
-                label="Project address"
-                className="sm:col-span-2"
-                error={errors.previousProjects?.[index]?.projectAddress?.message}
-                {...register(`previousProjects.${index}.projectAddress`)}
-              />
-              <TextField
-                label="Contract sum (HKD)"
-                inputMode="decimal"
-                error={errors.previousProjects?.[index]?.contractSum?.message}
-                {...register(`previousProjects.${index}.contractSum`)}
-              />
-              <TextField
-                label="Client name"
-                error={errors.previousProjects?.[index]?.clientName?.message}
-                {...register(`previousProjects.${index}.clientName`)}
-              />
-              <TextField
-                label="Start date"
-                type="date"
-                error={errors.previousProjects?.[index]?.startDate?.message}
-                {...register(`previousProjects.${index}.startDate`)}
-              />
-              <TextField
-                label="End date"
-                type="date"
-                error={errors.previousProjects?.[index]?.endDate?.message}
-                {...register(`previousProjects.${index}.endDate`)}
-              />
-              <TextField
-                label={employerLabel}
-                className="sm:col-span-2"
-                error={errors.previousProjects?.[index]?.architectEngineer?.message}
-                {...register(`previousProjects.${index}.architectEngineer`)}
+              <input
+                type="hidden"
+                {...register(`previousProjectUploads.${index}.documentUrls`)}
               />
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <button
         type="button"
-        onClick={() => append(emptyProject)}
-        className="mt-5 inline-flex items-center gap-1.5 rounded-md border border-brand-300 px-3 py-1.5 text-sm font-medium text-brand-800 transition-colors hover:border-brand-500 hover:bg-brand-50"
+        onClick={() => append({ documentUrls: [] })}
+        className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-brand-300 px-3 py-1.5 text-sm font-medium text-brand-800 transition-colors hover:border-brand-500 hover:bg-brand-50"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
-        Add project
+        Add project upload box
       </button>
     </FormSection>
   );

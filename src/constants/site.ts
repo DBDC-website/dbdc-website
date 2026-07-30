@@ -55,7 +55,7 @@ export const mainNav: NavItem[] = [
  */
 export const contactInfo = {
   organisation: 'DBDC OFFICE',
-  address: ['9/F, Catholic Diocese Centre', '16 Caine Road', 'Central, Hong Kong'],
+  address: ['9/F, Catholic Diocese Centre', '16 Caine Road, Hong Kong'],
   email: 'office@hkdbdc.org.hk',
   phone: '+852 2526 3200',
   fax: '+852 2526 1127',

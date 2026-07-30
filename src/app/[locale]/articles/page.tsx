@@ -5,6 +5,9 @@ import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 import { getArticles } from '@/lib/articles';
 
+/** Fetch fresh article metadata on each request (Supabase is the source of truth). */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Related Articles',
   description:

@@ -25,8 +25,27 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dbdc.catholic.org.
 
 function toMoney(value?: string): number | null {
   if (!value) return null;
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const normalized = value.trim().toLowerCase().replace(/,/g, '');
+  if (!normalized) return null;
+
+  const direct = Number(normalized);
+  if (Number.isFinite(direct)) return direct;
+
+  const multipliers: Record<string, number> = {
+    k: 1_000,
+    thousand: 1_000,
+    m: 1_000_000,
+    million: 1_000_000,
+    b: 1_000_000_000,
+    billion: 1_000_000_000,
+  };
+
+  const match = normalized.match(/^(\d+(?:\.\d+)?)\s*(k|m|b|thousand|million|billion)$/);
+  if (!match) return null;
+  const base = Number(match[1]);
+  const multiplier = multipliers[match[2]];
+  if (!Number.isFinite(base) || !multiplier) return null;
+  return base * multiplier;
 }
 
 function toNullable(value?: string): string | null {
@@ -49,6 +68,7 @@ function mapConsultantRegistration(data: ConsultantRegistrationValues) {
 
   const allDocumentUrls = [
     ...data.businessRegistrationDocumentUrls,
+    ...data.previousProjectUploads.flatMap((item) => item.documentUrls),
     ...data.auditedAccountDocumentUrls,
     ...data.professionalDetails.aacsbDocumentUrls,
     ...data.professionalDetails.eacsbDocumentUrls,
@@ -103,6 +123,7 @@ function mapContractorRegistration(data: ContractorRegistrationValues) {
   const allDocumentUrls = [
     ...data.businessRegistrationDocumentUrls,
     ...data.buildingsDeptDocumentUrls,
+    ...data.previousProjectUploads.flatMap((item) => item.documentUrls),
     ...data.auditedAccountDocumentUrls,
     ...data.professionalDetails.devbDocumentUrls,
     ...data.professionalDetails.otherApprovedListEntries.flatMap(
