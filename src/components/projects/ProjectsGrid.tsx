@@ -13,17 +13,35 @@ import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 import { setSiteChromeHidden } from '@/lib/siteChrome';
 import type { Project } from '@/types/project';
 
+function galleryDedupeKey(src: string): string {
+  try {
+    const url = new URL(src);
+    // Ignore transform query params so cover + gallery copies of the same file match.
+    url.search = '';
+    url.hash = '';
+    return decodeURIComponent(url.pathname);
+  } catch {
+    return src.split('?')[0] ?? src;
+  }
+}
+
 function projectGallery(project: Project): Array<{ src: string; alt: string; caption?: string | null }> {
   const items: Array<{ src: string; alt: string; caption?: string | null }> = [];
   const seen = new Set<string>();
 
   const push = (src: string | null | undefined, alt: string, caption?: string | null) => {
-    if (!src || seen.has(src)) return;
-    const transformedSrc = withSupabaseImageTransform(src, { width: 800, quality: 80 });
-    seen.add(transformedSrc);
-    items.push({ src: transformedSrc, alt, caption });
+    if (!src) return;
+    const key = galleryDedupeKey(src);
+    if (seen.has(key)) return;
+    seen.add(key);
+    items.push({
+      src: withSupabaseImageTransform(src, { width: 800, quality: 80 }),
+      alt,
+      caption,
+    });
   };
 
+  // Cover image first; skip when the same file already exists in project_images.
   push(project.imageUrl, project.imageAlt);
   for (const image of project.images ?? []) {
     push(image.imageUrl, image.caption || project.imageAlt, image.caption);
