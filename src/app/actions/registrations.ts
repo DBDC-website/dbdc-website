@@ -13,18 +13,34 @@ export type RegistrationResult =
   | { ok: true; id: number }
   | { ok: false; message: string };
 
+/** Strip quotes / trailing comments that often break Vercel env values. */
+function sanitizeEnvValue(value: string | undefined | null): string | null {
+  if (!value) return null;
+  const trimmed = value.trim().replace(/^['"]+|['"]+$/g, '').trim();
+  const withoutComment = trimmed.split(/\s+#/)[0]?.trim() ?? '';
+  return withoutComment || null;
+}
+
+function isValidFromAddress(value: string): boolean {
+  // Resend accepts `email@example.com` or `Name <email@example.com>`.
+  return (
+    /^[^\s<>]+@[^\s<>]+\.[^\s<>]+$/.test(value) ||
+    /^[^<>]+\s<[^\s<>]+@[^\s<>]+\.[^\s<>]+>$/.test(value)
+  );
+}
+
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 /** Must be set in env (Vercel + local). Do not hardcode a Resend sandbox address. */
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL?.trim() || null;
+const FROM_EMAIL = sanitizeEnvValue(process.env.RESEND_FROM_EMAIL);
 const ADMIN_EMAILS = (
-  process.env.ADMIN_EMAILS ??
-  process.env.ADMIN_EMAIL ??
+  sanitizeEnvValue(process.env.ADMIN_EMAILS) ??
+  sanitizeEnvValue(process.env.ADMIN_EMAIL) ??
   ''
 )
   .split(',')
-  .map((email) => email.trim())
+  .map((email) => sanitizeEnvValue(email) ?? '')
   .filter(Boolean);
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dbdc.catholic.org.hk';
 
@@ -196,6 +212,17 @@ async function sendRegistrationEmails({
     );
     return;
   }
+
+  if (!isValidFromAddress(FROM_EMAIL)) {
+    console.error(
+      'Invalid RESEND_FROM_EMAIL format after sanitization:',
+      JSON.stringify(FROM_EMAIL),
+      'Expected `email@example.com` or `Name <email@example.com>`.',
+    );
+    return;
+  }
+
+  console.log('Resend using from address:', FROM_EMAIL);
 
   const submittedAt = new Date().toLocaleString('en-HK', {
     dateStyle: 'medium',
