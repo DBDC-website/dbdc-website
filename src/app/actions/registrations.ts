@@ -16,8 +16,13 @@ export type RegistrationResult =
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? 'DBDC <onboarding@resend.dev>';
-const ADMIN_EMAILS = (process.env.ADMIN_EMAIL ?? '')
+/** Must be set in env (Vercel + local). Do not hardcode a Resend sandbox address. */
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL?.trim() || null;
+const ADMIN_EMAILS = (
+  process.env.ADMIN_EMAILS ??
+  process.env.ADMIN_EMAIL ??
+  ''
+)
   .split(',')
   .map((email) => email.trim())
   .filter(Boolean);
@@ -185,6 +190,13 @@ async function sendRegistrationEmails({
     return;
   }
 
+  if (!FROM_EMAIL) {
+    console.warn(
+      'RESEND_FROM_EMAIL is not configured; skipping email notifications.',
+    );
+    return;
+  }
+
   const submittedAt = new Date().toLocaleString('en-HK', {
     dateStyle: 'medium',
     timeStyle: 'short',
@@ -195,7 +207,7 @@ async function sendRegistrationEmails({
 
   try {
     if (ADMIN_EMAILS.length > 0) {
-      await resend.emails.send({
+      const adminResult = await resend.emails.send({
         from: FROM_EMAIL,
         to: ADMIN_EMAILS,
         subject: `New ${kindLabel} Registration: ${companyName}`,
@@ -209,10 +221,21 @@ async function sendRegistrationEmails({
           <p>Please review this submission in Supabase/Admin panel.</p>
         `,
       });
+      console.log(
+        'Resend admin email response:',
+        JSON.stringify(adminResult, null, 2),
+      );
+      if (adminResult.error) {
+        console.error('Resend admin email error:', adminResult.error);
+      }
+    } else {
+      console.warn(
+        'ADMIN_EMAIL / ADMIN_EMAILS is not configured; skipping admin notification.',
+      );
     }
 
     if (normalizedApplicantEmail) {
-      await resend.emails.send({
+      const applicantResult = await resend.emails.send({
         from: FROM_EMAIL,
         to: [normalizedApplicantEmail],
         subject: 'Your DBDC Registration Has Been Received',
@@ -227,6 +250,17 @@ async function sendRegistrationEmails({
           <p style="font-size:12px;color:#666">Submitted via ${SITE_URL}</p>
         `,
       });
+      console.log(
+        'Resend applicant email response:',
+        JSON.stringify(applicantResult, null, 2),
+      );
+      if (applicantResult.error) {
+        console.error('Resend applicant email error:', applicantResult.error);
+      }
+    } else {
+      console.warn(
+        'Applicant email missing on registration; skipping confirmation email.',
+      );
     }
   } catch (emailError) {
     // Notifications must never block successful registration submission.
