@@ -31,7 +31,9 @@ export default function ArticlePdfList({ articles }: ArticlePdfListProps) {
                 {article.title}
               </span>
               <span className="mt-2 block text-sm text-stone-600 sm:text-base">
-                by {article.author}, {article.date}
+                {article.author
+                  ? `by ${article.author}, ${article.date}`
+                  : article.date}
               </span>
               <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-brand-800 transition-colors group-hover:text-brand-950">
                 <FileText className="h-4 w-4 text-gold-600" aria-hidden="true" />

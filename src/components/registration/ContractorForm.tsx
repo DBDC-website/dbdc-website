@@ -6,11 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2 } from 'lucide-react';
 import {
   contractorSchema,
-  CONTRACTOR_NATURE_OPTIONS,
-  CONTRACTOR_MINOR_WORKS_OPTIONS,
   type ContractorRegistrationValues,
 } from '@/lib/validations/registration';
 import { submitContractorRegistration } from '@/app/actions/registrations';
+import { ContractorNatureOfBusinessSection } from '@/components/registration/ContractorNatureOfBusinessSection';
 import {
   BusinessRegistrationSection,
   CapitalSection,
@@ -68,6 +67,7 @@ const defaultValues: ContractorRegistrationValues = {
   },
   contacts: [{ name: '', position: '', telephone: '', signatureUrl: '' }],
   previousProjects: [],
+  previousProjectUploads: [{ documentUrls: [] }],
 };
 
 function InHouseProfessionalSection() {
@@ -89,7 +89,7 @@ function InHouseProfessionalSection() {
           {...register('professionalDetails.architect')}
         />
         <CheckboxField
-          label="Site Engineer"
+          label="Engineer"
           {...register('professionalDetails.siteEngineer')}
         />
         <CheckboxField
@@ -134,7 +134,7 @@ function BuildingsDepartmentSection() {
 
   return (
     <FormSection
-      title="Building Department registration"
+      title="Buildings Department registration"
       description="Buildings Department registration details."
     >
       <div className="grid gap-5 sm:grid-cols-2">
@@ -226,6 +226,7 @@ export default function ContractorForm() {
   const [submitted, setSubmitted] = useState(false);
   const natureOfBusiness = methods.watch('natureOfBusiness') ?? [];
   const othersSelected = natureOfBusiness.includes('Others');
+  const hasMinorWorks = natureOfBusiness.includes('Minor Works');
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
@@ -263,49 +264,14 @@ export default function ContractorForm() {
           title="Nature of business"
           description="Select all contractor classifications that apply."
         >
-          {typeof errors.natureOfBusiness?.message === 'string' ? (
-            <p className="mb-4 text-xs font-medium text-red-600" role="alert">
-              {errors.natureOfBusiness.message}
-            </p>
-          ) : null}
-          <p className="mb-4 text-xs text-stone-500">
-            † = Registered under Buildings Department
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {CONTRACTOR_NATURE_OPTIONS.map((option) => (
-              <CheckboxField
-                key={option.value}
-                label={
-                  option.bdRegistered ? `${option.label} †` : option.label
-                }
-                value={option.value}
-                {...register('natureOfBusiness')}
-              />
-            ))}
-          </div>
-
-          <div className="mt-4">
-            <p className="mb-3 text-sm font-medium text-brand-900">Minor works</p>
-            <div className="flex flex-wrap gap-6">
-              {CONTRACTOR_MINOR_WORKS_OPTIONS.map((category) => (
-                <CheckboxField
-                  key={category}
-                  label={category.replace('Minor Works ', '')}
-                  value={category}
-                  {...register('natureOfBusiness')}
-                />
-              ))}
-            </div>
-          </div>
-
-          {othersSelected ? (
-            <TextField
-              label="Others (please specify):"
-              className="mt-4"
-              error={errors.natureOfBusinessOther?.message}
-              {...register('natureOfBusinessOther')}
-            />
-          ) : null}
+          <ContractorNatureOfBusinessSection
+            register={register}
+            setValue={methods.setValue}
+            errors={errors}
+            selectedNatureOfBusiness={natureOfBusiness}
+            othersSelected={othersSelected}
+            hasMinorWorks={hasMinorWorks}
+          />
         </FormSection>
 
         <BusinessRegistrationSection />
@@ -315,7 +281,7 @@ export default function ContractorForm() {
         <InHouseProfessionalSection />
         <CapitalSection />
         <ContactsSection />
-        <PreviousProjectsSection employerLabel="Name of Architect(s) / Engineer(s)" />
+        <PreviousProjectsSection />
         <RemarksSection />
 
         {submitError ? (

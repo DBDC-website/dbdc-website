@@ -68,6 +68,7 @@ const defaultValues: ConsultantRegistrationValues = {
   },
   contacts: [{ name: '', position: '', telephone: '', signatureUrl: '' }],
   previousProjects: [],
+  previousProjectUploads: [{ documentUrls: [] }],
 };
 
 function InHouseProfessionalSection() {
@@ -114,17 +115,6 @@ function InHouseProfessionalSection() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TextField
-            label="Professional:"
-            {...register('professionalDetails.professionalName')}
-          />
-          <TextField
-            label="No.:"
-            {...register('professionalDetails.professionalNo')}
-          />
-        </div>
-
         <div className="grid gap-3 sm:grid-cols-2">
           <CheckboxField
             label="Registered Structural Eng."
@@ -145,6 +135,17 @@ function InHouseProfessionalSection() {
           <CheckboxField
             label="Registered Energy Assessors (REA)"
             {...register('professionalDetails.registeredEnergyAssessor')}
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <TextField
+            label="Professional:"
+            {...register('professionalDetails.professionalName')}
+          />
+          <TextField
+            label="No.:"
+            {...register('professionalDetails.professionalNo')}
           />
         </div>
 
@@ -350,7 +351,7 @@ export default function ConsultantForm() {
         <InHouseProfessionalSection />
         <CapitalSection />
         <ContactsSection />
-        <PreviousProjectsSection employerLabel="Name of Employer" />
+        <PreviousProjectsSection />
         <RemarksSection />
 
         {submitError ? (

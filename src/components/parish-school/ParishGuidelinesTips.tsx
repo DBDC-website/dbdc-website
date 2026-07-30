@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { cinematicEase } from '@/lib/motion';
-import { cn } from '@/lib/cn';
+import { Lightbulb } from 'lucide-react';
+import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
 import type { ParishGuidelinesContent } from '@/types/parishGuidelines';
 
 type ParishGuidelinesTipsProps = {
@@ -13,106 +11,11 @@ type ParishGuidelinesTipsProps = {
   >;
 };
 
-/**
- * Clock-style positions for 5 tips.
- * Tip 1 at top (12 o’clock), then evenly around the circle.
- */
-function clockPosition(index: number, radius = 38) {
-  const angleDeg = -90 + index * (360 / 5);
-  const angleRad = (angleDeg * Math.PI) / 180;
-  return {
-    x: 50 + radius * Math.cos(angleRad),
-    y: 50 + radius * Math.sin(angleRad),
-  };
-}
-
-function truncateTip(text: string, max = 58) {
-  if (text.length <= max) return text;
-  const cut = text.slice(0, max).replace(/\s+\S*$/, '');
-  return `${cut}...`;
-}
-
-function TipOval({
-  index,
-  text,
-  reduceMotion,
-}: {
-  index: number;
-  text: string;
-  reduceMotion: boolean | null;
-}) {
-  const layout = clockPosition(index);
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <div
-      className={cn('absolute', hovered ? 'z-30' : 'z-10')}
-      style={{
-        left: `${layout.x}%`,
-        top: `${layout.y}%`,
-        transform: 'translate(-50%, -50%)',
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-    >
-      <motion.div
-        role="button"
-        tabIndex={0}
-        aria-expanded={hovered}
-        aria-label={`Tip ${index + 1}`}
-        className="relative flex h-[118px] w-[168px] cursor-default items-center justify-center overflow-hidden rounded-[50%] border border-sky-200/80 text-left shadow-lg shadow-brand-900/15 outline-none will-change-transform focus-visible:ring-2 focus-visible:ring-gold-400"
-        initial={false}
-        animate={
-          hovered
-            ? {
-                scaleX: reduceMotion ? 1.6667 : 1.7381,
-                scaleY: reduceMotion ? 1.8644 : 1.9661,
-                scale: reduceMotion ? 1 : 1.02,
-              }
-            : {
-                scaleX: 1,
-                scaleY: 1,
-                scale: 1,
-              }
-        }
-        transition={{ duration: 0.4, ease: cinematicEase }}
-      >
-        <span
-          className="absolute inset-0 bg-gradient-to-br from-[#e8f6fc] via-[#fff8eb] to-[#fde8d4]"
-          aria-hidden="true"
-        />
-        <span
-          className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_25%,rgba(0,160,220,0.22),transparent_55%),radial-gradient(ellipse_at_80%_80%,rgba(232,140,55,0.2),transparent_50%)]"
-          aria-hidden="true"
-        />
-        <span className="absolute inset-0 bg-white/30" aria-hidden="true" />
-        <span
-          className={cn(
-            'relative px-4 text-center font-medium leading-snug text-brand-950',
-            hovered
-              ? 'max-h-[12rem] overflow-y-auto text-xs sm:text-sm'
-              : 'line-clamp-4 text-[11px] sm:text-xs',
-          )}
-        >
-          <span className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-gold-700">
-            Tip {index + 1}
-          </span>
-          {hovered ? text : truncateTip(text)}
-        </span>
-      </motion.div>
-    </div>
-  );
-}
-
 export default function ParishGuidelinesTips({ content }: ParishGuidelinesTipsProps) {
-  const reduceMotion = useReducedMotion();
   const tips = content.tips.slice(0, 5);
 
   return (
     <div className="space-y-8 sm:space-y-10">
-      {/* Full-width tips heading over both columns, left-aligned inside cylinder glow */}
       <div className="relative w-full max-w-5xl py-2 sm:py-3">
         <div
           className="pointer-events-none absolute -inset-x-2 -inset-y-1 rounded-full bg-[radial-gradient(ellipse_at_18%_45%,rgba(255,252,245,0.92)_0%,rgba(255,248,235,0.52)_40%,transparent_72%)] sm:-inset-x-4"
@@ -126,22 +29,41 @@ export default function ParishGuidelinesTips({ content }: ParishGuidelinesTipsPr
         </h2>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-10">
-        <div className="relative mx-auto aspect-square w-full max-w-[34rem]">
+      <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-10">
+        <StaggerChildren as="ol" className="space-y-4">
           {tips.map((tip, index) => (
-            <TipOval
-              key={tip.text}
-              index={index}
-              text={tip.text}
-              reduceMotion={reduceMotion}
-            />
+            <StaggerItem key={tip.text} as="li">
+              <article className="group relative overflow-hidden rounded-2xl border border-white/70 bg-white/75 p-5 shadow-md shadow-brand-900/10 backdrop-blur-sm transition-[border-color,box-shadow] duration-300 hover:border-sky-200/90 hover:shadow-lg sm:p-6">
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#e8f6fc]/50 via-transparent to-[#fde8d4]/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+                />
+                <div className="relative flex gap-4">
+                  <span
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gold-100 to-sky-100 text-sm font-bold text-brand-900 shadow-sm"
+                    aria-hidden="true"
+                  >
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 flex-1 pt-0.5">
+                    <p className="mb-2 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-gold-700">
+                      <Lightbulb className="h-3.5 w-3.5" aria-hidden="true" />
+                      Tip {index + 1}
+                    </p>
+                    <p className="text-sm leading-relaxed text-brand-950 sm:text-base">
+                      {tip.text}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerChildren>
 
         <section
           id="assist-heading"
           aria-labelledby="assist-heading-title"
-          className="relative overflow-hidden rounded-[1.75rem] border border-sky-200/70 px-5 py-6 shadow-sm shadow-brand-900/10 sm:px-7 sm:py-8"
+          className="relative overflow-hidden rounded-[1.75rem] border border-sky-200/70 px-5 py-6 shadow-sm shadow-brand-900/10 sm:px-7 sm:py-8 lg:sticky lg:top-28"
         >
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <div className="absolute inset-0 bg-gradient-to-br from-[#e8f6fc]/90 via-[#fff8eb]/86 to-[#fde8d4]/90" />

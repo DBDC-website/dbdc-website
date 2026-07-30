@@ -48,6 +48,8 @@ export default async function CommitteeDetailPage({
 
   const members = await getCommitteeMembers(found.slug);
   const sections = withMembersSection(found.sections, members);
+  const currentIndex = committees.findIndex((item) => item.slug === found.slug);
+  const nextCommittee = currentIndex >= 0 ? committees[currentIndex + 1] : undefined;
 
   return (
     <div className="relative min-h-screen">
@@ -102,6 +104,7 @@ export default async function CommitteeDetailPage({
           <ScrollReveal>
             <Link
               href={`/${locale as Locale}#committees`}
+              scroll={false}
               className="inline-flex rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm font-medium text-brand-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white/75"
             >
               ← Back to Committees
@@ -111,6 +114,16 @@ export default async function CommitteeDetailPage({
           <div className="mt-5 sm:mt-6">
             <CommitteeSectionAccordion sections={sections} />
           </div>
+          {nextCommittee ? (
+            <div className="mt-6 flex justify-end sm:mt-8">
+              <Link
+                href={`/${locale as Locale}/committees/${nextCommittee.slug}`}
+                className="inline-flex rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm font-medium text-brand-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white/75"
+              >
+                Next: {nextCommittee.abbreviation} →
+              </Link>
+            </div>
+          ) : null}
         </AnimatedSection>
       </div>
     </div>

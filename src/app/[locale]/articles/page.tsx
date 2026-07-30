@@ -6,6 +6,9 @@ import PageSection from '@/components/ui/PageSection';
 import { getArticles } from '@/lib/articles';
 import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 
+/** Fetch fresh article metadata on each request (Supabase is the source of truth). */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Related Articles',
   description:
