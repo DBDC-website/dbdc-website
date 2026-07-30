@@ -62,18 +62,18 @@ function TipOval({
         tabIndex={0}
         aria-expanded={hovered}
         aria-label={`Tip ${index + 1}`}
-        className="relative flex cursor-default items-center justify-center overflow-hidden rounded-[50%] border border-sky-200/80 text-left shadow-lg shadow-brand-900/15 outline-none focus-visible:ring-2 focus-visible:ring-gold-400"
+        className="relative flex h-[118px] w-[168px] cursor-default items-center justify-center overflow-hidden rounded-[50%] border border-sky-200/80 text-left shadow-lg shadow-brand-900/15 outline-none will-change-transform focus-visible:ring-2 focus-visible:ring-gold-400"
         initial={false}
         animate={
           hovered
             ? {
-                width: reduceMotion ? 280 : 292,
-                height: reduceMotion ? 220 : 232,
+                scaleX: reduceMotion ? 1.6667 : 1.7381,
+                scaleY: reduceMotion ? 1.8644 : 1.9661,
                 scale: reduceMotion ? 1 : 1.02,
               }
             : {
-                width: 168,
-                height: 118,
+                scaleX: 1,
+                scaleY: 1,
                 scale: 1,
               }
         }

@@ -104,11 +104,12 @@ export default function FaqAccordion({ items }: FaqAccordionProps) {
                       id={panelId}
                       role="region"
                       aria-labelledby={`${panelId}-trigger`}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
+                      initial={{ scaleY: 0, opacity: 0 }}
+                      animate={{ scaleY: 1, opacity: 1 }}
+                      exit={{ scaleY: 0, opacity: 0 }}
                       transition={{ duration: 0.4, ease: easeOut }}
                       className="relative overflow-hidden border-t border-cream-200/90"
+                      style={{ transformOrigin: 'top' }}
                     >
                       <motion.div
                         initial={{ y: -8 }}

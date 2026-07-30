@@ -18,7 +18,9 @@ import ScrollReveal from '@/components/motion/ScrollReveal';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import type { Locale } from '@/constants/i18n';
 import { homeImages } from '@/constants/homeImages';
+import { useTouchDevice } from '@/hooks/useTouchDevice';
 import { cinematicEase } from '@/lib/motion';
+import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 import { cn } from '@/lib/cn';
 import type { Project } from '@/types/project';
 
@@ -38,7 +40,9 @@ function getInitialIndex(projectCount: number) {
 }
 
 function FeaturedBackdrop({ project }: { project: Project | null }) {
-  const hoverSrc = project?.imageUrl ?? null;
+  const hoverSrc = project?.imageUrl
+    ? withSupabaseImageTransform(project.imageUrl, { width: 1200, quality: 75 })
+    : null;
 
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -47,6 +51,7 @@ function FeaturedBackdrop({ project }: { project: Project | null }) {
         alt=""
         fill
         sizes="100vw"
+        unoptimized
         className="object-cover opacity-[0.92]"
         style={{ objectPosition: featuredDefaultBackdrop.objectPosition }}
         priority={false}
@@ -56,16 +61,17 @@ function FeaturedBackdrop({ project }: { project: Project | null }) {
           <motion.div
             key={project?.id ?? hoverSrc}
             className="absolute inset-0"
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 0.94, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 0.75, ease: cinematicEase }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.94 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: cinematicEase }}
           >
             <Image
               src={hoverSrc}
               alt=""
               fill
               sizes="100vw"
+              unoptimized
               className="object-cover"
               priority={false}
             />
@@ -80,23 +86,31 @@ function CarouselProjectCard({
   project,
   isActive,
   isHovered,
+  shouldLoadImage,
+  isTouch,
   onHoverStart,
   onHoverEnd,
 }: {
   project: Project;
   isActive: boolean;
   isHovered: boolean;
+  shouldLoadImage: boolean;
+  isTouch: boolean;
   onHoverStart: () => void;
   onHoverEnd: () => void;
 }) {
   const reduceMotion = useReducedMotion();
-  const hoverLift = isHovered && !reduceMotion;
+  const hoverLift = isHovered && !reduceMotion && !isTouch;
 
   return (
     <motion.div
-      onHoverStart={onHoverStart}
-      onHoverEnd={onHoverEnd}
-      style={{ perspective: 1200, transformStyle: 'preserve-3d' }}
+      onHoverStart={isTouch ? undefined : onHoverStart}
+      onHoverEnd={isTouch ? undefined : onHoverEnd}
+      style={
+        isTouch
+          ? undefined
+          : { perspective: 1200, transformStyle: 'preserve-3d' }
+      }
       className={cn(
         'flex h-full w-[min(92vw,32rem)] shrink-0 cursor-default flex-col sm:w-[34rem] lg:w-[38rem]',
         (isActive || isHovered) && 'relative',
@@ -104,44 +118,49 @@ function CarouselProjectCard({
     >
       <motion.div
         animate={
-          reduceMotion
+          reduceMotion || isTouch
             ? {
-                scale: isActive ? 1 : 0.9,
-                opacity: isActive ? 1 : 0.62,
+                scale: isActive ? 1 : 0.92,
+                opacity: isActive ? 1 : 0.7,
                 zIndex: isActive ? 10 : 1,
               }
             : hoverLift
-                ? {
-                    scale: 1.06,
-                    y: -18,
-                    rotateX: 2,
-                    rotateY: 0,
-                    z: 20,
-                    opacity: 1,
-                    zIndex: 30,
-                  }
-                : {
-                    scale: isActive ? 1 : 0.88,
-                    y: isActive ? -6 : 0,
-                    rotateX: 0,
-                    rotateY: 0,
-                    z: 0,
-                    opacity: isActive ? 1 : 0.62,
-                    zIndex: isActive ? 10 : 1,
-                  }
+              ? {
+                  scale: 1.06,
+                  y: -18,
+                  rotateX: 2,
+                  rotateY: 0,
+                  z: 20,
+                  opacity: 1,
+                  zIndex: 30,
+                }
+              : {
+                  scale: isActive ? 1 : 0.88,
+                  y: isActive ? -6 : 0,
+                  rotateX: 0,
+                  rotateY: 0,
+                  z: 0,
+                  opacity: isActive ? 1 : 0.62,
+                  zIndex: isActive ? 10 : 1,
+                }
         }
-        transition={{ duration: 0.65, ease: cinematicEase }}
+        transition={{ duration: isTouch ? 0.35 : 0.65, ease: cinematicEase }}
         className={cn(
-          'h-full origin-center overflow-hidden rounded-2xl will-change-transform',
+          'h-full origin-center overflow-hidden rounded-2xl',
           hoverLift
-              ? 'shadow-2xl shadow-brand-900/25 ring-2 ring-gold-300/70'
-              : isActive
-                ? 'shadow-xl shadow-brand-900/12 ring-2 ring-gold-300/45'
-                : 'shadow-md shadow-brand-900/5',
+            ? 'shadow-2xl shadow-brand-900/25 ring-2 ring-gold-300/70'
+            : isActive
+              ? 'shadow-xl shadow-brand-900/12 ring-2 ring-gold-300/45'
+              : 'shadow-md shadow-brand-900/5',
         )}
-        style={{ transformStyle: 'preserve-3d' }}
+        style={isTouch ? undefined : { transformStyle: 'preserve-3d' }}
       >
-        <ProjectCard project={project} />
+        <ProjectCard
+          project={project}
+          thumbnailSrc={shouldLoadImage ? project.imageUrl : undefined}
+          thumbnailLoading="lazy"
+          thumbnailTransform={{ width: 600, quality: 75 }}
+        />
       </motion.div>
     </motion.div>
   );
@@ -150,14 +169,15 @@ function CarouselProjectCard({
 function FeaturedProjectsCarousel({
   locale,
   projects,
-  onHoverProject,
+  onActiveProject,
 }: {
   locale: Locale;
   projects: Project[];
-  onHoverProject: (project: Project | null) => void;
+  onActiveProject: (project: Project | null) => void;
 }) {
   const projectCount = projects.length;
   const reduceMotion = useReducedMotion();
+  const isTouch = useTouchDevice();
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionInView = useInView(containerRef, {
     once: false,
@@ -201,10 +221,18 @@ function FeaturedProjectsCarousel({
   useEffect(() => {
     if (sectionInView) {
       setAutoplay(true);
+    } else {
+      setAutoplay(false);
+      clearResumeTimer();
     }
-  }, [sectionInView]);
+  }, [sectionInView, clearResumeTimer]);
 
   useEffect(() => () => clearResumeTimer(), [clearResumeTimer]);
+
+  // Keep section backdrop in sync with the centered slide (works on touch).
+  useEffect(() => {
+    onActiveProject(projects[activeIndex] ?? null);
+  }, [activeIndex, onActiveProject, projects]);
 
   const measure = useCallback(() => {
     const container = containerRef.current;
@@ -224,9 +252,10 @@ function FeaturedProjectsCarousel({
   }, [measure, projects.length]);
 
   const step = cardWidth + GAP;
-  const isAutoGliding =
+  const isAutoPlaying =
     autoplay &&
     !reduceMotion &&
+    !isTouch &&
     sectionInView &&
     hoveredId == null &&
     !isDragging &&
@@ -242,16 +271,16 @@ function FeaturedProjectsCarousel({
   );
 
   useLayoutEffect(() => {
-    if (isDragging || isAutoGliding) return;
+    if (isDragging || isAutoPlaying) return;
     x.set(getOffsetForIndex(activeIndex + projectCount));
   }, [
     activeIndex,
     cardWidth,
     getOffsetForIndex,
-    isAutoGliding,
+    isAutoPlaying,
     isDragging,
     x,
-    projects.length,
+    projectCount,
   ]);
 
   const goTo = useCallback(
@@ -275,7 +304,7 @@ function FeaturedProjectsCarousel({
 
   // Snap / animate track when active index changes
   useEffect(() => {
-    if (isDragging || isAutoGliding) return;
+    if (isDragging || isAutoPlaying) return;
     if (reduceMotion) {
       x.set(getOffsetForIndex(activeIndex + projectCount));
       return;
@@ -289,60 +318,20 @@ function FeaturedProjectsCarousel({
     activeIndex,
     cardWidth,
     getOffsetForIndex,
-    isAutoGliding,
+    isAutoPlaying,
     isDragging,
     reduceMotion,
     x,
   ]);
 
-  // Continuous autoplay glide (no pause-and-jump).
+  // Discrete autoplay is lighter than continuous rAF glide.
   useEffect(() => {
-    if (!isAutoGliding) return;
-
-    let raf = 0;
-    let lastTs = 0;
-    const pxPerSecond = step / (AUTO_MS / 1000);
-    const loopSpan = step * projectCount;
-    const loopResetX = getOffsetForIndex(projectCount * 2);
-
-    const tick = (ts: number) => {
-      if (!lastTs) {
-        lastTs = ts;
-      }
-      const dt = (ts - lastTs) / 1000;
-      lastTs = ts;
-
-      const container = containerRef.current;
-      if (!container) {
-        raf = window.requestAnimationFrame(tick);
-        return;
-      }
-
-      let nextX = x.get() - pxPerSecond * dt;
-      const base = container.offsetWidth / 2 - cardWidth / 2;
-      if (nextX <= loopResetX) {
-        nextX += loopSpan;
-      }
-
-      x.set(nextX);
-      const approxIndex = (base - nextX) / step;
-      const wrappedIndex =
-        ((Math.round(approxIndex) % projectCount) + projectCount) % projectCount;
-      setActiveIndex((prev) => (prev === wrappedIndex ? prev : wrappedIndex));
-
-      raf = window.requestAnimationFrame(tick);
-    };
-
-    raf = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(raf);
-  }, [
-    cardWidth,
-    getOffsetForIndex,
-    isAutoGliding,
-    projectCount,
-    step,
-    x,
-  ]);
+    if (!isAutoPlaying) return;
+    const timerId = window.setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % projectCount);
+    }, AUTO_MS);
+    return () => window.clearInterval(timerId);
+  }, [isAutoPlaying, projectCount]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -369,28 +358,20 @@ function FeaturedProjectsCarousel({
       return;
     }
     if (!reduceMotion) {
-      animate(x, getOffsetForIndex(activeIndex), {
+      animate(x, getOffsetForIndex(activeIndex + projectCount), {
         duration: 0.45,
         ease: cinematicEase,
       });
     }
   };
 
-  const handleHoverStart = (project: Project, isActive: boolean) => {
+  const handleHoverStart = (project: Project) => {
     setHoveredId(project.id);
-    if (isActive) {
-      onHoverProject(project);
-    }
   };
 
   const handleHoverEnd = () => {
     setHoveredId(null);
-    onHoverProject(null);
   };
-
-  const trackX = reduceMotion
-    ? getOffsetForIndex(activeIndex + projectCount)
-    : undefined;
 
   return (
     <div className="relative mt-6 sm:mt-8">
@@ -401,10 +382,15 @@ function FeaturedProjectsCarousel({
         aria-roledescription="carousel"
         aria-label="Featured Projects"
       >
-        <div className="relative overflow-visible [perspective:1400px]">
+        <div
+          className={cn(
+            'relative overflow-visible',
+            !isTouch && '[perspective:1400px]',
+          )}
+        >
           <motion.div
-            className="flex cursor-grab touch-none py-3 active:cursor-grabbing sm:py-4"
-            style={{ x: reduceMotion ? trackX : x, gap: GAP }}
+            className="flex cursor-grab touch-pan-y py-3 active:cursor-grabbing sm:py-4"
+            style={{ x, gap: GAP }}
             drag={reduceMotion ? false : 'x'}
             dragElastic={0.14}
             onDragStart={() => {
@@ -415,16 +401,20 @@ function FeaturedProjectsCarousel({
           >
             {[...projects, ...projects, ...projects].map((project, index) => {
               const isActive = index % projectCount === activeIndex;
+              const centeredIndex = activeIndex + projectCount;
+              const shouldLoad = Math.abs(index - centeredIndex) <= 1;
               return (
-              <div key={`${project.id}-${index}`} data-carousel-card className="shrink-0">
-                <CarouselProjectCard
-                  project={project}
-                  isActive={isActive}
-                  isHovered={hoveredId === project.id && isActive}
-                  onHoverStart={() => handleHoverStart(project, isActive)}
-                  onHoverEnd={handleHoverEnd}
-                />
-              </div>
+                <div key={`${project.id}-${index}`} data-carousel-card className="shrink-0">
+                  <CarouselProjectCard
+                    project={project}
+                    isActive={isActive}
+                    isHovered={hoveredId === project.id && isActive}
+                    shouldLoadImage={shouldLoad}
+                    isTouch={isTouch}
+                    onHoverStart={() => handleHoverStart(project)}
+                    onHoverEnd={handleHoverEnd}
+                  />
+                </div>
               );
             })}
           </motion.div>
@@ -485,8 +475,8 @@ export default function FeaturedProjectsSection({
   locale,
   projects,
 }: FeaturedProjectsSectionProps) {
-  const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
-  const hasHoverImage = Boolean(hoveredProject?.imageUrl);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const hasActiveImage = Boolean(activeProject?.imageUrl);
 
   return (
     <AnimatedSection
@@ -495,9 +485,9 @@ export default function FeaturedProjectsSection({
       spacing="generous"
       aria-labelledby="featured-projects-heading"
       withBackground={false}
-      backdrop={<FeaturedBackdrop project={hoveredProject} />}
+      backdrop={<FeaturedBackdrop project={activeProject} />}
       overlayClassName={
-        hasHoverImage
+        hasActiveImage
           ? 'bg-gradient-to-b from-cream-100/28 via-cream-50/18 to-cream-100/30 transition-colors duration-700'
           : 'bg-gradient-to-b from-cream-100/32 via-cream-50/22 to-cream-100/34 transition-colors duration-700'
       }
@@ -538,7 +528,7 @@ export default function FeaturedProjectsSection({
             <FeaturedProjectsCarousel
               locale={locale}
               projects={projects}
-              onHoverProject={setHoveredProject}
+              onActiveProject={setActiveProject}
             />
           </div>
         </ScrollReveal>

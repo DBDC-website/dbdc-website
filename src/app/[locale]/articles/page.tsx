@@ -4,6 +4,7 @@ import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 import { getArticles } from '@/lib/articles';
+import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 
 export const metadata: Metadata = {
   title: 'Related Articles',
@@ -24,7 +25,10 @@ export default async function ArticlesPage() {
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
         backgroundImage={{
-          src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets/indoor-1.jpg',
+          src: withSupabaseImageTransform(
+            'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets/indoor-1.jpg',
+            { width: 1200, quality: 80 },
+          ),
           alt: 'Baptismal chapel with mosaic mural',
           objectPosition: 'center 72%',
         }}

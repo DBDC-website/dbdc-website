@@ -4,6 +4,10 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/cn';
 import type { ProjectPlaceholderStyle } from '@/constants/projectPlaceholders';
+import {
+  withSupabaseImageTransform,
+  type SupabaseImageTransform,
+} from '@/lib/supabaseImage';
 
 type PlaceholderImageProps = {
   alt: string;
@@ -17,6 +21,7 @@ type PlaceholderImageProps = {
   className?: string;
   imageClassName?: string;
   priority?: boolean;
+  loading?: 'lazy' | 'eager';
   /** How the image fills its container when `src` is set. */
   fit?: 'cover' | 'contain';
   /** Intrinsic dimensions for `fit="contain"` — preserves natural aspect ratio. */
@@ -24,6 +29,7 @@ type PlaceholderImageProps = {
   height?: number;
   /** Optional gradient overlay on photographic images. */
   overlay?: boolean;
+  supabaseTransform?: SupabaseImageTransform;
 };
 
 const styleOverlay: Record<ProjectPlaceholderStyle, string> = {
@@ -102,15 +108,23 @@ export default function PlaceholderImage({
   className,
   imageClassName,
   priority = false,
+  loading = 'lazy',
   fit = 'cover',
   width,
   height,
   overlay = true,
+  supabaseTransform,
 }: PlaceholderImageProps) {
   const [failed, setFailed] = useState(false);
   const showLabel = Boolean(label);
+  const resolvedSrc = src
+    ? withSupabaseImageTransform(
+        src,
+        supabaseTransform ?? { width: 800, quality: 80 },
+      )
+    : undefined;
 
-  if (!src || failed) {
+  if (!resolvedSrc || failed) {
     return (
       <GradientFallback
         alt={alt}
@@ -128,13 +142,14 @@ export default function PlaceholderImage({
     return (
       <div className={cn('relative', className)}>
         <Image
-          src={src}
+          src={resolvedSrc}
           alt={alt}
           width={width ?? 1200}
           height={height ?? 800}
           className={cn('h-auto w-full object-contain', imageClassName)}
           sizes="(max-width: 1024px) 100vw, 60vw"
           priority={priority}
+          loading={priority ? undefined : loading}
           onError={() => setFailed(true)}
         />
       </div>
@@ -144,12 +159,13 @@ export default function PlaceholderImage({
   return (
     <div className={cn('relative overflow-hidden', className)}>
       <Image
-        src={src}
+        src={resolvedSrc}
         alt={alt}
         fill
         className={cn('object-cover', imageClassName)}
         sizes="(max-width: 768px) 100vw, 50vw"
         priority={priority}
+        loading={priority ? undefined : loading}
         onError={() => setFailed(true)}
       />
       {overlay ? (

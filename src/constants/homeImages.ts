@@ -1,7 +1,11 @@
 /** Site imagery — public files under Supabase `website-assets` or `/public`. */
+import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 
 const ASSETS =
   'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets';
+const TRANSFORM = { width: 1200, quality: 80 } as const;
+const withDefaultTransform = (src: string) =>
+  withSupabaseImageTransform(src, TRANSFORM);
 
 export type HeroSlide = {
   src: string;
@@ -13,22 +17,22 @@ export type HeroSlide = {
 /** Homepage hero carousel — first slide is shown on load. */
 export const heroSlides: HeroSlide[] = [
   {
-    src: `${ASSETS}/indoor-statue-mary.jpg`,
+    src: withDefaultTransform(`${ASSETS}/indoor-statue-mary.jpg`),
     alt: 'Statue of Our Lady in a chapel interior',
     objectPosition: 'center 22%',
   },
   {
-    src: `${ASSETS}/jesus-statue-closeup.jpg`,
-    alt: 'Close-up of a statue of Jesus',
-    objectPosition: 'center 30%',
+    src: withDefaultTransform(`${ASSETS}/outdoor-church-3.jpg`),
+    alt: 'Church facade with rose window against blue sky',
+    objectPosition: 'center 35%',
   },
   {
-    src: `${ASSETS}/indoor-1.jpg`,
+    src: withDefaultTransform(`${ASSETS}/indoor-1.jpg`),
     alt: 'Baptismal chapel with mosaic mural',
     objectPosition: 'center 35%',
   },
   {
-    src: `${ASSETS}/outdoor-bridge.jpg`,
+    src: withDefaultTransform(`${ASSETS}/outdoor-bridge.jpg`),
     alt: 'White cross overlooking a coastal bridge',
     objectPosition: 'center 40%',
   },
@@ -47,43 +51,51 @@ export const homeImages = {
   },
   /** About section — single photo split into halves that meet in the centre. */
   aboutMeet: {
-    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/CC%28CR%29_ren2019_02.jpg',
+    src: withDefaultTransform(
+      'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/CC%28CR%29_ren2019_02.jpg',
+    ),
     alt: 'Aerial view of a white cathedral with dark green roof in an urban setting',
     objectPosition: 'center 42%',
   },
   /** Default backdrop for homepage Featured projects. */
   featuredProjects: {
-    src: `${ASSETS}/outdoor-church-3.jpg`,
+    src: withDefaultTransform(`${ASSETS}/outdoor-church-3.jpg`),
     alt: 'Church facade with rose window against blue sky',
     objectPosition: 'center 35%',
   },
   /** Homepage Membership section — full-bleed photo behind the orange panel. */
   membership: {
-    src: `${ASSETS}/jesus-statue-closeup.jpg`,
-    alt: 'Close-up of a statue of Jesus',
-    objectPosition: 'center 30%',
+    src: withDefaultTransform(`${ASSETS}/outdoor-bridge.jpg`),
+    alt: 'White cross overlooking a coastal bridge',
+    objectPosition: 'center 40%',
   },
   /** Homepage Committees section backdrop. */
   committees: {
-    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/SJ%28YT%29_ren2021_02.jpg',
+    src: withDefaultTransform(
+      'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/SJ%28YT%29_ren2021_02.jpg',
+    ),
     alt: 'Fan-ceiling chapel interior with curved wooden pews',
     objectPosition: 'center 48%',
   },
   /** Individual committee detail pages. */
   committeeDetail: {
-    src: `${ASSETS}/jesus-statue-full.jpg`,
-    alt: 'Full-length statue of Jesus in a chapel interior',
-    objectPosition: 'center 30%',
+    src: withDefaultTransform(`${ASSETS}/indoor-statue-mary.jpg`),
+    alt: 'Statue of Our Lady in a chapel interior',
+    objectPosition: 'center 22%',
   },
   /** Selected Projects page hero — bright chapel interior with mosaic altar. */
   projectsHeader: {
-    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/SJ%28FL%29_ext_03.JPG',
+    src: withDefaultTransform(
+      'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/SJ%28FL%29_ext_03.JPG',
+    ),
     alt: 'Chapel interior with curved wooden pews and a blue-and-gold mosaic behind the altar',
     objectPosition: 'center 42%',
   },
   /** Parish & School Corner hero — hilltop church facade. */
   parishSchoolHeader: {
-    src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/STCK%28SL%29_ren2019_01.jpg',
+    src: withDefaultTransform(
+      'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/STCK%28SL%29_ren2019_01.jpg',
+    ),
     alt: 'Colorful children playroom mural with space-themed artwork',
     objectPosition: 'center 46%',
   },

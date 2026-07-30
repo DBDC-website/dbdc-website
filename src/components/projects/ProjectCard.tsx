@@ -1,8 +1,21 @@
 import PlaceholderImage from '@/components/ui/PlaceholderImage';
 import { getProjectPlaceholder } from '@/constants/projectPlaceholders';
+import type { SupabaseImageTransform } from '@/lib/supabaseImage';
 import type { Project } from '@/types/project';
 
-export default function ProjectCard({ project }: { project: Project }) {
+type ProjectCardProps = {
+  project: Project;
+  thumbnailSrc?: string | null;
+  thumbnailLoading?: 'lazy' | 'eager';
+  thumbnailTransform?: SupabaseImageTransform;
+};
+
+export default function ProjectCard({
+  project,
+  thumbnailSrc,
+  thumbnailLoading,
+  thumbnailTransform,
+}: ProjectCardProps) {
   const placeholder = getProjectPlaceholder(project);
   const label = project.buildingName ?? 'Project';
 
@@ -10,12 +23,14 @@ export default function ProjectCard({ project }: { project: Project }) {
     <div className="group relative h-full overflow-hidden rounded-2xl border border-white/35 bg-brand-900/10 shadow-lg shadow-brand-900/20">
       <PlaceholderImage
         alt={project.imageAlt}
-        src={project.imageUrl ?? undefined}
+        src={thumbnailSrc ?? project.imageUrl ?? undefined}
         gradient={placeholder.gradient}
         label={placeholder.label}
         sublabel={placeholder.sublabel}
         style={placeholder.style}
         className="aspect-[16/10] w-full transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+        loading={thumbnailLoading}
+        supabaseTransform={thumbnailTransform}
       />
 
       <div

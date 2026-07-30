@@ -110,6 +110,7 @@ export default function AnimatedPageHeader({
             fill
             priority
             sizes="100vw"
+            unoptimized
             className="object-cover"
             style={{
               objectPosition: backgroundImage.objectPosition ?? 'center center',

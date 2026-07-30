@@ -33,7 +33,7 @@ export function StaggerChildren({
   return (
     <MotionTag
       className={cn(className)}
-      initial="hidden"
+      initial={false}
       whileInView="visible"
       viewport={{ once: true, amount: 0.12 }}
       variants={staggerContainerVariants}

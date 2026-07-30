@@ -10,6 +10,7 @@ import {
   useTransform,
 } from 'framer-motion';
 import { heroSlides } from '@/constants/homeImages';
+import { useTouchDevice } from '@/hooks/useTouchDevice';
 
 /** Time until the first slide change after load. */
 const FIRST_SLIDE_MS = 2800;
@@ -35,7 +36,9 @@ const slideVariants = {
 
 export default function HeroParallaxBackground() {
   const reduceMotion = useReducedMotion();
+  const isTouch = useTouchDevice();
   const [index, setIndex] = useState(0);
+  const simplifyMotion = Boolean(reduceMotion || isTouch);
 
   const { scrollYProgress } = useScroll({
     offset: ['start start', 'end start'],
@@ -45,7 +48,7 @@ export default function HeroParallaxBackground() {
   const parallaxOpacity = useTransform(scrollYProgress, [0, 0.85], [1, 0.45]);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    if (simplifyMotion) return;
 
     let intervalId: number | undefined;
     const timeoutId = window.setTimeout(() => {
@@ -59,14 +62,15 @@ export default function HeroParallaxBackground() {
       window.clearTimeout(timeoutId);
       if (intervalId !== undefined) window.clearInterval(intervalId);
     };
-  }, [reduceMotion]);
+  }, [simplifyMotion]);
 
   useEffect(() => {
+    if (simplifyMotion) return;
     heroSlides.slice(1).forEach((slide) => {
       const img = new window.Image();
       img.src = slide.src;
     });
-  }, []);
+  }, [simplifyMotion]);
 
   const active = heroSlides[index] ?? heroSlides[0];
 
@@ -74,7 +78,7 @@ export default function HeroParallaxBackground() {
     <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-800 to-sage-300/40" />
 
-      {reduceMotion ? (
+      {simplifyMotion ? (
         <div className="absolute inset-0">
           <Image
             src={heroSlides[0].src}
@@ -84,6 +88,7 @@ export default function HeroParallaxBackground() {
             sizes="100vw"
             className="object-cover"
             style={{ objectPosition: heroSlides[0].objectPosition }}
+            unoptimized
           />
         </div>
       ) : (
@@ -110,6 +115,7 @@ export default function HeroParallaxBackground() {
                   sizes="100vw"
                   className="object-cover"
                   style={{ objectPosition: active.objectPosition }}
+                  unoptimized
                 />
               </div>
             </motion.div>

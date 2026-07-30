@@ -36,6 +36,10 @@ export default function RootLayout({
       className={`${inter.variable} ${lora.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://cgwkyszmhbwirecaxbuq.supabase.co" />
+        <link rel="dns-prefetch" href="https://cgwkyszmhbwirecaxbuq.supabase.co" />
+      </head>
       <body className="flex min-h-screen flex-col antialiased">
         <SmoothScroll>{children}</SmoothScroll>
       </body>

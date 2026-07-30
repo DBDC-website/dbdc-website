@@ -9,6 +9,7 @@ import { getProjectPlaceholder } from '@/constants/projectPlaceholders';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PlaceholderImage from '@/components/ui/PlaceholderImage';
 import { cinematicEase } from '@/lib/motion';
+import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 import { setSiteChromeHidden } from '@/lib/siteChrome';
 import type { Project } from '@/types/project';
 
@@ -18,8 +19,9 @@ function projectGallery(project: Project): Array<{ src: string; alt: string; cap
 
   const push = (src: string | null | undefined, alt: string, caption?: string | null) => {
     if (!src || seen.has(src)) return;
-    seen.add(src);
-    items.push({ src, alt, caption });
+    const transformedSrc = withSupabaseImageTransform(src, { width: 800, quality: 80 });
+    seen.add(transformedSrc);
+    items.push({ src: transformedSrc, alt, caption });
   };
 
   push(project.imageUrl, project.imageAlt);

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { homeImages } from '@/constants/homeImages';
+import { useTouchDevice } from '@/hooks/useTouchDevice';
 
 type SectionParallaxBackgroundProps = {
   sectionRef: React.RefObject<HTMLElement | null>;
@@ -15,6 +16,8 @@ export default function SectionParallaxBackground({
   imageOpacity = 0.22,
 }: SectionParallaxBackgroundProps) {
   const reduceMotion = useReducedMotion();
+  const isTouch = useTouchDevice();
+  const simplifyMotion = Boolean(reduceMotion || isTouch);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -24,7 +27,7 @@ export default function SectionParallaxBackground({
   const y = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
   const scale = useTransform(scrollYProgress, [0, 1], [1.06, 1.12]);
 
-  if (reduceMotion) {
+  if (simplifyMotion) {
     return (
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <Image
@@ -34,6 +37,7 @@ export default function SectionParallaxBackground({
           className="object-cover"
           style={{ opacity: imageOpacity * 0.75 }}
           sizes="100vw"
+          unoptimized
         />
       </div>
     );
@@ -49,6 +53,7 @@ export default function SectionParallaxBackground({
           className="object-cover"
           style={{ opacity: imageOpacity }}
           sizes="100vw"
+          unoptimized
         />
       </motion.div>
     </div>
