@@ -64,7 +64,7 @@ function FeaturedBackdrop({ project }: { project: Project | null }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.94 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: cinematicEase }}
+            transition={{ duration: 0.45, ease: cinematicEase }}
           >
             <Image
               src={hoverSrc}
@@ -169,11 +169,11 @@ function CarouselProjectCard({
 function FeaturedProjectsCarousel({
   locale,
   projects,
-  onActiveProject,
+  onHoverProject,
 }: {
   locale: Locale;
   projects: Project[];
-  onActiveProject: (project: Project | null) => void;
+  onHoverProject: (project: Project | null) => void;
 }) {
   const projectCount = projects.length;
   const reduceMotion = useReducedMotion();
@@ -190,7 +190,7 @@ function FeaturedProjectsCarousel({
   );
   const [cardWidth, setCardWidth] = useState(320);
   const [isDragging, setIsDragging] = useState(false);
-  const [autoplay, setAutoplay] = useState(false);
+  const [autoplay, setAutoplay] = useState(true);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const x = useMotionValue(0);
   const resumeTimerRef = useRef<number | null>(null);
@@ -214,7 +214,7 @@ function FeaturedProjectsCarousel({
 
   useEffect(() => {
     setActiveIndex(getInitialIndex(projects.length));
-    setAutoplay(false);
+    setAutoplay(true);
     clearResumeTimer();
   }, [projects.length, clearResumeTimer]);
 
@@ -228,11 +228,6 @@ function FeaturedProjectsCarousel({
   }, [sectionInView, clearResumeTimer]);
 
   useEffect(() => () => clearResumeTimer(), [clearResumeTimer]);
-
-  // Keep section backdrop in sync with the centered slide (works on touch).
-  useEffect(() => {
-    onActiveProject(projects[activeIndex] ?? null);
-  }, [activeIndex, onActiveProject, projects]);
 
   const measure = useCallback(() => {
     const container = containerRef.current;
@@ -252,10 +247,9 @@ function FeaturedProjectsCarousel({
   }, [measure, projects.length]);
 
   const step = cardWidth + GAP;
-  const isAutoPlaying =
+  const isAutoGliding =
     autoplay &&
     !reduceMotion &&
-    !isTouch &&
     sectionInView &&
     hoveredId == null &&
     !isDragging &&
@@ -271,13 +265,13 @@ function FeaturedProjectsCarousel({
   );
 
   useLayoutEffect(() => {
-    if (isDragging || isAutoPlaying) return;
+    if (isDragging || isAutoGliding) return;
     x.set(getOffsetForIndex(activeIndex + projectCount));
   }, [
     activeIndex,
     cardWidth,
     getOffsetForIndex,
-    isAutoPlaying,
+    isAutoGliding,
     isDragging,
     x,
     projectCount,
@@ -302,9 +296,9 @@ function FeaturedProjectsCarousel({
     [activeIndex, goTo],
   );
 
-  // Snap / animate track when active index changes
+  // Snap / animate track when active index changes (manual nav / drag).
   useEffect(() => {
-    if (isDragging || isAutoPlaying) return;
+    if (isDragging || isAutoGliding) return;
     if (reduceMotion) {
       x.set(getOffsetForIndex(activeIndex + projectCount));
       return;
@@ -318,20 +312,61 @@ function FeaturedProjectsCarousel({
     activeIndex,
     cardWidth,
     getOffsetForIndex,
-    isAutoPlaying,
+    isAutoGliding,
     isDragging,
+    projectCount,
     reduceMotion,
     x,
   ]);
 
-  // Discrete autoplay is lighter than continuous rAF glide.
+  // Continuous infinite glide (right → left).
   useEffect(() => {
-    if (!isAutoPlaying) return;
-    const timerId = window.setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % projectCount);
-    }, AUTO_MS);
-    return () => window.clearInterval(timerId);
-  }, [isAutoPlaying, projectCount]);
+    if (!isAutoGliding) return;
+
+    let raf = 0;
+    let lastTs = 0;
+    const pxPerSecond = step / (AUTO_MS / 1000);
+    const loopSpan = step * projectCount;
+    const loopResetX = getOffsetForIndex(projectCount * 2);
+
+    const tick = (ts: number) => {
+      if (!lastTs) {
+        lastTs = ts;
+      }
+      const dt = (ts - lastTs) / 1000;
+      lastTs = ts;
+
+      const container = containerRef.current;
+      if (!container) {
+        raf = window.requestAnimationFrame(tick);
+        return;
+      }
+
+      let nextX = x.get() - pxPerSecond * dt;
+      const base = container.offsetWidth / 2 - cardWidth / 2;
+      if (nextX <= loopResetX) {
+        nextX += loopSpan;
+      }
+
+      x.set(nextX);
+      const approxIndex = (base - nextX) / step;
+      const wrappedIndex =
+        ((Math.round(approxIndex) % projectCount) + projectCount) % projectCount;
+      setActiveIndex((prev) => (prev === wrappedIndex ? prev : wrappedIndex));
+
+      raf = window.requestAnimationFrame(tick);
+    };
+
+    raf = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(raf);
+  }, [
+    cardWidth,
+    getOffsetForIndex,
+    isAutoGliding,
+    projectCount,
+    step,
+    x,
+  ]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -365,12 +400,16 @@ function FeaturedProjectsCarousel({
     }
   };
 
-  const handleHoverStart = (project: Project) => {
+  const handleHoverStart = (project: Project, isActive: boolean) => {
     setHoveredId(project.id);
+    if (isActive) {
+      onHoverProject(project);
+    }
   };
 
   const handleHoverEnd = () => {
     setHoveredId(null);
+    onHoverProject(null);
   };
 
   return (
@@ -404,21 +443,24 @@ function FeaturedProjectsCarousel({
               const centeredIndex = activeIndex + projectCount;
               const shouldLoad = Math.abs(index - centeredIndex) <= 1;
               return (
-                <div key={`${project.id}-${index}`} data-carousel-card className="shrink-0">
+                <div
+                  key={`${project.id}-${index}`}
+                  data-carousel-card
+                  className="shrink-0"
+                >
                   <CarouselProjectCard
                     project={project}
                     isActive={isActive}
                     isHovered={hoveredId === project.id && isActive}
                     shouldLoadImage={shouldLoad}
                     isTouch={isTouch}
-                    onHoverStart={() => handleHoverStart(project)}
+                    onHoverStart={() => handleHoverStart(project, isActive)}
                     onHoverEnd={handleHoverEnd}
                   />
                 </div>
               );
             })}
           </motion.div>
-
         </div>
       </div>
 
@@ -475,8 +517,8 @@ export default function FeaturedProjectsSection({
   locale,
   projects,
 }: FeaturedProjectsSectionProps) {
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
-  const hasActiveImage = Boolean(activeProject?.imageUrl);
+  const [hoveredProject, setHoveredProject] = useState<Project | null>(null);
+  const hasHoverImage = Boolean(hoveredProject?.imageUrl);
 
   return (
     <AnimatedSection
@@ -485,9 +527,9 @@ export default function FeaturedProjectsSection({
       spacing="generous"
       aria-labelledby="featured-projects-heading"
       withBackground={false}
-      backdrop={<FeaturedBackdrop project={activeProject} />}
+      backdrop={<FeaturedBackdrop project={hoveredProject} />}
       overlayClassName={
-        hasActiveImage
+        hasHoverImage
           ? 'bg-gradient-to-b from-cream-100/28 via-cream-50/18 to-cream-100/30 transition-colors duration-700'
           : 'bg-gradient-to-b from-cream-100/32 via-cream-50/22 to-cream-100/34 transition-colors duration-700'
       }
@@ -528,7 +570,7 @@ export default function FeaturedProjectsSection({
             <FeaturedProjectsCarousel
               locale={locale}
               projects={projects}
-              onActiveProject={setActiveProject}
+              onHoverProject={setHoveredProject}
             />
           </div>
         </ScrollReveal>
