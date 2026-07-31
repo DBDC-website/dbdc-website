@@ -14,6 +14,8 @@ type PageSectionProps = {
   children: React.ReactNode;
   heading?: PageSectionHeading;
   headingClassName?: string;
+  /** Soft cream cylinder behind subsection titles. Defaults on. */
+  headingGlow?: boolean;
   ruleClassName?: string;
   contentClassName?: string;
   contentDelay?: number;
@@ -37,6 +39,7 @@ export default function PageSection({
   children,
   heading,
   headingClassName,
+  headingGlow = true,
   ruleClassName,
   contentClassName,
   contentDelay = 0.08,
@@ -64,11 +67,13 @@ export default function PageSection({
             eyebrow={heading.eyebrow}
             title={heading.title}
             description={heading.description}
+            glow={headingGlow}
             className={cn('[&_h2]:text-3xl [&_h2]:sm:text-4xl', headingClassName)}
           />
           <div
             className={cn(
               'mt-5 h-px w-20 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent',
+              headingGlow && 'ml-3 sm:ml-4',
               ruleClassName,
             )}
             aria-hidden="true"

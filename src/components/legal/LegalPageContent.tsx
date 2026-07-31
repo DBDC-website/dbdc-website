@@ -3,12 +3,13 @@ import Container from '@/components/ui/Container';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import { homeImages } from '@/constants/homeImages';
 import type { LegalPageContentData } from '@/constants/legal';
+import HeadingGlow from '@/components/ui/HeadingGlow';
 
 type LegalPageContentProps = {
   content: LegalPageContentData;
 };
 
-const pageBackdrop = homeImages.committeeDetail;
+const pageBackdrop = homeImages.legalPage;
 
 export default function LegalPageContent({ content }: LegalPageContentProps) {
   return (
@@ -63,15 +64,11 @@ export default function LegalPageContent({ content }: LegalPageContentProps) {
           <div className="space-y-8 sm:space-y-10">
             {content.sections.map((section) => (
               <section key={section.heading} className="space-y-3 sm:space-y-4">
-                <div className="relative w-fit max-w-full py-1.5 sm:py-2">
-                  <div
-                    className="pointer-events-none absolute -inset-y-2 -left-3 -right-8 rounded-full bg-[radial-gradient(ellipse_at_18%_45%,rgba(255,252,245,0.92)_0%,rgba(255,248,235,0.55)_48%,transparent_78%)] sm:-left-4 sm:-right-10"
-                    aria-hidden="true"
-                  />
-                  <h2 className="relative font-serif text-xl font-semibold text-brand-950 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.8)] sm:text-2xl">
+                <HeadingGlow>
+                  <h2 className="font-serif text-xl font-semibold text-brand-950 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.8)] sm:text-2xl">
                     {section.heading}
                   </h2>
-                </div>
+                </HeadingGlow>
 
                 <div className="space-y-3 rounded-2xl border border-sky-200/60 bg-gradient-to-br from-[#e8f6fc]/88 via-[#fff8eb]/84 to-[#fde8d4]/88 px-4 py-4 shadow-sm shadow-brand-900/10 sm:px-5 sm:py-5">
                   {section.paragraphs.map((paragraph) => (

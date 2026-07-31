@@ -7,6 +7,7 @@ import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import AnimatedSection from '@/components/ui/AnimatedSection';
+import HeadingGlow from '@/components/ui/HeadingGlow';
 import { featuredExperiences } from '@/components/projects/ExperienceCards';
 import type { Locale } from '@/constants/i18n';
 import { homeImages } from '@/constants/homeImages';
@@ -17,7 +18,7 @@ type FeaturedExperiencesSectionProps = {
   locale: Locale;
 };
 
-const experiencesBackdrop = homeImages.featuredProjects;
+const experiencesBackdrop = homeImages.featuredExperiences;
 
 const virtualTour = featuredExperiences[0];
 const heritage = featuredExperiences[1];
@@ -30,7 +31,7 @@ function ExperiencesBackdrop() {
         alt=""
         fill
         sizes="100vw"
-        className="object-cover opacity-[0.88]"
+        className="object-cover"
         style={{ objectPosition: experiencesBackdrop.objectPosition }}
         priority={false}
       />
@@ -194,26 +195,22 @@ export default function FeaturedExperiencesSection({
       aria-labelledby="featured-experiences-heading"
       withBackground={false}
       backdrop={<ExperiencesBackdrop />}
-      overlayClassName="bg-gradient-to-b from-cream-100/40 via-cream-50/28 to-cream-100/42"
+      overlayClassName="bg-gradient-to-b from-[#fff8eb]/28 via-[#f7f1e6]/18 to-[#eef4f8]/24"
       overflowVisible={false}
       className="!overflow-x-clip"
     >
       <ScrollReveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-3xl">
-            <div className="relative">
-              <div
-                className="pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-full bg-[radial-gradient(ellipse_at_20%_40%,rgba(255,252,245,0.85)_0%,rgba(255,248,235,0.45)_40%,transparent_70%)] sm:-inset-x-8"
-                aria-hidden="true"
-              />
+            <HeadingGlow>
               <h2
                 id="featured-experiences-heading"
-                className="relative scroll-mt-28 text-4xl font-semibold leading-tight text-brand-950 [text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] sm:scroll-mt-32 sm:text-5xl lg:scroll-mt-36"
+                className="scroll-mt-28 text-4xl font-semibold leading-tight text-brand-950 [text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] sm:scroll-mt-32 sm:text-5xl lg:scroll-mt-36"
               >
                 Featured Experiences
               </h2>
-            </div>
-            <p className="mt-4 text-base font-medium leading-relaxed text-brand-900 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.75)] sm:text-lg">
+            </HeadingGlow>
+            <p className="mt-4 text-base font-medium leading-relaxed text-brand-950 [text-shadow:0_0_10px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,1),0_0_32px_rgba(255,252,245,1),0_0_52px_rgba(255,248,235,0.95),0_1px_2px_rgba(255,255,255,1)] sm:text-lg">
               Step inside Churches &amp; Seminary virtually or explore the
               Catholic Heritage archive online.
             </p>

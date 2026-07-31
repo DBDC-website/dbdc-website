@@ -3,6 +3,7 @@ import { RegistrationCards } from '@/components/consultants/ConsultantsPageConte
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
+import { homeImages } from '@/constants/homeImages';
 
 export const metadata: Metadata = {
   title: 'Consultants & Contractors',
@@ -27,9 +28,9 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
         backgroundImage={{
-          src: 'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets/outdoor-bridge.jpg',
-          alt: 'White cross overlooking a coastal bridge',
-          objectPosition: 'center 40%',
+          src: homeImages.consultantsHeader.src,
+          alt: homeImages.consultantsHeader.alt,
+          objectPosition: homeImages.consultantsHeader.objectPosition,
         }}
       />
 

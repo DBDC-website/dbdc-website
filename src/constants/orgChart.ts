@@ -164,7 +164,7 @@ export const orgChartEdges: OrgEdge[] = [
     id: 'lower-office',
     from: 'selection',
     to: 'office',
-    d: 'M 400 490 V 516',
+    d: 'M 400 444 V 516',
   },
   {
     id: 'works-lower',

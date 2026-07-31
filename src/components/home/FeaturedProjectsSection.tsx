@@ -16,6 +16,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProjectCard from '@/components/projects/ProjectCard';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import AnimatedSection from '@/components/ui/AnimatedSection';
+import HeadingGlow from '@/components/ui/HeadingGlow';
 import type { Locale } from '@/constants/i18n';
 import { homeImages } from '@/constants/homeImages';
 import { cinematicEase } from '@/lib/motion';
@@ -505,18 +506,14 @@ export default function FeaturedProjectsSection({
       <ScrollReveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-3xl">
-            <div className="relative">
-              <div
-                className="pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-full bg-[radial-gradient(ellipse_at_20%_40%,rgba(255,252,245,0.85)_0%,rgba(255,248,235,0.45)_40%,transparent_70%)] sm:-inset-x-8"
-                aria-hidden="true"
-              />
+            <HeadingGlow>
               <h2
                 id="featured-projects-heading"
-                className="relative scroll-mt-28 text-4xl font-semibold leading-tight text-brand-950 [text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] sm:scroll-mt-32 sm:text-5xl lg:scroll-mt-36"
+                className="scroll-mt-28 text-4xl font-semibold leading-tight text-brand-950 [text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] sm:scroll-mt-32 sm:text-5xl lg:scroll-mt-36"
               >
                 Featured Projects
               </h2>
-            </div>
+            </HeadingGlow>
             <p className="mt-4 text-base font-medium leading-relaxed text-brand-900 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.75)] sm:text-lg">
               A selection of Diocesan building and development initiatives across
               Hong Kong.

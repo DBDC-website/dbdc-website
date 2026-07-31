@@ -42,18 +42,16 @@ export default function CommitteesSection({ locale }: CommitteesSectionProps) {
       overlayClassName="bg-gradient-to-b from-cream-50/78 via-cream-50/68 to-cream-100/74"
     >
       <ScrollReveal>
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute -inset-x-4 -inset-y-3 rounded-full bg-[radial-gradient(ellipse_at_20%_40%,rgba(255,252,245,0.92)_0%,rgba(255,248,235,0.55)_40%,transparent_70%)] sm:-inset-x-8"
-            aria-hidden="true"
-          />
-          <SectionHeading
-            id="committees-heading"
-            title="Committees"
-            className="relative [&_h2]:text-4xl [&_h2]:font-semibold [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_22px_rgba(255,255,255,1),0_0_48px_rgba(255,252,245,0.98),0_0_80px_rgba(255,248,235,0.9)] [&_h2]:sm:text-5xl"
-          />
-        </div>
-        <div className="relative mt-4 h-px w-16 bg-gold-400" aria-hidden="true" />
+        <SectionHeading
+          id="committees-heading"
+          title="Committees"
+          glow
+          className="[&_h2]:text-4xl [&_h2]:font-semibold [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_22px_rgba(255,255,255,1),0_0_48px_rgba(255,252,245,0.98),0_0_80px_rgba(255,248,235,0.9)] [&_h2]:sm:text-5xl"
+        />
+        <div
+          className="relative ml-3 mt-4 h-px w-16 bg-gold-400 sm:ml-4"
+          aria-hidden="true"
+        />
       </ScrollReveal>
 
       <StaggerChildren as="ul" className="mt-10 space-y-4">

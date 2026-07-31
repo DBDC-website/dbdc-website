@@ -6,6 +6,7 @@ import ParishFlowcharts from '@/components/parish-school/ParishFlowcharts';
 import ParishGuidelinesTips from '@/components/parish-school/ParishGuidelinesTips';
 import Container from '@/components/ui/Container';
 import AnimatedSection from '@/components/ui/AnimatedSection';
+import HeadingGlow from '@/components/ui/HeadingGlow';
 import { parishGuidelines } from '@/constants/parishGuidelines';
 import { homeImages } from '@/constants/homeImages';
 import { locales, type Locale } from '@/constants/i18n';
@@ -14,7 +15,7 @@ type GuidelinesPageProps = {
   params: Promise<{ locale: string }>;
 };
 
-const pageBackdrop = homeImages.committeeDetail;
+const pageBackdrop = homeImages.guidelinesPage;
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -41,9 +42,9 @@ export default async function ParishGuidelinesPage({ params }: GuidelinesPagePro
           style={{ objectPosition: pageBackdrop.objectPosition }}
           priority
         />
-        <div className="absolute inset-0 bg-brand-950/45" />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-900/35 via-brand-950/25 to-brand-950/50" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(255,252,245,0.12),transparent_55%)]" />
+        <div className="absolute inset-0 bg-cream-50/14" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fff8eb]/16 via-cream-50/10 to-[#f5efe4]/14" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_18%,rgba(255,252,245,0.1),transparent_55%)]" />
       </div>
 
       <div className="relative z-10">
@@ -101,18 +102,14 @@ export default async function ParishGuidelinesPage({ params }: GuidelinesPagePro
           className="!pb-12 !pt-4 sm:!pb-14 sm:!pt-6"
           aria-labelledby="flowcharts-heading"
         >
-          <div className="relative mb-6 w-fit max-w-3xl py-2 sm:mb-8 sm:py-3">
-            <div
-              className="pointer-events-none absolute -inset-y-2 -left-3 -right-10 rounded-full bg-[radial-gradient(ellipse_at_18%_45%,rgba(255,252,245,0.92)_0%,rgba(255,248,235,0.55)_48%,transparent_78%)] sm:-left-5 sm:-right-14"
-              aria-hidden="true"
-            />
+          <HeadingGlow className="mb-6 sm:mb-8">
             <h2
               id="flowcharts-heading"
-              className="relative scroll-mt-28 font-serif text-3xl font-semibold text-brand-950 [text-shadow:0_0_16px_rgba(255,255,255,0.95),0_0_32px_rgba(255,252,245,0.8)] sm:scroll-mt-32 sm:text-4xl"
+              className="scroll-mt-28 font-serif text-3xl font-semibold text-brand-950 [text-shadow:0_0_16px_rgba(255,255,255,0.95),0_0_32px_rgba(255,252,245,0.8)] sm:scroll-mt-32 sm:text-4xl"
             >
               {parishGuidelines.flowchartsTitle}
             </h2>
-          </div>
+          </HeadingGlow>
 
           <ParishFlowcharts flowcharts={parishGuidelines.flowcharts} />
         </AnimatedSection>
