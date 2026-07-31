@@ -2,6 +2,8 @@
 
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import type { BaseRegistrationValues } from '@/lib/validations/registration';
 import DocumentUploadField from '@/components/registration/DocumentUploadField';
 import SignaturePad from '@/components/registration/SignaturePad';
@@ -335,8 +337,15 @@ export function PreviousProjectsSection() {
 }
 
 export function RemarksSection() {
-  const { register, watch, setValue } = useFormContext<BaseRegistrationValues>();
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<BaseRegistrationValues>();
   const auditedAccountDocumentUrls = watch('auditedAccountDocumentUrls') ?? [];
+  const params = useParams();
+  const locale = typeof params?.locale === 'string' ? params.locale : 'en';
 
   return (
     <FormSection title="Remarks">
@@ -364,14 +373,36 @@ export function RemarksSection() {
             />
           </div>
         </div>
-        <CheckboxField
-          label="We have provided our company's audited accounts for the past 3 years, where available."
-          {...register('auditedAccountsProvided')}
-        />
-        <CheckboxField
-          label="We hereby agree DBDC may publish our company's particulars on the DBDC website."
-          {...register('publishCompany')}
-        />
+        <div>
+          <CheckboxField
+            label="I have read and agree to the Personal Information Collection Statement. I understand that confidential information submitted in this form will be used only for DBDC registration purposes and handled in accordance with the Diocese’s privacy policy."
+            {...register('privacyAgreed')}
+          />
+          {errors.privacyAgreed?.message ? (
+            <p className="mt-2 text-xs font-medium text-red-600" role="alert">
+              {errors.privacyAgreed.message}
+            </p>
+          ) : null}
+          <p className="mt-2 text-xs text-stone-500">
+            <Link
+              href={`/${locale}/pics`}
+              className="font-medium text-brand-800 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Read the Personal Information Collection Statement
+            </Link>
+            {' · '}
+            <Link
+              href={`/${locale}/privacy-policy`}
+              className="font-medium text-brand-800 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy Policy
+            </Link>
+          </p>
+        </div>
       </div>
     </FormSection>
   );

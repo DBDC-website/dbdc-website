@@ -130,8 +130,6 @@ const baseRegistrationShape = {
 
   businessRegistrationDocumentUrls: documentUrlsSchema,
 
-  publishCompany: z.boolean(),
-  auditedAccountsProvided: z.boolean(),
   auditedAccountDocumentUrls: documentUrlsSchema,
 
   contacts: z
@@ -139,6 +137,11 @@ const baseRegistrationShape = {
     .min(1, 'Add at least one authorised contact'),
   previousProjects: z.array(previousProjectSchema),
   previousProjectUploads: z.array(previousProjectUploadEntrySchema),
+
+  /** Required acknowledgement — not persisted as a DB column. */
+  privacyAgreed: z.boolean().refine((value) => value === true, {
+    message: 'Please confirm you agree before submitting',
+  }),
 };
 
 /** Fields common to both registration forms (used to type shared UI sections). */

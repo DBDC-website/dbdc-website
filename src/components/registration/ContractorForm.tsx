@@ -42,9 +42,8 @@ const defaultValues: ContractorRegistrationValues = {
   capitalAuthorized: '',
   capitalIssued: '',
   capitalAvailable: '',
-  publishCompany: false,
-  auditedAccountsProvided: false,
   auditedAccountDocumentUrls: [],
+  privacyAgreed: false,
   natureOfBusiness: [],
   natureOfBusinessOther: '',
   buildingsDeptRegNo: '',
@@ -226,7 +225,6 @@ export default function ContractorForm() {
   const [submitted, setSubmitted] = useState(false);
   const natureOfBusiness = methods.watch('natureOfBusiness') ?? [];
   const othersSelected = natureOfBusiness.includes('Others');
-  const hasMinorWorks = natureOfBusiness.includes('Minor Works');
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
@@ -270,7 +268,6 @@ export default function ContractorForm() {
             errors={errors}
             selectedNatureOfBusiness={natureOfBusiness}
             othersSelected={othersSelected}
-            hasMinorWorks={hasMinorWorks}
           />
         </FormSection>
 

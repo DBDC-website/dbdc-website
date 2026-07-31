@@ -1,5 +1,6 @@
 import AboutSection from '@/components/home/AboutSection';
 import CommitteesSection from '@/components/home/CommitteesSection';
+import FeaturedExperiencesSection from '@/components/home/FeaturedExperiencesSection';
 import FeaturedProjectsSection from '@/components/home/FeaturedProjectsSection';
 import HeroSection from '@/components/home/HeroSection';
 import MembershipSection from '@/components/home/MembershipSection';
@@ -22,6 +23,7 @@ export default async function HomePage({ params }: HomePageProps) {
         locale={locale as Locale}
         projects={featuredProjects}
       />
+      <FeaturedExperiencesSection locale={locale as Locale} />
       <MembershipSection />
       <CommitteesSection locale={locale as Locale} />
     </>

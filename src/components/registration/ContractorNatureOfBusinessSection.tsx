@@ -6,7 +6,6 @@ import {
   type ContractorRegistrationValues,
 } from '@/lib/validations/registration';
 import { CheckboxField, TextField } from '@/components/forms/Fields';
-import { useEffect } from 'react';
 import type {
   FieldErrors,
   UseFormRegister,
@@ -19,8 +18,9 @@ type NatureOfBusinessSectionProps = {
   errors: FieldErrors<ContractorRegistrationValues>;
   selectedNatureOfBusiness: string[];
   othersSelected: boolean;
-  hasMinorWorks: boolean;
 };
+
+const MINOR_WORKS_PARENT = 'Minor Works';
 
 function ContractorNatureOption({
   label,
@@ -43,29 +43,61 @@ function ContractorNatureOption({
 }
 
 function MinorWorksRow({
-  register,
-  hasMinorWorks,
+  selectedNatureOfBusiness,
+  setValue,
 }: {
-  register: UseFormRegister<ContractorRegistrationValues>;
-  hasMinorWorks: boolean;
+  selectedNatureOfBusiness: string[];
+  setValue: UseFormSetValue<ContractorRegistrationValues>;
 }) {
+  const hasParent = selectedNatureOfBusiness.includes(MINOR_WORKS_PARENT);
+
+  function commit(next: string[]) {
+    setValue('natureOfBusiness', next, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  }
+
+  function onSubChange(category: string, checked: boolean) {
+    let next = selectedNatureOfBusiness.filter((value) => value !== category);
+
+    if (checked) {
+      next = [...next, category];
+      if (!next.includes(MINOR_WORKS_PARENT)) {
+        next = [...next, MINOR_WORKS_PARENT];
+      }
+    } else {
+      const anySubLeft = CONTRACTOR_MINOR_WORKS_OPTIONS.some(
+        (option) => option !== category && next.includes(option),
+      );
+      if (!anySubLeft) {
+        next = next.filter((value) => value !== MINOR_WORKS_PARENT);
+      }
+    }
+
+    commit(next);
+  }
+
   return (
     <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap">
       <CheckboxField
         label="Minor works †"
-        value="Minor Works"
-        className="!shrink-0 !gap-1.5"
-        {...register('natureOfBusiness')}
+        className="!shrink-0 !cursor-default !gap-1.5 opacity-90"
+        checked={hasParent}
+        disabled
+        readOnly
+        tabIndex={-1}
+        aria-readonly="true"
       />
       <div className="ml-2 flex items-center gap-3">
         {CONTRACTOR_MINOR_WORKS_OPTIONS.map((category) => (
           <CheckboxField
             key={category}
             label={category.replace('Minor Works ', '')}
-            value={category}
             className="!shrink-0 !gap-1.5"
-            disabled={!hasMinorWorks}
-            {...register('natureOfBusiness')}
+            checked={selectedNatureOfBusiness.includes(category)}
+            onChange={(event) => onSubChange(category, event.target.checked)}
           />
         ))}
       </div>
@@ -79,7 +111,6 @@ export function ContractorNatureOfBusinessSection({
   errors,
   selectedNatureOfBusiness,
   othersSelected,
-  hasMinorWorks,
 }: NatureOfBusinessSectionProps) {
   const optionByValue = Object.fromEntries(
     CONTRACTOR_NATURE_OPTIONS.map((option) => [option.value, option]),
@@ -105,24 +136,6 @@ export function ContractorNatureOfBusinessSection({
   const col1 = orderedValues.slice(0, 8);
   const col2 = orderedValues.slice(8);
 
-  useEffect(() => {
-    if (hasMinorWorks) return;
-
-    const minorValues = new Set(CONTRACTOR_MINOR_WORKS_OPTIONS);
-    const filtered = selectedNatureOfBusiness.filter(
-      (value) =>
-        !minorValues.has(
-          value as (typeof CONTRACTOR_MINOR_WORKS_OPTIONS)[number],
-        ),
-    );
-    if (filtered.length !== selectedNatureOfBusiness.length) {
-      setValue('natureOfBusiness', filtered, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-    }
-  }, [hasMinorWorks, selectedNatureOfBusiness, setValue]);
-
   return (
     <>
       {typeof errors.natureOfBusiness?.message === 'string' ? (
@@ -135,12 +148,12 @@ export function ContractorNatureOfBusinessSection({
       </p>
       <div className="grid gap-3 lg:grid-cols-2">
         <div className="space-y-3">
-          {col1.map((value) => (
+          {col1.map((value) =>
             value === 'MINOR_WORKS' ? (
               <MinorWorksRow
                 key="MINOR_WORKS"
-                register={register}
-                hasMinorWorks={hasMinorWorks}
+                selectedNatureOfBusiness={selectedNatureOfBusiness}
+                setValue={setValue}
               />
             ) : (
               <ContractorNatureOption
@@ -148,8 +161,8 @@ export function ContractorNatureOfBusinessSection({
                 {...optionByValue[value]}
                 register={register}
               />
-            )
-          ))}
+            ),
+          )}
         </div>
         <div className="space-y-3">
           {col2.map((value) => {

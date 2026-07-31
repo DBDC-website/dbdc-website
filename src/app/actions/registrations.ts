@@ -99,8 +99,8 @@ function mapConsultantRegistration(data: ConsultantRegistrationValues) {
       data.professionalDetails.otherApprovedListEntries,
     ),
     professional_details: professionalDetails,
-    publish_company: data.publishCompany,
-    audited_accounts_provided: data.auditedAccountsProvided,
+    publish_company: false,
+    audited_accounts_provided: data.auditedAccountDocumentUrls.length > 0,
     signature_url: data.contacts[0]?.signatureUrl ?? null,
     document_urls: allDocumentUrls,
   };
@@ -155,8 +155,8 @@ function mapContractorRegistration(data: ContractorRegistrationValues) {
       data.professionalDetails.otherApprovedListEntries,
     ),
     professional_details: professionalDetails,
-    publish_company: data.publishCompany,
-    audited_accounts_provided: data.auditedAccountsProvided,
+    publish_company: false,
+    audited_accounts_provided: data.auditedAccountDocumentUrls.length > 0,
     signature_url: data.contacts[0]?.signatureUrl ?? null,
     document_urls: allDocumentUrls,
   };
