@@ -7,6 +7,16 @@ const TRANSFORM = { width: 1200, quality: 80 } as const;
 const withDefaultTransform = (src: string) =>
   withSupabaseImageTransform(src, TRANSFORM);
 
+/**
+ * Bump when files in `website-assets` are replaced under the same filename
+ * so browsers / Next Image cache pick up the new (smaller) uploads.
+ */
+const ASSETS_VERSION = '20260731b';
+
+export function websiteAsset(filename: string): string {
+  return withDefaultTransform(`${ASSETS}/${filename}?v=${ASSETS_VERSION}`);
+}
+
 export type HeroSlide = {
   src: string;
   alt: string;
@@ -17,24 +27,24 @@ export type HeroSlide = {
 /** Homepage hero carousel — first slide is shown on load. */
 export const heroSlides: HeroSlide[] = [
   {
-    src: withDefaultTransform(`${ASSETS}/indoor-statue-mary.jpg`),
+    src: websiteAsset('indoor-statue-mary.jpg'),
     alt: 'Statue of Our Lady in a chapel interior',
-    objectPosition: 'center 22%',
+    objectPosition: '28% 42%',
   },
   {
-    src: withDefaultTransform(`${ASSETS}/outdoor-church-3.jpg`),
-    alt: 'Church facade with rose window against blue sky',
+    src: websiteAsset('jesus-statue-side.jpg'),
+    alt: 'Statue of Jesus on a cross with a gold and blue mosaic backdrop',
     objectPosition: 'center 35%',
   },
   {
-    src: withDefaultTransform(`${ASSETS}/indoor-1.jpg`),
+    src: websiteAsset('indoor-1.jpg'),
     alt: 'Baptismal chapel with mosaic mural',
-    objectPosition: 'center 35%',
+    objectPosition: 'center 48%',
   },
   {
-    src: withDefaultTransform(`${ASSETS}/outdoor-bridge.jpg`),
+    src: websiteAsset('outdoor-bridge.jpg'),
     alt: 'White cross overlooking a coastal bridge',
-    objectPosition: 'center 40%',
+    objectPosition: 'center 42%',
   },
 ];
 
@@ -59,14 +69,20 @@ export const homeImages = {
   },
   /** Default backdrop for homepage Featured projects. */
   featuredProjects: {
-    src: withDefaultTransform(`${ASSETS}/outdoor-church-3.jpg`),
+    src: websiteAsset('outdoor-church-3.jpg'),
     alt: 'Church facade with rose window against blue sky',
-    objectPosition: 'center 35%',
+    objectPosition: 'center 40%',
+  },
+  /** Homepage Featured experiences — hanging crucifix chapel interior. */
+  featuredExperiences: {
+    src: websiteAsset('indoor-church-hanging.jpg'),
+    alt: 'Ornate hanging crucifix in a cream and blue chapel interior',
+    objectPosition: 'center 40%',
   },
   /** Homepage Membership section — full-bleed photo behind the orange panel. */
   membership: {
-    src: withDefaultTransform(`${ASSETS}/outdoor-bridge.jpg`),
-    alt: 'White cross overlooking a coastal bridge',
+    src: websiteAsset('indoor-15.jpg'),
+    alt: 'Cream chapel interior with pointed windows and coffered ceiling',
     objectPosition: 'center 40%',
   },
   /** Homepage Committees section backdrop. */
@@ -79,9 +95,33 @@ export const homeImages = {
   },
   /** Individual committee detail pages. */
   committeeDetail: {
-    src: withDefaultTransform(`${ASSETS}/indoor-statue-mary.jpg`),
-    alt: 'Statue of Our Lady in a chapel interior',
-    objectPosition: 'center 22%',
+    src: websiteAsset('indoor-10.jpg'),
+    alt: 'Modern chapel interior with wooden pews and stained glass',
+    objectPosition: 'center 42%',
+  },
+  /** Legal / policy pages. */
+  legalPage: {
+    src: websiteAsset('jesus-statue-side.jpg'),
+    alt: 'Statue of Jesus on a cross with a gold and blue mosaic backdrop',
+    objectPosition: 'center 38%',
+  },
+  /** Parish working guidelines page. */
+  guidelinesPage: {
+    src: websiteAsset('outdoor-statue.jpg'),
+    alt: 'White marble statue of two figures against a red wall and greenery',
+    objectPosition: 'center 45%',
+  },
+  /** Articles page header. */
+  articlesHeader: {
+    src: websiteAsset('indoor-1.jpg'),
+    alt: 'Baptismal chapel with mosaic mural',
+    objectPosition: 'center 48%',
+  },
+  /** Consultants & contractors page headers. */
+  consultantsHeader: {
+    src: websiteAsset('outdoor-bridge.jpg'),
+    alt: 'White cross overlooking a coastal bridge',
+    objectPosition: 'center 42%',
   },
   /** Selected Projects page hero — bright chapel interior with mosaic altar. */
   projectsHeader: {

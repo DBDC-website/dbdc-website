@@ -4,10 +4,10 @@ import { RegistrationCards } from '@/components/consultants/ConsultantsPageConte
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
+import { homeImages } from '@/constants/homeImages';
 import { isValidLocale, type Locale } from '@/constants/i18n';
 import { t } from '@/lib/i18n';
 import { buildPageMetadata } from '@/lib/i18n/metadata';
-import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -41,12 +41,9 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
         backgroundImage={{
-          src: withSupabaseImageTransform(
-            'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets/outdoor-bridge.jpg',
-            { width: 1200, quality: 80 },
-          ),
-          alt: 'White cross overlooking a coastal bridge',
-          objectPosition: 'center 40%',
+          src: homeImages.consultantsHeader.src,
+          alt: homeImages.consultantsHeader.alt,
+          objectPosition: homeImages.consultantsHeader.objectPosition,
         }}
       />
 

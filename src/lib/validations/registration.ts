@@ -153,8 +153,6 @@ function buildRegistrationSchemas(locale: Locale) {
 
     businessRegistrationDocumentUrls: documentUrlsSchema,
 
-    publishCompany: z.boolean(),
-    auditedAccountsProvided: z.boolean(),
     auditedAccountDocumentUrls: documentUrlsSchema,
 
     contacts: z
@@ -162,6 +160,11 @@ function buildRegistrationSchemas(locale: Locale) {
       .min(1, t(locale, 'forms.errors.contactsMin')),
     previousProjects: z.array(previousProjectSchema),
     previousProjectUploads: z.array(previousProjectUploadEntrySchema),
+
+    /** Required acknowledgement — not persisted as a DB column. */
+    privacyAgreed: z.boolean().refine((value) => value === true, {
+      message: t(locale, 'forms.errors.privacyRequired'),
+    }),
   };
 
   const otherRegisteredProfessionalSchema = z.object({

@@ -108,7 +108,8 @@
     "heritageTitle": "Catholic Heritage Website",
     "heritageDescription": "Discover the history, architecture, and conservation of Catholic buildings across the Diocese of Hong Kong.",
     "heritageCta": "Visit heritage site",
-    "heritageAlt": "Preview of the Catholic Heritage website"
+    "heritageAlt": "Preview of the Catholic Heritage website",
+    "viewOnProjects": "View on projects"
   },
   "parish": {
     "eyebrow": "For Parishes & Schools",
@@ -207,14 +208,16 @@
       "contactsMin": "Add at least one authorised contact",
       "invalidUrl": "Enter a valid URL (including https://)",
       "invalidDate": "Enter a valid date",
-      "invalidAmount": "Enter a valid amount (numbers only)"
+      "invalidAmount": "Enter a valid amount (numbers only)",
+      "privacyRequired": "Please confirm you agree before submitting"
     },
     "auditedAccountsTitle": "Audited accounts for the past 3 years",
     "auditedAccountsHint": "Please upload your company's audited accounts for the past 3 years, if available.",
     "auditedAccountsLabel": "Audited accounts",
-    "auditedAccountsCheckbox": "We have provided our company's audited accounts for the past 3 years, where available.",
-    "publishCompanyCheckbox": "We hereby agree DBDC may publish our company's particulars on the DBDC website.",
-    "addProjectUpload": "Add project upload box"
+    "addProjectUpload": "Add project upload box",
+    "privacyAgreedCheckbox": "I have read and agree to the Personal Information Collection Statement. I understand that confidential information submitted in this form will be used only for DBDC registration purposes and handled in accordance with the Diocese's privacy policy.",
+    "privacyPicsLink": "Read the Personal Information Collection Statement",
+    "privacyPolicyLink": "Privacy Policy"
   },
   "roles": {
     "exOfficio": "Ex-officio",

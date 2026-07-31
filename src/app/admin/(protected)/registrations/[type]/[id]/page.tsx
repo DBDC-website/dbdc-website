@@ -103,7 +103,15 @@ export default async function RegistrationDetailPage({
               })}
             </p>
           </div>
-          <StatusBadge status={detail.status} />
+          <div className="flex flex-wrap items-center gap-3">
+            <StatusBadge status={detail.status} />
+            <a
+              href={`/admin/registrations/${detail.type}/${detail.id}/download`}
+              className="inline-flex items-center rounded-md border border-brand-300 bg-white px-3 py-1.5 text-sm font-medium text-brand-800 transition-colors hover:border-brand-500 hover:bg-brand-50"
+            >
+              Download ZIP
+            </a>
+          </div>
         </div>
       </div>
 
@@ -172,11 +180,7 @@ export default async function RegistrationDetailPage({
           />
           <Field label="Other approved lists" value={detail.otherApprovedLists} />
           <Field
-            label="Publish company"
-            value={detail.publishCompany ? 'Yes' : 'No'}
-          />
-          <Field
-            label="Audited accounts provided"
+            label="Audited accounts uploaded"
             value={detail.auditedAccountsProvided ? 'Yes' : 'No'}
           />
           {detail.type === 'consultant' ? (

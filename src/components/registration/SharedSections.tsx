@@ -2,6 +2,7 @@
 
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
+import Link from 'next/link';
 import type { Locale } from '@/constants/i18n';
 import type { BaseRegistrationValues } from '@/lib/validations/registration';
 import DocumentUploadField from '@/components/registration/DocumentUploadField';
@@ -338,7 +339,12 @@ export function PreviousProjectsSection({ locale }: LocaleProps) {
 }
 
 export function RemarksSection({ locale }: LocaleProps) {
-  const { register, watch, setValue } = useFormContext<BaseRegistrationValues>();
+  const {
+    register,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<BaseRegistrationValues>();
   const auditedAccountDocumentUrls = watch('auditedAccountDocumentUrls') ?? [];
 
   return (
@@ -366,14 +372,36 @@ export function RemarksSection({ locale }: LocaleProps) {
             />
           </div>
         </div>
-        <CheckboxField
-          label={t(locale, 'forms.auditedAccountsCheckbox')}
-          {...register('auditedAccountsProvided')}
-        />
-        <CheckboxField
-          label={t(locale, 'forms.publishCompanyCheckbox')}
-          {...register('publishCompany')}
-        />
+        <div>
+          <CheckboxField
+            label={t(locale, 'forms.privacyAgreedCheckbox')}
+            {...register('privacyAgreed')}
+          />
+          {errors.privacyAgreed?.message ? (
+            <p className="mt-2 text-xs font-medium text-red-600" role="alert">
+              {errors.privacyAgreed.message}
+            </p>
+          ) : null}
+          <p className="mt-2 text-xs text-stone-500">
+            <Link
+              href={`/${locale}/pics`}
+              className="font-medium text-brand-800 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t(locale, 'forms.privacyPicsLink')}
+            </Link>
+            {' · '}
+            <Link
+              href={`/${locale}/privacy-policy`}
+              className="font-medium text-brand-800 underline-offset-2 hover:underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t(locale, 'forms.privacyPolicyLink')}
+            </Link>
+          </p>
+        </div>
       </div>
     </FormSection>
   );

@@ -108,7 +108,8 @@
     "heritageTitle": "天主教文物及建築網站",
     "heritageDescription": "探索香港教區天主教建築物的歷史、建築風格及保育工作。",
     "heritageCta": "前往文物網站",
-    "heritageAlt": "天主教文物及建築網站預覽"
+    "heritageAlt": "天主教文物及建築網站預覽",
+    "viewOnProjects": "於工程頁面查看"
   },
   "parish": {
     "eyebrow": "堂區及學校",
@@ -207,14 +208,16 @@
       "contactsMin": "請至少加入一位獲授權聯絡人",
       "invalidUrl": "請輸入有效網址（包括 https://）",
       "invalidDate": "請輸入有效日期",
-      "invalidAmount": "請輸入有效金額（只限數字）"
+      "invalidAmount": "請輸入有效金額（只限數字）",
+      "privacyRequired": "提交前請確認您已同意"
     },
     "auditedAccountsTitle": "過去三年經審核帳目",
     "auditedAccountsHint": "如有，請上載貴公司過去三年的經審核帳目。",
     "auditedAccountsLabel": "經審核帳目",
-    "auditedAccountsCheckbox": "我們已提供貴公司過去三年的經審核帳目（如適用）。",
-    "publishCompanyCheckbox": "我們同意教區建築及發展委員會可於網站刊載本公司資料。",
-    "addProjectUpload": "新增工程上載欄"
+    "addProjectUpload": "新增工程上載欄",
+    "privacyAgreedCheckbox": "本人已閱讀並同意《個人資料收集聲明》。本人明白本表格所提交的機密資料只會用於教區建築及發展委員會的登記用途，並會按照教區私隱政策處理。",
+    "privacyPicsLink": "閱讀《個人資料收集聲明》",
+    "privacyPolicyLink": "私隱政策"
   },
   "roles": {
     "exOfficio": "當然委員",

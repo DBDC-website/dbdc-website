@@ -71,19 +71,29 @@ export default async function CommitteeDetailPage({
   const committees = getCommittees(locale);
   const currentIndex = committees.findIndex((item) => item.slug === found.slug);
   const nextCommittee = currentIndex >= 0 ? committees[currentIndex + 1] : undefined;
+  const zoomBackdrop =
+    found.slug === 'rdc' || found.slug === 'sc' || found.slug === 'wc';
+  const backdropScaleClass =
+    found.slug === 'sc'
+      ? 'object-cover scale-[1.42]'
+      : zoomBackdrop
+        ? 'object-cover scale-[1.32]'
+        : 'object-cover';
 
   return (
     <div className="relative min-h-screen">
-      <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <Image
           src={committeeBackdrop.src}
           alt=""
           fill
           sizes="100vw"
-          className="object-cover"
+          className={backdropScaleClass}
           style={{ objectPosition: committeeBackdrop.objectPosition }}
           priority
         />
+        <div className="absolute inset-0 bg-cream-50/16" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#fff8eb]/14 via-cream-50/8 to-[#f0ebe3]/16" />
       </div>
 
       <div className="relative z-10">
