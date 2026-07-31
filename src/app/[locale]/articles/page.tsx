@@ -3,8 +3,8 @@ import ArticlePdfList from '@/components/articles/ArticlePdfList';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
+import { homeImages } from '@/constants/homeImages';
 import { getArticles } from '@/lib/articles';
-import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 
 /** Fetch fresh article metadata on each request (Supabase is the source of truth). */
 export const dynamic = 'force-dynamic';
@@ -28,12 +28,9 @@ export default async function ArticlesPage() {
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
         backgroundImage={{
-          src: withSupabaseImageTransform(
-            'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/website-assets/indoor-1.jpg',
-            { width: 1200, quality: 80 },
-          ),
-          alt: 'Baptismal chapel with mosaic mural',
-          objectPosition: 'center 72%',
+          src: homeImages.articlesHeader.src,
+          alt: homeImages.articlesHeader.alt,
+          objectPosition: homeImages.articlesHeader.objectPosition,
         }}
       />
 

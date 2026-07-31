@@ -1,3 +1,4 @@
+import HeadingGlow from '@/components/ui/HeadingGlow';
 import { cn } from '@/lib/cn';
 
 type SectionHeadingProps = {
@@ -11,6 +12,8 @@ type SectionHeadingProps = {
   /** Heading level for correct document outline. */
   as?: 'h1' | 'h2' | 'h3';
   tone?: 'default' | 'inverse';
+  /** Soft cream cylinder glow behind the title (subsection style). */
+  glow?: boolean;
   className?: string;
 };
 
@@ -22,18 +25,14 @@ export default function SectionHeading({
   align = 'left',
   as = 'h2',
   tone = 'default',
+  glow = false,
   className,
 }: SectionHeadingProps) {
   const Heading = as;
   const isInverse = tone === 'inverse';
 
-  return (
-    <div
-      className={cn(
-        align === 'center' && 'mx-auto max-w-2xl text-center',
-        className,
-      )}
-    >
+  const titleBlock = (
+    <>
       {eyebrow ? (
         <p
           className={cn(
@@ -47,13 +46,34 @@ export default function SectionHeading({
       <Heading
         id={id}
         className={cn(
-          'mt-3 text-3xl font-semibold leading-tight sm:text-4xl',
+          'text-3xl font-semibold leading-tight sm:text-4xl',
+          eyebrow ? 'mt-3' : 'mt-0',
           id && 'scroll-mt-28 sm:scroll-mt-32 lg:scroll-mt-36',
           isInverse && 'text-white',
         )}
       >
         {title}
       </Heading>
+    </>
+  );
+
+  return (
+    <div
+      className={cn(
+        align === 'center' && 'mx-auto max-w-2xl text-center',
+        className,
+      )}
+    >
+      {glow ? (
+        <HeadingGlow
+          className={align === 'center' ? 'mx-auto' : undefined}
+          offset={align === 'center' ? 'none' : 'default'}
+        >
+          {titleBlock}
+        </HeadingGlow>
+      ) : (
+        titleBlock
+      )}
       {description ? (
         <p
           className={cn(
