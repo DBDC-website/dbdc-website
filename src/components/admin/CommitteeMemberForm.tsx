@@ -37,7 +37,7 @@ export default function CommitteeMemberForm({
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <label htmlFor="name" className={labelClass}>
-              Name
+              Name (English / romanised)
             </label>
             <input
               id="name"
@@ -47,6 +47,36 @@ export default function CommitteeMemberForm({
               className={fieldClass}
             />
           </div>
+
+          <div>
+            <label htmlFor="name_zh_hant" className={labelClass}>
+              Name (Traditional Chinese)
+            </label>
+            <input
+              id="name_zh_hant"
+              name="name_zh_hant"
+              defaultValue={member?.nameZhHant ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="name_zh_hans" className={labelClass}>
+              Name (Simplified Chinese)
+            </label>
+            <input
+              id="name_zh_hans"
+              name="name_zh_hans"
+              defaultValue={member?.nameZhHans ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <p className="text-xs text-stone-500 sm:col-span-2">
+            Only fill the Chinese names you have been given. Leave blank and the
+            romanised name is shown instead — never convert a person&apos;s name
+            automatically.
+          </p>
 
           <div>
             <label htmlFor="role" className={labelClass}>
@@ -65,6 +95,9 @@ export default function CommitteeMemberForm({
                 </option>
               ))}
             </select>
+            <p className="mt-1 text-xs text-stone-500">
+              Role labels are translated automatically on the public site.
+            </p>
           </div>
 
           <div>

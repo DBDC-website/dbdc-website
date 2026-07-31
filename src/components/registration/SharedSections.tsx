@@ -2,6 +2,7 @@
 
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { Plus, Trash2 } from 'lucide-react';
+import type { Locale } from '@/constants/i18n';
 import type { BaseRegistrationValues } from '@/lib/validations/registration';
 import DocumentUploadField from '@/components/registration/DocumentUploadField';
 import SignaturePad from '@/components/registration/SignaturePad';
@@ -11,6 +12,7 @@ import {
   TextAreaField,
   TextField,
 } from '@/components/forms/Fields';
+import { t } from '@/lib/i18n';
 
 const emptyContact = {
   name: '',
@@ -19,7 +21,9 @@ const emptyContact = {
   signatureUrl: '',
 };
 
-export function CompanyInfoSection() {
+type LocaleProps = { locale: Locale };
+
+export function CompanyInfoSection({ locale }: LocaleProps) {
   const {
     register,
     formState: { errors },
@@ -27,8 +31,8 @@ export function CompanyInfoSection() {
 
   return (
     <FormSection
-      title="Company information"
-      description="Details of the company applying for registration."
+      title={t(locale, 'forms.companyInformation')}
+      description={t(locale, 'forms.companyInformationDescription')}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
@@ -68,7 +72,7 @@ export function CompanyInfoSection() {
   );
 }
 
-export function BusinessRegistrationSection() {
+export function BusinessRegistrationSection({ locale }: LocaleProps) {
   const {
     register,
     watch,
@@ -78,8 +82,8 @@ export function BusinessRegistrationSection() {
 
   return (
     <FormSection
-      title="Business registration certificate"
-      description="Business registration certificate details."
+      title={t(locale, 'forms.businessRegistration')}
+      description={t(locale, 'forms.businessRegistrationDescription')}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
@@ -111,7 +115,7 @@ export function BusinessRegistrationSection() {
   );
 }
 
-export function ScopeOfServicesSection() {
+export function ScopeOfServicesSection({ locale }: LocaleProps) {
   const {
     register,
     formState: { errors },
@@ -119,8 +123,8 @@ export function ScopeOfServicesSection() {
 
   return (
     <FormSection
-      title="Scope of services"
-      description="Briefly describe the services your company provides."
+      title={t(locale, 'forms.scopeOfServices')}
+      description={t(locale, 'forms.scopeOfServicesDescription')}
     >
       <TextAreaField
         label="Scope of services"
@@ -132,7 +136,7 @@ export function ScopeOfServicesSection() {
   );
 }
 
-export function CapitalSection() {
+export function CapitalSection({ locale }: LocaleProps) {
   const {
     register,
     formState: { errors },
@@ -140,8 +144,8 @@ export function CapitalSection() {
 
   return (
     <FormSection
-      title="Company capital"
-      description="Provide capital amounts in your preferred format (e.g. 2 million)."
+      title={t(locale, 'forms.companyCapital')}
+      description={t(locale, 'forms.companyCapitalDescription')}
     >
       <div className="grid gap-5 sm:grid-cols-3">
         <TextField
@@ -167,7 +171,7 @@ export function CapitalSection() {
   );
 }
 
-export function ContactsSection() {
+export function ContactsSection({ locale }: LocaleProps) {
   const {
     register,
     control,
@@ -179,8 +183,8 @@ export function ContactsSection() {
 
   return (
     <FormSection
-      title="Principals / Directors"
-      description="Principals or directors authorised to sign documents on behalf of the company."
+      title={t(locale, 'forms.principals')}
+      description={t(locale, 'forms.principalsDescription')}
     >
       {typeof errors.contacts?.message === 'string' ? (
         <p className="mb-4 text-xs font-medium text-red-600" role="alert">
@@ -229,7 +233,7 @@ export function ContactsSection() {
             </div>
             <div className="mt-4">
               <SignaturePad
-                label="Signature"
+                label={t(locale, 'forms.signature')}
                 required
                 value={watch(`contacts.${index}.signatureUrl`) ?? ''}
                 onChange={(path) =>
@@ -259,13 +263,12 @@ export function ContactsSection() {
   );
 }
 
-export function PreviousProjectsSection() {
+export function PreviousProjectsSection({ locale }: LocaleProps) {
   const {
     control,
     setValue,
     register,
     watch,
-    formState: { errors },
   } = useFormContext<BaseRegistrationValues>();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -274,8 +277,8 @@ export function PreviousProjectsSection() {
 
   return (
     <FormSection
-      title="Portfolio of major projects"
-      description="Major projects carried out in Hong Kong over the past 5 years. Please highlight any experience on Church projects. (Optional)"
+      title={t(locale, 'forms.portfolio')}
+      description={t(locale, 'forms.portfolioDescription')}
     >
       <div className="space-y-4">
         {fields.map((field, index) => {
@@ -328,30 +331,29 @@ export function PreviousProjectsSection() {
         className="mt-4 inline-flex items-center gap-1.5 rounded-md border border-brand-300 px-3 py-1.5 text-sm font-medium text-brand-800 transition-colors hover:border-brand-500 hover:bg-brand-50"
       >
         <Plus className="h-4 w-4" aria-hidden="true" />
-        Add project upload box
+        {t(locale, 'forms.addProjectUpload')}
       </button>
     </FormSection>
   );
 }
 
-export function RemarksSection() {
+export function RemarksSection({ locale }: LocaleProps) {
   const { register, watch, setValue } = useFormContext<BaseRegistrationValues>();
   const auditedAccountDocumentUrls = watch('auditedAccountDocumentUrls') ?? [];
 
   return (
-    <FormSection title="Remarks">
+    <FormSection title={t(locale, 'forms.remarks')}>
       <div className="space-y-5">
         <div className="rounded-lg border border-cream-200 bg-cream-50/50 p-4">
           <p className="text-sm font-medium text-brand-900">
-            Audited accounts for the past 3 years
+            {t(locale, 'forms.auditedAccountsTitle')}
           </p>
           <p className="mt-1 text-xs text-stone-500">
-            Please upload your company&apos;s audited accounts for the past 3
-            years, if available.
+            {t(locale, 'forms.auditedAccountsHint')}
           </p>
           <div className="mt-3">
             <DocumentUploadField
-              label="Audited accounts"
+              label={t(locale, 'forms.auditedAccountsLabel')}
               value={auditedAccountDocumentUrls}
               onChange={(paths) =>
                 setValue('auditedAccountDocumentUrls', paths, {
@@ -365,11 +367,11 @@ export function RemarksSection() {
           </div>
         </div>
         <CheckboxField
-          label="We have provided our company's audited accounts for the past 3 years, where available."
+          label={t(locale, 'forms.auditedAccountsCheckbox')}
           {...register('auditedAccountsProvided')}
         />
         <CheckboxField
-          label="We hereby agree DBDC may publish our company's particulars on the DBDC website."
+          label={t(locale, 'forms.publishCompanyCheckbox')}
           {...register('publishCompany')}
         />
       </div>

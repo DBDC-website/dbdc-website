@@ -4,9 +4,10 @@ import AnimatedSection from '@/components/ui/AnimatedSection';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
-import { committees } from '@/constants/committees';
+import { getCommittees } from '@/content/committees';
 import { homeImages } from '@/constants/homeImages';
 import type { Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
 
 type CommitteesSectionProps = {
   locale: Locale;
@@ -31,6 +32,8 @@ function CommitteesBackdrop() {
 }
 
 export default function CommitteesSection({ locale }: CommitteesSectionProps) {
+  const committees = getCommittees(locale);
+
   return (
     <AnimatedSection
       id="committees"
@@ -49,7 +52,7 @@ export default function CommitteesSection({ locale }: CommitteesSectionProps) {
           />
           <SectionHeading
             id="committees-heading"
-            title="Committees"
+            title={t(locale, 'home.committeesTitle')}
             className="relative [&_h2]:text-4xl [&_h2]:font-semibold [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_22px_rgba(255,255,255,1),0_0_48px_rgba(255,252,245,0.98),0_0_80px_rgba(255,248,235,0.9)] [&_h2]:sm:text-5xl"
           />
         </div>

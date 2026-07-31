@@ -15,7 +15,13 @@ export interface ArticlePdf {
 export type ArticleRow = {
   id: number;
   label: string;
+  label_en?: string | null;
+  label_zh_hant?: string | null;
+  label_zh_hans?: string | null;
   title: string;
+  title_en?: string | null;
+  title_zh_hant?: string | null;
+  title_zh_hans?: string | null;
   author: string | null;
   date: string;
   pdf_url: string;

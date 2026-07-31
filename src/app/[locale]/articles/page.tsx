@@ -1,29 +1,49 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import ArticlePdfList from '@/components/articles/ArticlePdfList';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
+import { isValidLocale, type Locale } from '@/constants/i18n';
 import { getArticles } from '@/lib/articles';
+import { t } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 
 /** Fetch fresh article metadata on each request (Supabase is the source of truth). */
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'Related Articles',
-  description:
-    'Research articles and papers on Diocesan building, laity involvement, and church development.',
+type ArticlesPageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-export default async function ArticlesPage() {
-  const articles = await getArticles();
+export async function generateMetadata({
+  params,
+}: ArticlesPageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '/articles',
+    titleKey: 'articles.metaTitle',
+    descriptionKey: 'articles.metaDescription',
+  });
+}
+
+export default async function ArticlesPage({ params }: ArticlesPageProps) {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  const articles = await getArticles(locale);
 
   return (
     <div className="relative bg-[#eef6f5]">
       <PageHeader
-        eyebrow="Research"
-        title="Related Articles"
-        description="Published papers and research on Catholic church building and laity involvement in Hong Kong."
+        eyebrow={t(locale, 'articles.eyebrow')}
+        title={t(locale, 'articles.title')}
+        description={t(locale, 'articles.description')}
         theme="cathedral"
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
@@ -55,7 +75,7 @@ export default async function ArticlesPage() {
             <ArticlePdfList articles={articles} />
           ) : (
             <p className="max-w-4xl text-base text-stone-600 sm:text-lg">
-              Articles will appear here once published.
+              {t(locale, 'articles.empty')}
             </p>
           )}
         </PageSection>

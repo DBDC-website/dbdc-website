@@ -61,6 +61,24 @@
     serif;
 }
 
+/* Per-locale CJK stacks (data-locale set by LocaleDocument).
+   Locally installed faces only — CJK webfonts are megabytes per weight. */
+html[data-locale='zh-Hant'] {
+  --font-sans: var(--font-inter), "PingFang TC", "PingFang HK",
+    "Hiragino Sans CNS", "Microsoft JhengHei", "Noto Sans TC",
+    "Noto Sans CJK TC", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-lora), "PingFang TC", "Songti TC",
+    "Microsoft JhengHei", "Noto Serif TC", ui-serif, serif;
+}
+
+html[data-locale='zh-Hans'] {
+  --font-sans: var(--font-inter), "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-serif: var(--font-lora), "PingFang SC", "Songti SC", "Microsoft YaHei",
+    "Noto Serif SC", ui-serif, serif;
+}
+
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;

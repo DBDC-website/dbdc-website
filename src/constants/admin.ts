@@ -21,6 +21,7 @@ export function isAdminEmail(email: string | null | undefined): boolean {
 
 export const REGISTRATION_BUCKET = 'registration-documents';
 export const PROJECT_IMAGES_BUCKET = 'project-images';
+export const ARTICLES_BUCKET = 'articles-bucket';
 
 export type RegistrationType = 'consultant' | 'contractor';
 export type RegistrationStatus = 'pending' | 'approved' | 'rejected';

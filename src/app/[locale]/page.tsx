@@ -3,27 +3,44 @@ import CommitteesSection from '@/components/home/CommitteesSection';
 import FeaturedProjectsSection from '@/components/home/FeaturedProjectsSection';
 import HeroSection from '@/components/home/HeroSection';
 import MembershipSection from '@/components/home/MembershipSection';
-import { type Locale } from '@/constants/i18n';
+import { isValidLocale, type Locale } from '@/constants/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 import { getFeaturedProjects } from '@/lib/projects';
+import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;
 };
 
+export async function generateMetadata({
+  params,
+}: HomePageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '',
+    titleKey: 'site.name',
+    descriptionKey: 'site.description',
+  });
+}
+
 export default async function HomePage({ params }: HomePageProps) {
-  const { locale } = await params;
-  const featuredProjects = await getFeaturedProjects();
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  const featuredProjects = await getFeaturedProjects(locale);
 
   return (
     <>
-      <HeroSection locale={locale as Locale} />
-      <AboutSection />
-      <FeaturedProjectsSection
-        locale={locale as Locale}
-        projects={featuredProjects}
-      />
-      <MembershipSection />
-      <CommitteesSection locale={locale as Locale} />
+      <HeroSection locale={locale} />
+      <AboutSection locale={locale} />
+      <FeaturedProjectsSection locale={locale} projects={featuredProjects} />
+      <MembershipSection locale={locale} />
+      <CommitteesSection locale={locale} />
     </>
   );
 }

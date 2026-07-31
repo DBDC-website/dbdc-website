@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-locale="en"
       className={`${inter.variable} ${lora.variable}`}
       suppressHydrationWarning
     >

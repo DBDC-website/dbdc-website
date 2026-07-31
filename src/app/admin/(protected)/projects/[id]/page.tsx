@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ProjectForm from '@/components/admin/ProjectForm';
-import { getAdminProject } from '@/lib/admin/projects';
+import ProjectImageCaptions from '@/components/admin/ProjectImageCaptions';
+import { getAdminProject, listAdminProjectImages } from '@/lib/admin/projects';
 
 export const metadata: Metadata = {
   title: 'Edit project',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 
 const MESSAGES: Record<string, string> = {
   '1': 'Project saved.',
+  captions: 'Captions saved.',
 };
 
 const ERRORS: Record<string, string> = {
@@ -17,6 +19,7 @@ const ERRORS: Record<string, string> = {
   slug: 'That slug is already in use. Choose another.',
   upload: 'Image upload failed. Check the file type and size.',
   save: 'Could not save the project. Try again.',
+  captions: 'Could not save the captions. Try again.',
   delete: 'Could not delete the project.',
 };
 
@@ -37,7 +40,10 @@ export default async function EditProjectPage({
     notFound();
   }
 
-  const project = await getAdminProject(id);
+  const [project, images] = await Promise.all([
+    getAdminProject(id),
+    listAdminProjectImages(id),
+  ]);
   if (!project) {
     notFound();
   }
@@ -70,6 +76,18 @@ export default async function EditProjectPage({
 
       <div className="mt-8 rounded-xl border border-cream-200 bg-white p-5 shadow-sm sm:p-6">
         <ProjectForm project={project} />
+      </div>
+
+      <div className="mt-8 rounded-xl border border-cream-200 bg-white p-5 shadow-sm sm:p-6">
+        <h2 className="text-lg font-semibold text-brand-900">
+          Gallery captions
+        </h2>
+        <p className="mt-1 text-sm text-stone-600">
+          Shown under each image on the public project gallery.
+        </p>
+        <div className="mt-5">
+          <ProjectImageCaptions projectId={project.id} images={images} />
+        </div>
       </div>
     </div>
   );

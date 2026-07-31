@@ -1,13 +1,14 @@
 import { notFound } from 'next/navigation';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import LocaleDocument from '@/components/layout/LocaleDocument';
 import MobileMenuOverlay, {
   MOBILE_MENU_TOGGLE_ID,
 } from '@/components/layout/MobileMenuOverlay';
 import SkipLink from '@/components/layout/SkipLink';
 import FloatingDonateButton from '@/components/layout/FloatingDonateButton';
 import { isValidLocale, locales, type Locale } from '@/constants/i18n';
-import { mainNav } from '@/constants/site';
+import { getMainNav } from '@/lib/i18n/navigation';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -20,14 +21,18 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
 
-  if (!isValidLocale(locale)) {
+  if (!isValidLocale(localeParam)) {
     notFound();
   }
 
+  const locale = localeParam as Locale;
+  const navItems = getMainNav(locale);
+
   return (
     <>
+      <LocaleDocument locale={locale} />
       <input
         type="checkbox"
         id={MOBILE_MENU_TOGGLE_ID}
@@ -35,14 +40,17 @@ export default async function LocaleLayout({
         tabIndex={-1}
         aria-hidden="true"
       />
-      <SkipLink />
-      <Header locale={locale as Locale} />
-      <MobileMenuOverlay locale={locale as Locale} items={mainNav} />
-      <main id="main-content" className="flex-1 pt-[4.75rem] sm:pt-[5.25rem] lg:pt-[5.75rem]">
+      <SkipLink locale={locale} />
+      <Header locale={locale} items={navItems} />
+      <MobileMenuOverlay locale={locale} items={navItems} />
+      <main
+        id="main-content"
+        className="flex-1 pt-[4.75rem] sm:pt-[5.25rem] lg:pt-[5.75rem]"
+      >
         {children}
       </main>
-      <FloatingDonateButton />
-      <Footer locale={locale as Locale} />
+      <FloatingDonateButton locale={locale} />
+      <Footer locale={locale} />
     </>
   );
 }

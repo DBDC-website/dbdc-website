@@ -6,8 +6,15 @@ export type CommitteeMemberSlug = CommitteeSlug | 'dbdc';
 export type CommitteeMember = {
   id: number;
   committeeSlug: CommitteeMemberSlug;
+  /** Display name for the active locale (authored Chinese if present). */
   name: string;
+  /** Authored Chinese names — never machine-translated. */
+  nameZhHant?: string | null;
+  nameZhHans?: string | null;
+  /** Localized role for display. */
   role: string | null;
+  /** English role for grouping / detection (`role_en` ?? legacy `role`). */
+  roleEn: string | null;
   sortOrder: number;
   active: boolean;
 };
@@ -16,7 +23,12 @@ export type CommitteeMemberRow = {
   id: number;
   committee_slug: CommitteeMemberSlug;
   name: string;
+  name_zh_hant?: string | null;
+  name_zh_hans?: string | null;
   role: string | null;
+  role_en?: string | null;
+  role_zh_hant?: string | null;
+  role_zh_hans?: string | null;
   sort_order: number;
   active: boolean;
 };

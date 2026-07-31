@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import FaqAccordion from '@/components/parish-school/FaqAccordion';
 import GovernmentLinksGrid from '@/components/parish-school/GovernmentLinksGrid';
 import ParishSchoolContact from '@/components/parish-school/ParishSchoolContact';
@@ -8,38 +9,47 @@ import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 import {
-  faqItems,
-  governmentLinks,
-  parishSchoolContact,
-  parishSchoolPreamble,
-} from '@/constants/parishSchool';
+  getFaqItems,
+  getGovernmentLinks,
+  getParishSchoolContact,
+  getParishSchoolPreamble,
+} from '@/content/parishSchool';
 import { homeImages } from '@/constants/homeImages';
 import { type Locale, isValidLocale } from '@/constants/i18n';
-import { notFound } from 'next/navigation';
+import { t } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 
 type ParishSchoolPageProps = {
   params: Promise<{ locale: string }>;
 };
 
-export const metadata: Metadata = {
-  title: 'Parish & School Corner',
-  description:
-    'Guidance for parishes and schools on building maintenance, improvements, and renovation works in the Diocese of Hong Kong.',
-};
+export async function generateMetadata({
+  params,
+}: ParishSchoolPageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '/parish-school',
+    titleKey: 'parish.metaTitle',
+    descriptionKey: 'parish.metaDescription',
+  });
+}
 
 export default async function ParishSchoolPage({ params }: ParishSchoolPageProps) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
 
-  if (!isValidLocale(locale)) {
+  if (!isValidLocale(localeParam)) {
     notFound();
   }
+  const locale = localeParam as Locale;
 
   return (
     <div className="relative bg-[#f5e2c8]">
       <PageHeader
-        eyebrow="For Parishes & Schools"
-        title="Parish & School Corner"
-        description="Questions and answers to assist parishes in planning building maintenance, improvement, construction, or renovation works."
+        eyebrow={t(locale, 'parish.eyebrow')}
+        title={t(locale, 'parish.title')}
+        description={t(locale, 'parish.description')}
         theme="cathedral"
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
@@ -66,10 +76,10 @@ export default async function ParishSchoolPage({ params }: ParishSchoolPageProps
         aria-labelledby="preamble-heading"
         heading={{
           id: 'preamble-heading',
-          title: 'Preamble',
+          title: t(locale, 'parish.preambleTitle'),
         }}
       >
-        <ParishSchoolPreamble preamble={parishSchoolPreamble} />
+        <ParishSchoolPreamble preamble={getParishSchoolPreamble(locale)} />
       </PageSection>
 
       <PageSection
@@ -81,11 +91,11 @@ export default async function ParishSchoolPage({ params }: ParishSchoolPageProps
         aria-labelledby="faq-heading"
         heading={{
           id: 'faq-heading',
-          title: 'Frequently Asked Questions',
-          description: 'Click a question to expand the answer.',
+          title: t(locale, 'parish.faqTitle'),
+          description: t(locale, 'parish.faqHint'),
         }}
       >
-        <FaqAccordion items={faqItems} />
+        <FaqAccordion items={getFaqItems(locale)} />
       </PageSection>
 
       <PageSection
@@ -97,10 +107,10 @@ export default async function ParishSchoolPage({ params }: ParishSchoolPageProps
         aria-labelledby="contact-heading"
         heading={{
           id: 'contact-heading',
-          title: 'Need further assistance?',
+          title: t(locale, 'parish.contactTitle'),
         }}
       >
-        <ParishSchoolContact contact={parishSchoolContact} locale={locale as Locale} />
+        <ParishSchoolContact contact={getParishSchoolContact(locale)} locale={locale} />
       </PageSection>
 
       <PageSection
@@ -112,17 +122,17 @@ export default async function ParishSchoolPage({ params }: ParishSchoolPageProps
         aria-labelledby="gov-links-heading"
         heading={{
           id: 'gov-links-heading',
-          title: 'Useful links',
+          title: t(locale, 'parish.linksTitle'),
         }}
       >
-        <GovernmentLinksGrid links={governmentLinks} locale={locale as Locale} />
+        <GovernmentLinksGrid links={getGovernmentLinks(locale)} locale={locale} />
       </PageSection>
       </div>
 
       <SectionJumpButton
         targets={[
-          { id: 'faq-heading', label: 'FAQs' },
-          { id: 'contact-heading', label: 'Assistance & links' },
+          { id: 'faq-heading', label: t(locale, 'parish.jumpFaqs') },
+          { id: 'contact-heading', label: t(locale, 'parish.jumpAssist') },
         ]}
       />
     </div>

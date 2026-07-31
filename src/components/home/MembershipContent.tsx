@@ -3,9 +3,12 @@
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren';
 import type { MemberGroup } from '@/constants/about';
+import type { Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 
 type MembershipContentProps = {
+  locale: Locale;
   leadershipGroups: MemberGroup[];
   appointedMembers: string[];
   administrator: string | null;
@@ -70,7 +73,13 @@ function LeadershipCard({ group }: { group: MemberGroup }) {
   );
 }
 
-function AppointedMembersPanel({ members }: { members: string[] }) {
+function AppointedMembersPanel({
+  locale,
+  members,
+}: {
+  locale: Locale;
+  members: string[];
+}) {
   if (members.length === 0) return null;
 
   return (
@@ -81,7 +90,7 @@ function AppointedMembersPanel({ members }: { members: string[] }) {
           HEADER_HUE_CARD,
         )}
       >
-        <CategoryHeading>Members</CategoryHeading>
+        <CategoryHeading>{t(locale, 'home.roleMembers')}</CategoryHeading>
         <ul className="mt-3 grid gap-x-6 gap-y-1.5 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((member) => (
             <li key={member}>
@@ -94,7 +103,13 @@ function AppointedMembersPanel({ members }: { members: string[] }) {
   );
 }
 
-function AdministratorPanel({ name }: { name: string | null }) {
+function AdministratorPanel({
+  locale,
+  name,
+}: {
+  locale: Locale;
+  name: string | null;
+}) {
   if (!name) return null;
 
   return (
@@ -106,7 +121,7 @@ function AdministratorPanel({ name }: { name: string | null }) {
         )}
       >
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-          <CategoryHeading>Administrator</CategoryHeading>
+          <CategoryHeading>{t(locale, 'home.roleAdministrator')}</CategoryHeading>
           <MemberName name={name} className="pr-1 sm:pr-2 sm:text-right" />
         </div>
       </article>
@@ -115,6 +130,7 @@ function AdministratorPanel({ name }: { name: string | null }) {
 }
 
 export default function MembershipContent({
+  locale,
   leadershipGroups,
   appointedMembers,
   administrator,
@@ -134,8 +150,8 @@ export default function MembershipContent({
         </StaggerChildren>
       ) : null}
 
-      <AppointedMembersPanel members={appointedMembers} />
-      <AdministratorPanel name={administrator} />
+      <AppointedMembersPanel locale={locale} members={appointedMembers} />
+      <AdministratorPanel locale={locale} name={administrator} />
     </div>
   );
 }

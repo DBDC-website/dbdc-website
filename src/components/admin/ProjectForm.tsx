@@ -29,26 +29,74 @@ export default function ProjectForm({ project }: ProjectFormProps) {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label htmlFor="title" className={labelClass}>
-              Title
+            <label htmlFor="title_en" className={labelClass}>
+              Title (English)
             </label>
             <input
-              id="title"
-              name="title"
+              id="title_en"
+              name="title_en"
               required
-              defaultValue={project?.title ?? ''}
+              defaultValue={project?.titleEn ?? ''}
               className={fieldClass}
             />
           </div>
 
           <div>
-            <label htmlFor="building_name" className={labelClass}>
-              Building name
+            <label htmlFor="title_zh_hant" className={labelClass}>
+              Title (Traditional Chinese)
             </label>
             <input
-              id="building_name"
-              name="building_name"
-              defaultValue={project?.buildingName ?? ''}
+              id="title_zh_hant"
+              name="title_zh_hant"
+              defaultValue={project?.titleZhHant ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="title_zh_hans" className={labelClass}>
+              Title (Simplified Chinese)
+            </label>
+            <input
+              id="title_zh_hans"
+              name="title_zh_hans"
+              defaultValue={project?.titleZhHans ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label htmlFor="building_name_en" className={labelClass}>
+              Building name (English)
+            </label>
+            <input
+              id="building_name_en"
+              name="building_name_en"
+              defaultValue={project?.buildingNameEn ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="building_name_zh_hant" className={labelClass}>
+              Building name (Traditional Chinese)
+            </label>
+            <input
+              id="building_name_zh_hant"
+              name="building_name_zh_hant"
+              defaultValue={project?.buildingNameZhHant ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="building_name_zh_hans" className={labelClass}>
+              Building name (Simplified Chinese)
+            </label>
+            <input
+              id="building_name_zh_hans"
+              name="building_name_zh_hans"
+              defaultValue={project?.buildingNameZhHans ?? ''}
               className={fieldClass}
             />
           </div>
@@ -68,6 +116,23 @@ export default function ProjectForm({ project }: ProjectFormProps) {
             />
           </div>
 
+          <div>
+            <label htmlFor="slug" className={labelClass}>
+              Slug
+            </label>
+            <input
+              id="slug"
+              name="slug"
+              defaultValue={project?.slug ?? ''}
+              placeholder="auto from English title if blank"
+              className={fieldClass}
+            />
+            <p className="mt-1 text-xs text-stone-500">
+              URL-safe id. Leave blank on create to generate from the English
+              title.
+            </p>
+          </div>
+
           <div className="sm:col-span-2">
             <label htmlFor="address" className={labelClass}>
               Address
@@ -80,30 +145,38 @@ export default function ProjectForm({ project }: ProjectFormProps) {
             />
           </div>
 
-          <div>
-            <label htmlFor="slug" className={labelClass}>
-              Slug
+          <div className="sm:col-span-2">
+            <label htmlFor="image_alt_en" className={labelClass}>
+              Image alt (English)
             </label>
             <input
-              id="slug"
-              name="slug"
-              defaultValue={project?.slug ?? ''}
-              placeholder="auto from title if blank"
+              id="image_alt_en"
+              name="image_alt_en"
+              defaultValue={project?.imageAltEn ?? ''}
               className={fieldClass}
             />
-            <p className="mt-1 text-xs text-stone-500">
-              URL-safe id. Leave blank on create to generate from the title.
-            </p>
           </div>
 
           <div>
-            <label htmlFor="image_alt" className={labelClass}>
-              Image alt text
+            <label htmlFor="image_alt_zh_hant" className={labelClass}>
+              Image alt (Traditional Chinese)
             </label>
             <input
-              id="image_alt"
-              name="image_alt"
-              defaultValue={project?.imageAlt ?? ''}
+              id="image_alt_zh_hant"
+              name="image_alt_zh_hant"
+              defaultValue={project?.imageAltZhHant ?? ''}
+              className={fieldClass}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="image_alt_zh_hans" className={labelClass}>
+              Image alt (Simplified Chinese)
+            </label>
+            <input
+              id="image_alt_zh_hans"
+              name="image_alt_zh_hans"
+              defaultValue={project?.imageAltZhHans ?? ''}
               className={fieldClass}
             />
           </div>

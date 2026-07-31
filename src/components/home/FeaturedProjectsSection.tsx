@@ -19,6 +19,7 @@ import AnimatedSection from '@/components/ui/AnimatedSection';
 import type { Locale } from '@/constants/i18n';
 import { homeImages } from '@/constants/homeImages';
 import { useTouchDevice } from '@/hooks/useTouchDevice';
+import { t } from '@/lib/i18n';
 import { cinematicEase } from '@/lib/motion';
 import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 import { cn } from '@/lib/cn';
@@ -419,7 +420,7 @@ function FeaturedProjectsCarousel({
         className="relative overflow-visible px-0 py-3 sm:py-4"
         role="region"
         aria-roledescription="carousel"
-        aria-label="Featured Projects"
+        aria-label={t(locale, 'home.featuredAria')}
       >
         <div
           className={cn(
@@ -468,7 +469,7 @@ function FeaturedProjectsCarousel({
         <button
           type="button"
           onClick={goPrev}
-          aria-label="Show previous project"
+          aria-label={t(locale, 'home.featuredPrev')}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream-200/90 bg-white/90 text-brand-800 shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md"
         >
           <ChevronLeft className="h-5 w-5" aria-hidden="true" />
@@ -493,7 +494,7 @@ function FeaturedProjectsCarousel({
         <button
           type="button"
           onClick={goNext}
-          aria-label="Show next project"
+          aria-label={t(locale, 'home.featuredNext')}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream-200/90 bg-white/90 text-brand-800 shadow-sm transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md"
         >
           <ChevronRight className="h-5 w-5" aria-hidden="true" />
@@ -505,7 +506,7 @@ function FeaturedProjectsCarousel({
           href={`/${locale}/projects`}
           className="inline-flex items-center gap-1.5 text-base font-semibold text-brand-800"
         >
-          View all projects
+          {t(locale, 'home.featuredViewAll')}
           <ArrowRight className="h-5 w-5" aria-hidden="true" />
         </Link>
       </div>
@@ -546,19 +547,18 @@ export default function FeaturedProjectsSection({
                 id="featured-projects-heading"
                 className="relative scroll-mt-28 text-4xl font-semibold leading-tight text-brand-950 [text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] sm:scroll-mt-32 sm:text-5xl lg:scroll-mt-36"
               >
-                Featured Projects
+                {t(locale, 'home.featuredTitle')}
               </h2>
             </div>
             <p className="mt-4 text-base font-medium leading-relaxed text-brand-900 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.75)] sm:text-lg">
-              A selection of Diocesan building and development initiatives across
-              Hong Kong.
+              {t(locale, 'home.featuredSubtitle')}
             </p>
           </div>
           <Link
             href={`/${locale}/projects`}
             className="relative hidden items-center gap-1.5 text-base font-semibold text-brand-800 transition-colors hover:text-brand-950 hover:underline sm:inline-flex sm:text-lg"
           >
-            View all projects
+            {t(locale, 'home.featuredViewAll')}
             <ArrowRight className="h-5 w-5" aria-hidden="true" />
           </Link>
         </div>
@@ -576,7 +576,7 @@ export default function FeaturedProjectsSection({
         </ScrollReveal>
       ) : (
         <p className="mt-10 text-sm text-stone-600">
-          Featured projects will appear here once they are published in the CMS.
+          {t(locale, 'home.featuredEmpty')}
         </p>
       )}
     </AnimatedSection>

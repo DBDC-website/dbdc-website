@@ -50,6 +50,34 @@ function extensionFor(file: File): string {
   return 'jpg';
 }
 
+function readLocalizedFields(formData: FormData) {
+  const titleEn = readText(formData, 'title_en');
+  const titleZhHant = readText(formData, 'title_zh_hant');
+  const titleZhHans = readText(formData, 'title_zh_hans');
+  const buildingNameEn = readText(formData, 'building_name_en');
+  const buildingNameZhHant = readText(formData, 'building_name_zh_hant');
+  const buildingNameZhHans = readText(formData, 'building_name_zh_hans');
+  const imageAltEn = readText(formData, 'image_alt_en');
+  const imageAltZhHant = readText(formData, 'image_alt_zh_hant');
+  const imageAltZhHans = readText(formData, 'image_alt_zh_hans');
+
+  const legacyImageAlt =
+    imageAltEn || buildingNameEn || titleEn;
+
+  return {
+    titleEn,
+    titleZhHant,
+    titleZhHans,
+    buildingNameEn,
+    buildingNameZhHant,
+    buildingNameZhHans,
+    imageAltEn,
+    imageAltZhHant,
+    imageAltZhHans,
+    legacyImageAlt,
+  };
+}
+
 async function uploadProjectImage(
   supabase: Awaited<ReturnType<typeof requireAdmin>>,
   file: File,
@@ -90,16 +118,15 @@ function revalidatePublicSite() {
 export async function createProject(formData: FormData) {
   const supabase = await requireAdmin();
 
-  const title = readText(formData, 'title');
-  const buildingName = readText(formData, 'building_name');
+  const fields = readLocalizedFields(formData);
   const address = readText(formData, 'address');
   const year = parseYear(readText(formData, 'year'));
-  const imageAlt = readText(formData, 'image_alt');
   const published = formData.get('published') === 'on';
   const slugInput = readText(formData, 'slug');
-  const slug = slugInput || slugify(title || buildingName);
+  const slug =
+    slugInput || slugify(fields.titleEn || fields.buildingNameEn);
 
-  if (!title) {
+  if (!fields.titleEn) {
     redirect('/admin/projects/new?error=title');
   }
 
@@ -120,13 +147,22 @@ export async function createProject(formData: FormData) {
     .from('projects')
     .insert({
       slug,
-      title,
-      building_name: buildingName || null,
+      title: fields.titleEn,
+      title_en: fields.titleEn,
+      title_zh_hant: fields.titleZhHant || null,
+      title_zh_hans: fields.titleZhHans || null,
+      building_name: fields.buildingNameEn || null,
+      building_name_en: fields.buildingNameEn || null,
+      building_name_zh_hant: fields.buildingNameZhHant || null,
+      building_name_zh_hans: fields.buildingNameZhHans || null,
       address: address || null,
       year,
       published,
       image_url: imageUrl,
-      image_alt: imageAlt || buildingName || title,
+      image_alt: fields.legacyImageAlt,
+      image_alt_en: fields.imageAltEn || fields.legacyImageAlt,
+      image_alt_zh_hant: fields.imageAltZhHant || null,
+      image_alt_zh_hans: fields.imageAltZhHans || null,
       updated_at: new Date().toISOString(),
     })
     .select('id')
@@ -142,7 +178,10 @@ export async function createProject(formData: FormData) {
     const { error: imageError } = await supabase.from('project_images').insert({
       project_id: data.id,
       image_url: imageUrl,
-      caption: imageAlt || buildingName || title,
+      caption: fields.legacyImageAlt,
+      caption_en: fields.legacyImageAlt,
+      caption_zh_hant: fields.imageAltZhHant || null,
+      caption_zh_hans: fields.imageAltZhHans || null,
       image_type: 'gallery',
       sort_order: 0,
     });
@@ -163,17 +202,16 @@ export async function updateProject(formData: FormData) {
     redirect('/admin/projects?error=invalid');
   }
 
-  const title = readText(formData, 'title');
-  const buildingName = readText(formData, 'building_name');
+  const fields = readLocalizedFields(formData);
   const address = readText(formData, 'address');
   const year = parseYear(readText(formData, 'year'));
-  const imageAlt = readText(formData, 'image_alt');
   const published = formData.get('published') === 'on';
   const slugInput = readText(formData, 'slug');
-  const slug = slugInput || slugify(title || buildingName);
+  const slug =
+    slugInput || slugify(fields.titleEn || fields.buildingNameEn);
   const clearImage = formData.get('clear_image') === 'on';
 
-  if (!title) {
+  if (!fields.titleEn) {
     redirect(`/admin/projects/${id}?error=title`);
   }
 
@@ -201,7 +239,10 @@ export async function updateProject(formData: FormData) {
       const { error: imageError } = await supabase.from('project_images').insert({
         project_id: id,
         image_url: imageUrl,
-        caption: imageAlt || buildingName || title,
+        caption: fields.legacyImageAlt,
+        caption_en: fields.legacyImageAlt,
+        caption_zh_hant: fields.imageAltZhHant || null,
+        caption_zh_hans: fields.imageAltZhHans || null,
         image_type: 'gallery',
         sort_order: 0,
       });
@@ -218,13 +259,22 @@ export async function updateProject(formData: FormData) {
     .from('projects')
     .update({
       slug,
-      title,
-      building_name: buildingName || null,
+      title: fields.titleEn,
+      title_en: fields.titleEn,
+      title_zh_hant: fields.titleZhHant || null,
+      title_zh_hans: fields.titleZhHans || null,
+      building_name: fields.buildingNameEn || null,
+      building_name_en: fields.buildingNameEn || null,
+      building_name_zh_hant: fields.buildingNameZhHant || null,
+      building_name_zh_hans: fields.buildingNameZhHans || null,
       address: address || null,
       year,
       published,
       image_url: imageUrl,
-      image_alt: imageAlt || buildingName || title,
+      image_alt: fields.legacyImageAlt,
+      image_alt_en: fields.imageAltEn || fields.legacyImageAlt,
+      image_alt_zh_hant: fields.imageAltZhHant || null,
+      image_alt_zh_hans: fields.imageAltZhHans || null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', id);
@@ -238,6 +288,47 @@ export async function updateProject(formData: FormData) {
   revalidatePublicSite();
   revalidatePath(`/admin/projects/${id}`);
   redirect(`/admin/projects/${id}?saved=1`);
+}
+
+/** Saves gallery captions in all three languages for one project. */
+export async function updateProjectImageCaptions(formData: FormData) {
+  const supabase = await requireAdmin();
+
+  const projectId = Number(readText(formData, 'project_id'));
+  if (!Number.isFinite(projectId) || projectId <= 0) {
+    redirect('/admin/projects?error=invalid');
+  }
+
+  const imageIds = formData
+    .getAll('image_id')
+    .map((value) => Number(value))
+    .filter((value) => Number.isFinite(value) && value > 0);
+
+  for (const imageId of imageIds) {
+    const captionEn = readText(formData, `caption_en_${imageId}`);
+    const captionZhHant = readText(formData, `caption_zh_hant_${imageId}`);
+    const captionZhHans = readText(formData, `caption_zh_hans_${imageId}`);
+
+    const { error } = await supabase
+      .from('project_images')
+      .update({
+        caption: captionEn || null,
+        caption_en: captionEn || null,
+        caption_zh_hant: captionZhHant || null,
+        caption_zh_hans: captionZhHans || null,
+      })
+      .eq('id', imageId)
+      .eq('project_id', projectId);
+
+    if (error) {
+      console.error('Failed to update project image caption:', error);
+      redirect(`/admin/projects/${projectId}?error=captions`);
+    }
+  }
+
+  revalidatePublicSite();
+  revalidatePath(`/admin/projects/${projectId}`);
+  redirect(`/admin/projects/${projectId}?saved=captions`);
 }
 
 export async function deleteProject(formData: FormData) {

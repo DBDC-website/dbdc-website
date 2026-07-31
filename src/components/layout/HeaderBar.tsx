@@ -11,9 +11,9 @@ import {
 import { Menu } from 'lucide-react';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import type { Locale } from '@/constants/i18n';
-import { siteConfig } from '@/constants/site';
 import { useSiteChromeHidden } from '@/hooks/useSiteChromeHidden';
 import type { NavItem } from '@/types/navigation';
+import { t } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 import LanguageSwitcher from './LanguageSwitcher';
 import MainNav from './MainNav';
@@ -27,6 +27,7 @@ type HeaderBarProps = {
 export default function HeaderBar({ locale, items }: HeaderBarProps) {
   const { scrollY } = useScroll();
   const chromeHidden = useSiteChromeHidden();
+  const siteName = t(locale, 'site.name');
 
   const borderOpacity = useTransform(scrollY, [0, 72], [0.35, 0.88]);
   const shadowStrength = useTransform(scrollY, [0, 72], [0.04, 0.12]);
@@ -57,7 +58,7 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 rounded-sm bg-white p-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
-              aria-label="Catholic Diocese of Hong Kong (opens in a new tab)"
+              aria-label={t(locale, 'chrome.dioceseLogoAria')}
             >
               <Image
                 src="/logo.png"
@@ -71,9 +72,9 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
             <Link
               href={`/${locale}`}
               className="min-w-0 rounded-md font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm lg:text-[1.05rem] lg:leading-tight"
-              aria-label={`${siteConfig.name} home`}
+              aria-label={t(locale, 'chrome.homeAria', { name: siteName })}
             >
-              {siteConfig.name}
+              {siteName}
             </Link>
           </div>
 
@@ -87,7 +88,7 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
             <label
               htmlFor={MOBILE_MENU_TOGGLE_ID}
               className="inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-logo-grey hover:bg-white/55 active:bg-white/75 lg:hidden"
-              aria-label="Open menu"
+              aria-label={t(locale, 'nav.openMenu')}
               aria-controls="mobile-menu"
             >
               <Menu className="pointer-events-none h-7 w-7" aria-hidden="true" />

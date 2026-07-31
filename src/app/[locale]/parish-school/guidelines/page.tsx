@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import ParishFlowcharts from '@/components/parish-school/ParishFlowcharts';
 import ParishGuidelinesTips from '@/components/parish-school/ParishGuidelinesTips';
 import Container from '@/components/ui/Container';
 import AnimatedSection from '@/components/ui/AnimatedSection';
-import { parishGuidelines } from '@/constants/parishGuidelines';
+import { getParishGuidelines } from '@/content/parishGuidelines';
 import { homeImages } from '@/constants/homeImages';
-import { locales, type Locale } from '@/constants/i18n';
+import { isValidLocale, locales, type Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 
 type GuidelinesPageProps = {
   params: Promise<{ locale: string }>;
@@ -20,14 +23,26 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
-  title: 'Parish Working Guidelines',
-  description:
-    'Useful tips for selecting contractors for parish maintenance works, and reference flow charts for maintenance, emergency, and renovation projects.',
-};
+export async function generateMetadata({
+  params,
+}: GuidelinesPageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '/parish-school/guidelines',
+    titleKey: 'parish.guidelines.metaTitle',
+    descriptionKey: 'parish.guidelines.metaDescription',
+  });
+}
 
 export default async function ParishGuidelinesPage({ params }: GuidelinesPageProps) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  const parishGuidelines = getParishGuidelines(locale);
 
   return (
     <div className="relative min-h-screen">
@@ -62,11 +77,10 @@ export default async function ParishGuidelinesPage({ params }: GuidelinesPagePro
 
           <Container size="wide" className="relative z-10 px-6 text-center sm:px-8">
             <h1 className="mx-auto max-w-4xl font-serif text-4xl font-semibold leading-tight text-brand-950 [text-shadow:0_0_18px_rgba(255,255,255,0.95),0_0_36px_rgba(255,252,245,0.75)] sm:text-5xl lg:text-6xl">
-              Parish Working Guidelines
+              {t(locale, 'parish.guidelines.title')}
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base font-semibold leading-relaxed text-brand-900 [text-shadow:0_0_14px_rgba(255,255,255,0.9),0_0_28px_rgba(255,252,245,0.7)] sm:text-lg lg:text-xl">
-              Practical guidance on contractor selection and project workflows for
-              parish building works.
+              {t(locale, 'parish.guidelines.description')}
             </p>
             <div
               className="mx-auto mt-8 h-px w-24 bg-gradient-to-r from-gold-400 via-[#00a0dc]/70 to-transparent"
@@ -83,11 +97,11 @@ export default async function ParishGuidelinesPage({ params }: GuidelinesPagePro
           className="!py-7 sm:!py-9 lg:!py-10"
         >
           <Link
-            href={`/${locale as Locale}/parish-school`}
+            href={`/${locale}/parish-school`}
             className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm font-medium text-brand-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white/75"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Back to Parish & School Corner
+            {t(locale, 'parish.guidelines.back')}
           </Link>
 
           <ParishGuidelinesTips content={parishGuidelines} />

@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import type { Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
 
 /**
  * Validation schemas for the consultant and contractor registration forms.
@@ -7,46 +9,7 @@ import { z } from 'zod';
  * converted to numbers / dates / null inside the server action.
  */
 
-// --- Reusable field helpers -------------------------------------------------
-
-const optionalText = z.string().trim().max(2000).optional();
-
-const optionalEmail = z
-  .union([z.literal(''), z.email('Enter a valid email address')])
-  .optional();
-
-const optionalUrl = z
-  .union([z.literal(''), z.url('Enter a valid URL (including https://)')])
-  .optional();
-
-const optionalDate = z
-  .union([z.literal(''), z.iso.date('Enter a valid date')])
-  .optional();
-
-const optionalCapitalText = z.string().trim().max(80).optional();
-const optionalMoney = z
-  .string()
-  .trim()
-  .max(20)
-  .optional()
-  .refine(
-    (value) => !value || /^\d+(\.\d{1,2})?$/.test(value),
-    'Enter a valid amount (numbers only)',
-  );
-
-const documentUrlsSchema = z.array(z.string().trim().min(1));
-
-const otherApprovedListEntrySchema = z.object({
-  listName: optionalText,
-  listedDate: optionalDate,
-  documentUrls: documentUrlsSchema,
-});
-
-const previousProjectUploadEntrySchema = z.object({
-  documentUrls: documentUrlsSchema,
-});
-
-// --- Selectable options (surfaced in the UI) --------------------------------
+// --- Selectable options (surfaced in the UI; values stay English for storage) -
 
 export const CONSULTANT_NATURE_OPTIONS = [
   'Architecture',
@@ -93,128 +56,206 @@ export const CONTRACTOR_MINOR_WORKS_OPTIONS = [
 
 export const AUTHORIZED_PERSON_CATEGORIES = ['I', 'II', 'III'] as const;
 
-// --- Shared child collections ----------------------------------------------
+function buildRegistrationSchemas(locale: Locale) {
+  const optionalText = z.string().trim().max(2000).optional();
 
-const contactSchema = z.object({
-  name: z.string().trim().min(1, 'Contact name is required').max(200),
-  position: optionalText,
-  telephone: optionalText,
-  signatureUrl: z.string().trim().min(1, 'Please provide a signature'),
-});
+  const optionalEmail = z
+    .union([
+      z.literal(''),
+      z.email(t(locale, 'forms.errors.invalidEmail')),
+    ])
+    .optional();
 
-const previousProjectSchema = z.object({
-  projectName: z.string().trim().min(1, 'Project name is required').max(300),
-  projectAddress: optionalText,
-  contractSum: optionalMoney,
-  startDate: optionalDate,
-  endDate: optionalDate,
-  clientName: optionalText,
-  architectEngineer: optionalText,
-});
+  const optionalUrl = z
+    .union([
+      z.literal(''),
+      z.url(t(locale, 'forms.errors.invalidUrl')),
+    ])
+    .optional();
 
-const baseRegistrationShape = {
-  companyName: z.string().trim().min(1, 'Company name is required').max(300),
-  registeredAddress: optionalText,
-  telephone: optionalText,
-  fax: optionalText,
-  email: optionalEmail,
-  website: optionalUrl,
+  const optionalDate = z
+    .union([
+      z.literal(''),
+      z.iso.date(t(locale, 'forms.errors.invalidDate')),
+    ])
+    .optional();
 
-  scopeOfServices: optionalText,
-  businessRegistrationNo: optionalText,
-  registrationDate: optionalDate,
+  const optionalCapitalText = z.string().trim().max(80).optional();
+  const optionalMoney = z
+    .string()
+    .trim()
+    .max(20)
+    .optional()
+    .refine(
+      (value) => !value || /^\d+(\.\d{1,2})?$/.test(value),
+      t(locale, 'forms.errors.invalidAmount'),
+    );
 
-  capitalAuthorized: optionalCapitalText,
-  capitalIssued: optionalCapitalText,
-  capitalAvailable: optionalCapitalText,
+  const documentUrlsSchema = z.array(z.string().trim().min(1));
 
-  businessRegistrationDocumentUrls: documentUrlsSchema,
+  const otherApprovedListEntrySchema = z.object({
+    listName: optionalText,
+    listedDate: optionalDate,
+    documentUrls: documentUrlsSchema,
+  });
 
-  publishCompany: z.boolean(),
-  auditedAccountsProvided: z.boolean(),
-  auditedAccountDocumentUrls: documentUrlsSchema,
+  const previousProjectUploadEntrySchema = z.object({
+    documentUrls: documentUrlsSchema,
+  });
 
-  contacts: z
-    .array(contactSchema)
-    .min(1, 'Add at least one authorised contact'),
-  previousProjects: z.array(previousProjectSchema),
-  previousProjectUploads: z.array(previousProjectUploadEntrySchema),
-};
+  const contactSchema = z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, t(locale, 'forms.errors.contactNameRequired'))
+      .max(200),
+    position: optionalText,
+    telephone: optionalText,
+    signatureUrl: z
+      .string()
+      .trim()
+      .min(1, t(locale, 'forms.errors.signatureRequired')),
+  });
 
-/** Fields common to both registration forms (used to type shared UI sections). */
-export const baseRegistrationSchema = z.object(baseRegistrationShape);
-export type BaseRegistrationValues = z.infer<typeof baseRegistrationSchema>;
+  const previousProjectSchema = z.object({
+    projectName: z
+      .string()
+      .trim()
+      .min(1, t(locale, 'forms.errors.projectNameRequired'))
+      .max(300),
+    projectAddress: optionalText,
+    contractSum: optionalMoney,
+    startDate: optionalDate,
+    endDate: optionalDate,
+    clientName: optionalText,
+    architectEngineer: optionalText,
+  });
 
-const otherRegisteredProfessionalSchema = z.object({
-  professional: optionalText,
-  no: optionalText,
-});
+  const baseRegistrationShape = {
+    companyName: z
+      .string()
+      .trim()
+      .min(1, t(locale, 'forms.errors.companyNameRequired'))
+      .max(300),
+    registeredAddress: optionalText,
+    telephone: optionalText,
+    fax: optionalText,
+    email: optionalEmail,
+    website: optionalUrl,
 
-const consultantProfessionalDetailsSchema = z.object({
-  authorizedPersonCategories: z.array(z.enum(AUTHORIZED_PERSON_CATEGORIES)),
-  professionalName: optionalText,
-  professionalNo: optionalText,
-  registeredStructuralEngineer: z.boolean(),
-  registeredGeotechnicalEngineer: z.boolean(),
-  authorizedLandSurveyor: z.boolean(),
-  registeredInspector: z.boolean(),
-  registeredEnergyAssessor: z.boolean(),
-  otherRegisteredProfessionals: z.array(otherRegisteredProfessionalSchema),
-  aacsbDocumentUrls: documentUrlsSchema,
-  eacsbDocumentUrls: documentUrlsSchema,
-  otherApprovedListEntries: z.array(otherApprovedListEntrySchema),
-});
+    scopeOfServices: optionalText,
+    businessRegistrationNo: optionalText,
+    registrationDate: optionalDate,
 
-const contractorProfessionalDetailsSchema = z.object({
-  authorizedPerson: z.boolean(),
-  architect: z.boolean(),
-  siteEngineer: z.boolean(),
-  buildingSurveyor: z.boolean(),
-  quantitySurveyor: z.boolean(),
-  registeredInspector: z.boolean(),
-  registeredEnergyAssessor: z.boolean(),
-  otherProfessional: z.boolean(),
-  otherProfessionalSpecify: optionalText,
-  devbDocumentUrls: documentUrlsSchema,
-  otherApprovedListEntries: z.array(otherApprovedListEntrySchema),
-});
+    capitalAuthorized: optionalCapitalText,
+    capitalIssued: optionalCapitalText,
+    capitalAvailable: optionalCapitalText,
 
-// --- Consultant schema ------------------------------------------------------
+    businessRegistrationDocumentUrls: documentUrlsSchema,
 
-export const consultantSchema = z.object({
-  ...baseRegistrationShape,
-  natureOfBusiness: z
-    .array(z.string())
-    .min(1, 'Select at least one nature of business'),
-  natureOfBusinessOther: optionalText,
-  aacsbListed: z.boolean(),
-  aacsbDate: optionalDate,
-  eacsbListed: z.boolean(),
-  eacsbDate: optionalDate,
-  professionalDetails: consultantProfessionalDetailsSchema,
-});
+    publishCompany: z.boolean(),
+    auditedAccountsProvided: z.boolean(),
+    auditedAccountDocumentUrls: documentUrlsSchema,
 
-// --- Contractor schema ------------------------------------------------------
+    contacts: z
+      .array(contactSchema)
+      .min(1, t(locale, 'forms.errors.contactsMin')),
+    previousProjects: z.array(previousProjectSchema),
+    previousProjectUploads: z.array(previousProjectUploadEntrySchema),
+  };
 
-export const contractorSchema = z.object({
-  ...baseRegistrationShape,
-  natureOfBusiness: z
-    .array(z.string())
-    .min(1, 'Select at least one nature of business'),
-  natureOfBusinessOther: optionalText,
-  buildingsDeptRegNo: optionalText,
-  buildingsDeptDate: optionalDate,
-  buildingsDeptDocumentUrls: documentUrlsSchema,
-  devbApproved: z.boolean(),
-  devbDate: optionalDate,
-  professionalDetails: contractorProfessionalDetailsSchema,
-});
+  const otherRegisteredProfessionalSchema = z.object({
+    professional: optionalText,
+    no: optionalText,
+  });
+
+  const consultantProfessionalDetailsSchema = z.object({
+    authorizedPersonCategories: z.array(z.enum(AUTHORIZED_PERSON_CATEGORIES)),
+    professionalName: optionalText,
+    professionalNo: optionalText,
+    registeredStructuralEngineer: z.boolean(),
+    registeredGeotechnicalEngineer: z.boolean(),
+    authorizedLandSurveyor: z.boolean(),
+    registeredInspector: z.boolean(),
+    registeredEnergyAssessor: z.boolean(),
+    otherRegisteredProfessionals: z.array(otherRegisteredProfessionalSchema),
+    aacsbDocumentUrls: documentUrlsSchema,
+    eacsbDocumentUrls: documentUrlsSchema,
+    otherApprovedListEntries: z.array(otherApprovedListEntrySchema),
+  });
+
+  const contractorProfessionalDetailsSchema = z.object({
+    authorizedPerson: z.boolean(),
+    architect: z.boolean(),
+    siteEngineer: z.boolean(),
+    buildingSurveyor: z.boolean(),
+    quantitySurveyor: z.boolean(),
+    registeredInspector: z.boolean(),
+    registeredEnergyAssessor: z.boolean(),
+    otherProfessional: z.boolean(),
+    otherProfessionalSpecify: optionalText,
+    devbDocumentUrls: documentUrlsSchema,
+    otherApprovedListEntries: z.array(otherApprovedListEntrySchema),
+  });
+
+  const consultantSchema = z.object({
+    ...baseRegistrationShape,
+    natureOfBusiness: z
+      .array(z.string())
+      .min(1, t(locale, 'forms.errors.natureRequired')),
+    natureOfBusinessOther: optionalText,
+    aacsbListed: z.boolean(),
+    aacsbDate: optionalDate,
+    eacsbListed: z.boolean(),
+    eacsbDate: optionalDate,
+    professionalDetails: consultantProfessionalDetailsSchema,
+  });
+
+  const contractorSchema = z.object({
+    ...baseRegistrationShape,
+    natureOfBusiness: z
+      .array(z.string())
+      .min(1, t(locale, 'forms.errors.natureRequired')),
+    natureOfBusinessOther: optionalText,
+    buildingsDeptRegNo: optionalText,
+    buildingsDeptDate: optionalDate,
+    buildingsDeptDocumentUrls: documentUrlsSchema,
+    devbApproved: z.boolean(),
+    devbDate: optionalDate,
+    professionalDetails: contractorProfessionalDetailsSchema,
+  });
+
+  return {
+    baseRegistrationSchema: z.object(baseRegistrationShape),
+    consultantSchema,
+    contractorSchema,
+  };
+}
+
+export function createConsultantSchema(locale: Locale) {
+  return buildRegistrationSchemas(locale).consultantSchema;
+}
+
+export function createContractorSchema(locale: Locale) {
+  return buildRegistrationSchemas(locale).contractorSchema;
+}
+
+export function createBaseRegistrationSchema(locale: Locale) {
+  return buildRegistrationSchemas(locale).baseRegistrationSchema;
+}
+
+/** English schemas for server-side validation (storage values stay EN). */
+export const consultantSchema = createConsultantSchema('en');
+export const contractorSchema = createContractorSchema('en');
+export const baseRegistrationSchema = createBaseRegistrationSchema('en');
 
 export type ConsultantRegistrationValues = z.infer<typeof consultantSchema>;
 export type ContractorRegistrationValues = z.infer<typeof contractorSchema>;
-export type RegistrationContact = z.infer<typeof contactSchema>;
-export type RegistrationPreviousProject = z.infer<typeof previousProjectSchema>;
-export type OtherApprovedListEntry = z.infer<typeof otherApprovedListEntrySchema>;
-export type OtherRegisteredProfessional = z.infer<
-  typeof otherRegisteredProfessionalSchema
->;
+export type BaseRegistrationValues = z.infer<typeof baseRegistrationSchema>;
+export type RegistrationContact = ConsultantRegistrationValues['contacts'][number];
+export type RegistrationPreviousProject =
+  ConsultantRegistrationValues['previousProjects'][number];
+export type OtherApprovedListEntry =
+  ConsultantRegistrationValues['professionalDetails']['otherApprovedListEntries'][number];
+export type OtherRegisteredProfessional =
+  ConsultantRegistrationValues['professionalDetails']['otherRegisteredProfessionals'][number];

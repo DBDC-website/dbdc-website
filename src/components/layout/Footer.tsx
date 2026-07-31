@@ -3,17 +3,13 @@ import { MapPin, Mail, Phone, Printer, Clock } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import type { Locale } from '@/constants/i18n';
-import { contactInfo, mainNav, siteConfig } from '@/constants/site';
+import { contactInfo } from '@/constants/site';
+import { t, tList } from '@/lib/i18n';
+import { getLegalLinks, getMainNav } from '@/lib/i18n/navigation';
 
 type FooterProps = {
   locale: Locale;
 };
-
-const legalLinks = [
-  { href: '/copyright-disclaimer', label: 'Copyright & Disclaimer' },
-  { href: '/privacy-policy', label: 'Privacy Policy Statement' },
-  { href: '/pics', label: 'Personal Information Collection Statement' },
-] as const;
 
 const footerLinkClass =
   'font-bold text-logo-grey/90 transition-colors hover:text-logo-grey hover:underline decoration-gold-400/80';
@@ -23,6 +19,12 @@ const footerHeadingClass =
 
 export default function Footer({ locale }: FooterProps) {
   const year = new Date().getFullYear();
+  const navItems = getMainNav(locale);
+  const legalLinks = getLegalLinks(locale);
+  const address = tList(locale, 'footer.address');
+  const officeHours = tList(locale, 'footer.officeHours');
+  const siteName = t(locale, 'site.name');
+  const tagline = t(locale, 'site.tagline');
 
   return (
     <footer className="relative mt-auto overflow-hidden border-t border-gold-400/45 text-logo-grey">
@@ -30,10 +32,10 @@ export default function Footer({ locale }: FooterProps) {
 
       <Container size="wide" className="relative py-6 sm:py-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-x-6">
-          <nav aria-label="Footer navigation" className="min-w-0 flex-1">
-            <h2 className={footerHeadingClass}>Explore</h2>
+          <nav aria-label={t(locale, 'footer.exploreAria')} className="min-w-0 flex-1">
+            <h2 className={footerHeadingClass}>{t(locale, 'footer.explore')}</h2>
             <ul className="mt-2 space-y-1.5 text-xs leading-snug sm:text-sm">
-              {mainNav.map((item) => (
+              {navItems.map((item) => (
                 <li key={item.href}>
                   <Link href={`/${locale}${item.href}`} className={footerLinkClass}>
                     {item.label}
@@ -45,10 +47,10 @@ export default function Footer({ locale }: FooterProps) {
 
           <div className="min-w-0 flex-1">
             <p className="font-serif text-sm font-bold leading-tight text-logo-grey sm:text-base">
-              {contactInfo.organisation}
+              {t(locale, 'footer.organisation')}
             </p>
             <p className="mt-1 text-xs font-bold leading-snug text-logo-grey/80 sm:text-sm">
-              {siteConfig.name}
+              {siteName}
             </p>
 
             <address className="mt-3 space-y-2 text-xs not-italic leading-snug sm:text-sm">
@@ -58,7 +60,7 @@ export default function Footer({ locale }: FooterProps) {
                   aria-hidden="true"
                 />
                 <span className="font-bold text-logo-grey/85">
-                  {contactInfo.address.map((line) => (
+                  {address.map((line) => (
                     <span key={line} className="block">
                       {line}
                     </span>
@@ -77,7 +79,7 @@ export default function Footer({ locale }: FooterProps) {
                   href={`tel:${contactInfo.phone.replace(/\s+/g, '')}`}
                   className={footerLinkClass}
                 >
-                  T: {contactInfo.phone}
+                  {t(locale, 'footer.phonePrefix')} {contactInfo.phone}
                 </a>
               </div>
               <div className="flex items-center gap-2">
@@ -86,13 +88,13 @@ export default function Footer({ locale }: FooterProps) {
                   href={`tel:${contactInfo.fax.replace(/\s+/g, '')}`}
                   className={footerLinkClass}
                 >
-                  F: {contactInfo.fax}
+                  {t(locale, 'footer.faxPrefix')} {contactInfo.fax}
                 </a>
               </div>
               <div className="flex items-start gap-2">
                 <Clock className="mt-0.5 h-4 w-4 shrink-0 text-gold-600" aria-hidden="true" />
                 <span className="font-bold text-logo-grey/85">
-                  {contactInfo.officeHours.map((line) => (
+                  {officeHours.map((line) => (
                     <span key={line} className="block">
                       {line}
                     </span>
@@ -102,8 +104,8 @@ export default function Footer({ locale }: FooterProps) {
             </address>
           </div>
 
-          <nav aria-label="Legal" className="min-w-0 flex-1">
-            <h2 className={footerHeadingClass}>Legal</h2>
+          <nav aria-label={t(locale, 'footer.legalAria')} className="min-w-0 flex-1">
+            <h2 className={footerHeadingClass}>{t(locale, 'footer.legal')}</h2>
             <ul className="mt-2 space-y-1.5 text-xs leading-snug sm:text-sm">
               {legalLinks.map((link) => (
                 <li key={link.href}>
@@ -116,7 +118,9 @@ export default function Footer({ locale }: FooterProps) {
           </nav>
 
           <div className="min-w-0 flex-1">
-            <h2 className={`text-left ${footerHeadingClass}`}>Find us</h2>
+            <h2 className={`text-left ${footerHeadingClass}`}>
+              {t(locale, 'footer.findUs')}
+            </h2>
             <a
               href="https://www.google.com/maps/place/%E5%A4%A9%E4%B8%BB%E6%95%99%E9%A6%99%E6%B8%AF%E6%95%99%E5%8D%80%EF%BC%8C%E6%95%99%E5%8D%80%E4%B8%AD%E5%BF%83/@22.2785009,114.1495479,15.38z/data=!4m15!1m7!3m6!1s0x3404007aec05dbf7:0x201f5ea45a557578!2z5aSp5Li75pWZ6aaZ5riv5pWZ5Y2A77yM5pWZ5Y2A5Lit5b-D!8m2!3d22.2796715!4d114.153943!16s%2Fg%2F11f3448gfj!3m6!1s0x3404007aec05dbf7:0x201f5ea45a557578!8m2!3d22.2796715!4d114.153943!15sCh3kuK3nkrDloIXpgZMxNuiZn-aVmeWNgOS4reW_g5IBD2NhdGhvbGljX2NodXJjaA!16s%2Fg%2F11f3448gfj?entry=ttu&g_ep=EgoyMDI2MDYxMy4wIKXMDSoASAFQAw%3D%3D"
               target="_blank"
@@ -125,7 +129,7 @@ export default function Footer({ locale }: FooterProps) {
             >
               <img
                 src="/images/map.png"
-                alt="Map location of DBDC Office"
+                alt={t(locale, 'footer.mapAlt')}
                 className="h-full w-full object-cover"
               />
             </a>
@@ -138,8 +142,7 @@ export default function Footer({ locale }: FooterProps) {
         />
 
         <p className="text-center text-[11px] font-bold leading-tight text-logo-grey/65 sm:text-xs">
-          &copy; {year} {siteConfig.name}, {siteConfig.tagline}. All rights
-          reserved.
+          &copy; {year} {siteName}, {tagline}. {t(locale, 'footer.rightsReserved')}
         </p>
       </Container>
     </footer>

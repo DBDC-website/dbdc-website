@@ -1,27 +1,47 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 import ExperienceCards from '@/components/projects/ExperienceCards';
 import ProjectsGrid from '@/components/projects/ProjectsGrid';
 import ScrollToExperiencesButton from '@/components/projects/ScrollToExperiencesButton';
 import { homeImages } from '@/constants/homeImages';
+import { isValidLocale, type Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 import { getPublishedProjects } from '@/lib/projects';
 
-export const metadata: Metadata = {
-  title: 'Selected Projects',
-  description:
-    'A showcase of Diocesan building and development projects across the Diocese, its parishes, schools and other properties.',
+type ProjectsPageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-export default async function ProjectsPage() {
-  const projects = await getPublishedProjects();
+export async function generateMetadata({
+  params,
+}: ProjectsPageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '/projects',
+    titleKey: 'projects.metaTitle',
+    descriptionKey: 'projects.metaDescription',
+  });
+}
+
+export default async function ProjectsPage({ params }: ProjectsPageProps) {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  const projects = await getPublishedProjects(locale);
 
   return (
     <div className="relative bg-[#f4e6d4]">
       <PageHeader
-        eyebrow="Our Works"
-        title="Selected Projects"
-        description="A showcase of building, restoration, and development work carried out for the Diocese, its parishes, schools and other properties."
+        eyebrow={t(locale, 'projects.eyebrow')}
+        title={t(locale, 'projects.title')}
+        description={t(locale, 'projects.description')}
         theme="cathedral"
         align="center"
         contentClassName="min-h-[22rem] py-14 sm:min-h-[26rem] sm:py-16 lg:min-h-[30rem] lg:pb-10 lg:pt-20"
@@ -52,15 +72,14 @@ export default async function ProjectsPage() {
           className="relative z-10 !pt-6 !pb-6 sm:!pt-8 sm:!pb-8 lg:!pt-10 lg:!pb-8"
           heading={{
             id: 'project-showcase-heading',
-            title: 'Project showcase',
-            description:
-              'Selected Diocesan building and development projects from the DBDC portfolio.',
+            title: t(locale, 'projects.showcaseTitle'),
+            description: t(locale, 'projects.showcaseDescription'),
           }}
           headingClassName="[&_h2]:text-brand-950 [&_p]:text-stone-700"
           ruleClassName="from-[#d2a73c] via-[#00a0dc] to-transparent"
           contentClassName="!mt-8 lg:!mt-10"
         >
-          <ProjectsGrid projects={projects} />
+          <ProjectsGrid projects={projects} locale={locale} />
         </PageSection>
 
         <div
@@ -76,18 +95,17 @@ export default async function ProjectsPage() {
           className="relative z-10 !pt-6 sm:!pt-8 lg:!pt-8"
           heading={{
             id: 'experiences-heading',
-            title: 'Featured experiences',
-            description:
-              'Step inside Churches & Seminary virtually or explore the Catholic Heritage archive online.',
+            title: t(locale, 'projects.experiencesTitle'),
+            description: t(locale, 'projects.experiencesDescription'),
           }}
           headingClassName="[&_h2]:text-brand-950 [&_p]:text-base [&_p]:font-medium [&_p]:text-stone-700 sm:[&_p]:text-lg"
           ruleClassName="from-[#d2a73c] via-[#00a0dc] to-transparent"
         >
-          <ExperienceCards />
+          <ExperienceCards locale={locale} />
         </PageSection>
       </div>
 
-      <ScrollToExperiencesButton />
+      <ScrollToExperiencesButton locale={locale} />
     </div>
   );
 }

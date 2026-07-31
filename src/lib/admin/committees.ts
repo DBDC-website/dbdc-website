@@ -5,14 +5,18 @@ import type {
   CommitteeMemberSlug,
 } from '@/types/committee';
 
-const MEMBER_SELECT = 'id, committee_slug, name, role, sort_order, active';
+const MEMBER_SELECT =
+  'id, committee_slug, name, name_zh_hant, name_zh_hans, role, role_en, sort_order, active';
 
 function mapRow(row: CommitteeMemberRow): CommitteeMember {
   return {
     id: row.id,
     committeeSlug: row.committee_slug,
     name: row.name,
+    nameZhHant: row.name_zh_hant?.trim() || null,
+    nameZhHans: row.name_zh_hans?.trim() || null,
     role: row.role,
+    roleEn: row.role_en?.trim() || row.role,
     sortOrder: row.sort_order,
     active: row.active,
   };

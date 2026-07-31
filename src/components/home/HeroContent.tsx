@@ -8,7 +8,7 @@ import {
   heroEntranceItemVariants,
 } from '@/lib/motion';
 import type { Locale } from '@/constants/i18n';
-import { siteConfig } from '@/constants/site';
+import { t } from '@/lib/i18n';
 
 type HeroContentProps = {
   locale: Locale;
@@ -16,6 +16,10 @@ type HeroContentProps = {
 
 export default function HeroContent({ locale }: HeroContentProps) {
   const reduceMotion = useReducedMotion();
+  const welcome = t(locale, 'home.heroWelcome');
+  const siteName = t(locale, 'site.name');
+  const description = t(locale, 'site.description');
+  const cta = t(locale, 'home.heroCta');
 
   const content = (
     <>
@@ -24,19 +28,19 @@ export default function HeroContent({ locale }: HeroContentProps) {
         id="hero-heading"
         className="text-4xl font-semibold leading-[1.15] text-white [text-wrap:wrap] sm:text-5xl lg:text-6xl xl:text-7xl"
       >
-        Welcome to
+        {welcome}
         <br />
-        {siteConfig.name}
+        {siteName}
       </motion.h1>
       <motion.p
         variants={heroEntranceItemVariants}
         className="mt-8 max-w-2xl text-lg font-bold leading-relaxed text-cream-100 sm:text-xl"
       >
-        {siteConfig.description}
+        {description}
       </motion.p>
       <motion.div variants={heroEntranceItemVariants} className="mt-12">
         <Button href={`/${locale}/projects`} variant="secondary" size="lg">
-          Explore our projects
+          {cta}
         </Button>
       </motion.div>
     </>
@@ -51,16 +55,16 @@ export default function HeroContent({ locale }: HeroContentProps) {
               id="hero-heading"
               className="text-4xl font-semibold leading-[1.15] text-white [text-wrap:wrap] sm:text-5xl lg:text-6xl xl:text-7xl"
             >
-              Welcome to
+              {welcome}
               <br />
-              {siteConfig.name}
+              {siteName}
             </h1>
             <p className="mt-8 max-w-2xl text-lg font-bold leading-relaxed text-cream-100 sm:text-xl">
-              {siteConfig.description}
+              {description}
             </p>
             <div className="mt-12">
               <Button href={`/${locale}/projects`} variant="secondary" size="lg">
-                Explore our projects
+                {cta}
               </Button>
             </div>
           </div>

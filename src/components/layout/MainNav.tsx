@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
 import type { Locale } from '@/constants/i18n';
 import type { NavChild, NavItem } from '@/types/navigation';
+import { t } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 
 type MainNavProps = {
@@ -141,7 +142,7 @@ export default function MainNav({ locale, items, className }: MainNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label="Main navigation" className={className}>
+    <nav aria-label={t(locale, 'nav.mainAria')} className={className}>
       <ul className="flex items-center gap-1">
         {items.map((item) => {
           const href = resolveHref(locale, item.href);

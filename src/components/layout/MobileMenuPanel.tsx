@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { Locale } from '@/constants/i18n';
 import type { NavItem } from '@/types/navigation';
+import { t } from '@/lib/i18n';
 import LanguageSwitcher from './LanguageSwitcher';
 
 type MobileMenuPanelProps = {
@@ -35,11 +36,13 @@ export default function MobileMenuPanel({
   return (
     <div className="absolute right-0 top-0 flex h-full w-full max-w-sm flex-col bg-gradient-to-b from-cream-50 via-cream-100 to-gold-50/50 shadow-xl">
       <div className="flex items-center justify-between border-b border-gold-200/60 px-4 py-4">
-        <span className="font-serif text-lg font-semibold text-brand-950">Menu</span>
+        <span className="font-serif text-lg font-semibold text-brand-950">
+          {t(locale, 'nav.menuLabel')}
+        </span>
         <label
           htmlFor={toggleId}
           className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-md text-brand-950 hover:bg-gold-100/70"
-          aria-label="Close menu"
+          aria-label={t(locale, 'nav.closeMenu')}
         >
           <span className="text-2xl leading-none" aria-hidden="true">
             &times;
@@ -47,7 +50,10 @@ export default function MobileMenuPanel({
         </label>
       </div>
 
-      <nav aria-label="Mobile navigation" className="flex-1 overflow-y-auto px-3 py-5">
+      <nav
+        aria-label={t(locale, 'nav.mobileAria')}
+        className="flex-1 overflow-y-auto px-3 py-5"
+      >
         <ul className="flex flex-col gap-1">
           {items.map((item) => (
             <li key={item.href}>

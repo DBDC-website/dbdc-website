@@ -1,12 +1,30 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import LegalPageContent from '@/components/legal/LegalPageContent';
-import { privacyPolicyContent } from '@/constants/legal';
+import { getPrivacyPolicy } from '@/content/legal';
+import { isValidLocale, type Locale } from '@/constants/i18n';
+import { buildAlternates } from '@/lib/i18n/metadata';
 
-export const metadata: Metadata = {
-  title: privacyPolicyContent.title,
-  description: privacyPolicyContent.description,
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-export default function PrivacyPolicyPage() {
-  return <LegalPageContent content={privacyPolicyContent} />;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  const content = getPrivacyPolicy(localeParam);
+  return {
+    title: content.title,
+    description: content.description,
+    alternates: buildAlternates(localeParam, '/privacy-policy'),
+  };
+}
+
+export default async function PrivacyPolicyPage({ params }: PageProps) {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  return <LegalPageContent content={getPrivacyPolicy(locale)} />;
 }

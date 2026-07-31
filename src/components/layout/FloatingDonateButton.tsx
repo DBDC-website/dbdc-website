@@ -4,11 +4,19 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Heart } from 'lucide-react';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
+import type { Locale } from '@/constants/i18n';
 import { donateConfig } from '@/constants/donate';
 import { useSiteChromeHidden } from '@/hooks/useSiteChromeHidden';
+import { t } from '@/lib/i18n';
 import { cn } from '@/lib/cn';
 
-export default function FloatingDonateButton() {
+type FloatingDonateButtonProps = {
+  locale: Locale;
+};
+
+export default function FloatingDonateButton({
+  locale,
+}: FloatingDonateButtonProps) {
   const reduceMotion = useReducedMotion();
   const chromeHidden = useSiteChromeHidden();
 
@@ -25,7 +33,7 @@ export default function FloatingDonateButton() {
         href={donateConfig.url}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={donateConfig.ariaLabel}
+        aria-label={t(locale, 'donate.ariaLabel')}
         className="pointer-events-auto group relative flex items-center"
         initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.92 }}
         animate={{ opacity: chromeHidden ? 0 : 1, y: 0, scale: 1 }}
@@ -39,7 +47,7 @@ export default function FloatingDonateButton() {
             'translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100',
           )}
         >
-          {donateConfig.tooltip}
+          {t(locale, 'donate.tooltip')}
         </span>
 
         <span className="relative flex h-[3.75rem] w-[3.75rem] items-center justify-center sm:h-16 sm:w-16">

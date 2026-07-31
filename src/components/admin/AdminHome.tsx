@@ -2,7 +2,13 @@
 
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Building2, ClipboardList, Users } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  ClipboardList,
+  FileText,
+  Users,
+} from 'lucide-react';
 import { cinematicEase, easeOut } from '@/lib/motion';
 import type { AdminDashboardStats } from '@/lib/admin/dashboard';
 
@@ -37,6 +43,18 @@ const DESTINATIONS = [
     cta: 'Manage members',
   },
   {
+    id: 'articles',
+    href: '/admin/articles',
+    title: 'Articles',
+    description:
+      'Publish research PDFs and their Traditional / Simplified Chinese titles.',
+    icon: FileText,
+    accent: 'from-[#3f5d4a] to-brand-900',
+    glow: 'bg-emerald-600/15',
+    statKey: 'articles' as const,
+    cta: 'Manage articles',
+  },
+  {
     id: 'registrations',
     href: '/admin/registrations',
     title: 'Registrations',
@@ -64,6 +82,11 @@ function formatStat(
       return {
         primary: String(stats.membersTotal),
         secondary: `${stats.membersActive} active`,
+      };
+    case 'articles':
+      return {
+        primary: String(stats.articlesTotal),
+        secondary: `${stats.articlesTranslated} translated`,
       };
     case 'registrations':
       return {

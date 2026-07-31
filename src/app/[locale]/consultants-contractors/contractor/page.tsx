@@ -1,31 +1,43 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
 import ContractorForm from '@/components/registration/ContractorForm';
-import { type Locale } from '@/constants/i18n';
+import { isValidLocale, type Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 import { withSupabaseImageTransform } from '@/lib/supabaseImage';
-
-export const metadata: Metadata = {
-  title: 'Contractor Registration',
-  description:
-    'Register your company with the Diocesan Building and Development Commission list of approved contractors.',
-};
 
 type PageProps = {
   params: Promise<{ locale: string }>;
 };
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '/consultants-contractors/contractor',
+    titleKey: 'consultants.contractorMetaTitle',
+    descriptionKey: 'consultants.contractorMetaDescription',
+  });
+}
+
 export default async function ContractorRegistrationPage({ params }: PageProps) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
 
   return (
     <>
       <PageHeader
-        eyebrow="Work With Us"
-        title="Contractor Registration"
-        description="Building and specialist contractors can apply to join the DBDC list of approved contractors."
+        eyebrow={t(locale, 'consultants.eyebrow')}
+        title={t(locale, 'consultants.contractorFormTitle')}
+        description={t(locale, 'consultants.contractorBody')}
         theme="cathedral"
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
@@ -41,13 +53,13 @@ export default async function ContractorRegistrationPage({ params }: PageProps) 
 
       <PageSection containerSize="narrow" spacing="default">
         <Link
-          href={`/${locale as Locale}/consultants-contractors`}
+          href={`/${locale}/consultants-contractors`}
           className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 transition-colors hover:text-brand-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Back to registration
+          {t(locale, 'consultants.formBack')}
         </Link>
-        <ContractorForm />
+        <ContractorForm locale={locale} />
       </PageSection>
     </>
   );

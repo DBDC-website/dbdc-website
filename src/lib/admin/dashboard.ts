@@ -5,6 +5,8 @@ export type AdminDashboardStats = {
   projectsPublished: number;
   membersTotal: number;
   membersActive: number;
+  articlesTotal: number;
+  articlesTranslated: number;
   registrationsTotal: number;
   registrationsPending: number;
 };
@@ -17,6 +19,8 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     projectsPublished,
     membersTotal,
     membersActive,
+    articlesTotal,
+    articlesTranslated,
     consultantTotal,
     contractorTotal,
     consultantPending,
@@ -26,6 +30,8 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     countRows(supabase, 'projects', { column: 'published', value: true }),
     countRows(supabase, 'committee_members'),
     countRows(supabase, 'committee_members', { column: 'active', value: true }),
+    countRows(supabase, 'articles'),
+    countTranslatedArticles(supabase),
     countRows(supabase, 'consultant_registrations'),
     countRows(supabase, 'contractor_registrations'),
     countRows(supabase, 'consultant_registrations', {
@@ -43,9 +49,28 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     projectsPublished,
     membersTotal,
     membersActive,
+    articlesTotal,
+    articlesTranslated,
     registrationsTotal: consultantTotal + contractorTotal,
     registrationsPending: consultantPending + contractorPending,
   };
+}
+
+/** Articles that already carry at least one Chinese title. */
+async function countTranslatedArticles(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+): Promise<number> {
+  const { count, error } = await supabase
+    .from('articles')
+    .select('*', { count: 'exact', head: true })
+    .not('title_zh_hant', 'is', null);
+
+  if (error) {
+    console.error('Failed to count translated articles:', error);
+    return 0;
+  }
+
+  return count ?? 0;
 }
 
 async function countRows(

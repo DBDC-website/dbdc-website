@@ -1,29 +1,42 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { RegistrationCards } from '@/components/consultants/ConsultantsPageContent';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
+import { isValidLocale, type Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
+import { buildPageMetadata } from '@/lib/i18n/metadata';
 import { withSupabaseImageTransform } from '@/lib/supabaseImage';
-
-export const metadata: Metadata = {
-  title: 'Consultants & Contractors',
-  description:
-    'Registration information and online applications for consultants and contractors working with the DBDC.',
-};
 
 type PageProps = {
   params: Promise<{ locale: string }>;
 };
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  return buildPageMetadata({
+    locale: localeParam,
+    path: '/consultants-contractors',
+    titleKey: 'consultants.metaTitle',
+    descriptionKey: 'consultants.metaDescription',
+  });
+}
+
 export default async function ConsultantsContractorsPage({ params }: PageProps) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
 
   return (
     <div className="relative bg-[#eef6f5]">
       <PageHeader
-        eyebrow="Work With Us"
-        title="Consultants & Contractors"
-        description="Registration information and online applications for consultants and contractors."
+        eyebrow={t(locale, 'consultants.eyebrow')}
+        title={t(locale, 'consultants.title')}
+        description={t(locale, 'consultants.description')}
         theme="cathedral"
         align="center"
         contentClassName="min-h-[21rem] py-14 sm:min-h-[25rem] sm:py-16 lg:min-h-[29rem] lg:pb-10 lg:pt-20"
@@ -52,7 +65,7 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
           className="relative z-10 !pt-8 !pb-12 sm:!pt-10 sm:!pb-14"
           heading={{
             id: 'registration-heading',
-            title: 'Registration',
+            title: t(locale, 'consultants.registrationTitle'),
           }}
           headingClassName="[&_h2]:text-brand-950 [&_p]:text-stone-700"
         >

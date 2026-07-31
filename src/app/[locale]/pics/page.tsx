@@ -1,12 +1,30 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import LegalPageContent from '@/components/legal/LegalPageContent';
-import { picsPageContent } from '@/constants/legal';
+import { getPics } from '@/content/legal';
+import { isValidLocale, type Locale } from '@/constants/i18n';
+import { buildAlternates } from '@/lib/i18n/metadata';
 
-export const metadata: Metadata = {
-  title: picsPageContent.title,
-  description: picsPageContent.description,
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-export default function PicsPage() {
-  return <LegalPageContent content={picsPageContent} />;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) return {};
+  const content = getPics(localeParam);
+  return {
+    title: content.title,
+    description: content.description,
+    alternates: buildAlternates(localeParam, '/pics'),
+  };
+}
+
+export default async function PicsPage({ params }: PageProps) {
+  const { locale: localeParam } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  return <LegalPageContent content={getPics(locale)} />;
 }

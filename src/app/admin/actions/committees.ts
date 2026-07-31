@@ -37,6 +37,8 @@ export async function createCommitteeMember(formData: FormData) {
   const supabase = await requireAdmin();
 
   const name = readText(formData, 'name');
+  const nameZhHant = readText(formData, 'name_zh_hant');
+  const nameZhHans = readText(formData, 'name_zh_hans');
   const roleRaw = readText(formData, 'role');
   const slugRaw = readText(formData, 'committee_slug');
   const requestedOrder = parseOptionalSortOrder(readText(formData, 'sort_order'));
@@ -66,7 +68,10 @@ export async function createCommitteeMember(formData: FormData) {
     .from('committee_members')
     .insert({
       name,
+      name_zh_hant: nameZhHant || null,
+      name_zh_hans: nameZhHans || null,
       role,
+      role_en: role,
       committee_slug: committeeSlug,
       sort_order: sortOrder,
       active,
@@ -89,6 +94,8 @@ export async function updateCommitteeMember(formData: FormData) {
 
   const id = Number(readText(formData, 'id'));
   const name = readText(formData, 'name');
+  const nameZhHant = readText(formData, 'name_zh_hant');
+  const nameZhHans = readText(formData, 'name_zh_hans');
   const roleRaw = readText(formData, 'role');
   const slugRaw = readText(formData, 'committee_slug');
   const requestedOrder = parseOptionalSortOrder(readText(formData, 'sort_order'));
@@ -136,7 +143,10 @@ export async function updateCommitteeMember(formData: FormData) {
     .from('committee_members')
     .update({
       name,
+      name_zh_hant: nameZhHant || null,
+      name_zh_hans: nameZhHans || null,
       role: roleRaw,
+      role_en: roleRaw,
       committee_slug: committeeSlug,
       sort_order: sortOrder,
       active,

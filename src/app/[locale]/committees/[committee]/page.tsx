@@ -6,13 +6,15 @@ import CommitteeSectionAccordion from '@/components/committees/CommitteeSectionA
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import Container from '@/components/ui/Container';
 import AnimatedSection from '@/components/ui/AnimatedSection';
-import { committees, getCommittee } from '@/constants/committees';
+import { getCommittee, getCommittees } from '@/content/committees';
 import { homeImages } from '@/constants/homeImages';
-import { locales, type Locale } from '@/constants/i18n';
+import { isValidLocale, locales, type Locale } from '@/constants/i18n';
 import {
   getCommitteeMembers,
   withMembersSection,
 } from '@/lib/committees';
+import { t } from '@/lib/i18n';
+import { buildAlternates } from '@/lib/i18n/metadata';
 import type { CommitteeSlug } from '@/types/committee';
 
 type CommitteeDetailProps = {
@@ -23,31 +25,50 @@ const committeeBackdrop = homeImages.committeeDetail;
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
-    committees.map((committee) => ({ locale, committee: committee.slug })),
+    getCommittees('en').map((committee) => ({
+      locale,
+      committee: committee.slug,
+    })),
   );
 }
 
 export async function generateMetadata({
   params,
 }: CommitteeDetailProps): Promise<Metadata> {
-  const { committee } = await params;
-  const found = getCommittee(committee as CommitteeSlug);
-  if (!found) return { title: 'Committee not found' };
-  return { title: found.name, description: found.summary };
+  const { locale: localeParam, committee } = await params;
+  if (!isValidLocale(localeParam)) {
+    return { title: t('en', 'committees.notFound') };
+  }
+  const found = getCommittee(committee as CommitteeSlug, localeParam);
+  if (!found) {
+    return { title: t(localeParam, 'committees.notFound') };
+  }
+  return {
+    title: found.name,
+    description: t(localeParam, 'committees.metaDescription', {
+      name: found.name,
+    }),
+    alternates: buildAlternates(localeParam, `/committees/${found.slug}`),
+  };
 }
 
 export default async function CommitteeDetailPage({
   params,
 }: CommitteeDetailProps) {
-  const { locale, committee } = await params;
-  const found = getCommittee(committee as CommitteeSlug);
+  const { locale: localeParam, committee } = await params;
+  if (!isValidLocale(localeParam)) {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  const found = getCommittee(committee as CommitteeSlug, locale);
 
   if (!found) {
     notFound();
   }
 
-  const members = await getCommitteeMembers(found.slug);
-  const sections = withMembersSection(found.sections, members);
+  const members = await getCommitteeMembers(found.slug, locale);
+  const sections = withMembersSection(found.sections, members, locale);
+  const committees = getCommittees(locale);
   const currentIndex = committees.findIndex((item) => item.slug === found.slug);
   const nextCommittee = currentIndex >= 0 ? committees[currentIndex + 1] : undefined;
 
@@ -103,11 +124,11 @@ export default async function CommitteeDetailPage({
         >
           <ScrollReveal>
             <Link
-              href={`/${locale as Locale}#committees`}
+              href={`/${locale}#committees`}
               scroll={false}
               className="inline-flex rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm font-medium text-brand-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white/75"
             >
-              ← Back to Committees
+              {t(locale, 'committees.back')}
             </Link>
           </ScrollReveal>
 
@@ -117,10 +138,10 @@ export default async function CommitteeDetailPage({
           {nextCommittee ? (
             <div className="mt-6 flex justify-end sm:mt-8">
               <Link
-                href={`/${locale as Locale}/committees/${nextCommittee.slug}`}
+                href={`/${locale}/committees/${nextCommittee.slug}`}
                 className="inline-flex rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-sm font-medium text-brand-950 shadow-sm backdrop-blur-sm transition-colors hover:bg-white/75"
               >
-                Next: {nextCommittee.abbreviation} →
+                {t(locale, 'committees.next', { abbr: nextCommittee.abbreviation })}
               </Link>
             </div>
           ) : null}

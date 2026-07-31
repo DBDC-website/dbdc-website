@@ -3,7 +3,12 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import AboutMeetBackdrop from '@/components/home/AboutMeetBackdrop';
 import OrganizationChartFlow from '@/components/home/OrganizationChartFlow';
-import { aboutDbdc } from '@/constants/about';
+import type { Locale } from '@/constants/i18n';
+import { t, tList } from '@/lib/i18n';
+
+type AboutSectionProps = {
+  locale: Locale;
+};
 
 function NumberedList({ items }: { items: string[] }) {
   return (
@@ -33,7 +38,7 @@ function SubsectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function AboutSection() {
+export default function AboutSection({ locale }: AboutSectionProps) {
   return (
     <AnimatedSection
       id="about"
@@ -62,7 +67,7 @@ export default function AboutSection() {
             />
             <SectionHeading
               id="about-dbdc-heading"
-              title="About the DBDC"
+              title={t(locale, 'home.aboutTitle')}
               className="relative [&_h2]:text-4xl [&_h2]:font-semibold [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] [&_h2]:sm:text-5xl"
             />
             <div
@@ -74,12 +79,12 @@ export default function AboutSection() {
 
         <div className="mt-10 space-y-10 sm:mt-12 lg:mt-14 lg:space-y-12">
           <p className="max-w-4xl text-base font-medium leading-relaxed text-brand-950 sm:text-lg">
-            {aboutDbdc.intro}
+            {t(locale, 'home.aboutIntro')}
           </p>
 
           <div className="max-w-4xl">
-            <SubsectionHeading>Objectives</SubsectionHeading>
-            <NumberedList items={aboutDbdc.objectives} />
+            <SubsectionHeading>{t(locale, 'home.objectives')}</SubsectionHeading>
+            <NumberedList items={tList(locale, 'home.objectivesList')} />
           </div>
 
           <ScrollReveal delay={0.14}>

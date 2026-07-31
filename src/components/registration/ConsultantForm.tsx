@@ -5,7 +5,7 @@ import { FormProvider, useForm, useFormContext, useFieldArray } from 'react-hook
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckCircle2, Plus, Trash2 } from 'lucide-react';
 import {
-  consultantSchema,
+  createConsultantSchema,
   CONSULTANT_NATURE_OPTIONS,
   AUTHORIZED_PERSON_CATEGORIES,
   type ConsultantRegistrationValues,
@@ -28,6 +28,8 @@ import {
   TextField,
 } from '@/components/forms/Fields';
 import Button from '@/components/ui/Button';
+import type { Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
 
 const defaultValues: ConsultantRegistrationValues = {
   companyName: '',
@@ -267,9 +269,9 @@ function ApprovedListsSection() {
   );
 }
 
-export default function ConsultantForm() {
+export default function ConsultantForm({ locale }: { locale: Locale }) {
   const methods = useForm<ConsultantRegistrationValues>({
-    resolver: zodResolver(consultantSchema),
+    resolver: zodResolver(createConsultantSchema(locale)),
     defaultValues,
     mode: 'onBlur',
   });
@@ -291,7 +293,7 @@ export default function ConsultantForm() {
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      setSubmitError(result.message);
+      setSubmitError(result.message || t(locale, 'forms.errors.submitFailed'));
     }
   });
 
@@ -300,12 +302,10 @@ export default function ConsultantForm() {
       <div className="rounded-xl border border-sage-200 bg-sage-50/70 p-8 text-center">
         <CheckCircle2 className="mx-auto h-12 w-12 text-sage-600" aria-hidden="true" />
         <h2 className="mt-4 text-xl font-semibold text-brand-900">
-          Registration submitted
+          {t(locale, 'forms.success')}
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-stone-600">
-          Thank you. Your consultant registration has been received and will be
-          reviewed by the DBDC office. We will be in touch if further information
-          is required.
+          {t(locale, 'forms.successBody')}
         </p>
       </div>
     );
@@ -314,11 +314,11 @@ export default function ConsultantForm() {
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} noValidate className="space-y-8">
-        <CompanyInfoSection />
+        <CompanyInfoSection locale={locale} />
 
         <FormSection
-          title="Nature of business"
-          description="Select all professional disciplines that apply."
+          title={t(locale, 'forms.natureOfBusiness')}
+          description={t(locale, 'forms.natureOfBusinessConsultantHint')}
         >
           {typeof errors.natureOfBusiness?.message === 'string' ? (
             <p className="mb-4 text-xs font-medium text-red-600" role="alert">
@@ -345,14 +345,14 @@ export default function ConsultantForm() {
           ) : null}
         </FormSection>
 
-        <BusinessRegistrationSection />
-        <ScopeOfServicesSection />
+        <BusinessRegistrationSection locale={locale} />
+        <ScopeOfServicesSection locale={locale} />
         <ApprovedListsSection />
         <InHouseProfessionalSection />
-        <CapitalSection />
-        <ContactsSection />
-        <PreviousProjectsSection />
-        <RemarksSection />
+        <CapitalSection locale={locale} />
+        <ContactsSection locale={locale} />
+        <PreviousProjectsSection locale={locale} />
+        <RemarksSection locale={locale} />
 
         {submitError ? (
           <p
@@ -365,7 +365,7 @@ export default function ConsultantForm() {
 
         <div className="flex justify-end">
           <Button type="submit" size="lg" disabled={isSubmitting}>
-            {isSubmitting ? 'Submitting…' : 'Submit registration'}
+            {isSubmitting ? t(locale, 'forms.submitting') : t(locale, 'forms.submit')}
           </Button>
         </div>
       </form>

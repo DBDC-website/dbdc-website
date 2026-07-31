@@ -8,6 +8,8 @@ import { ChevronLeft, ChevronRight, MapPin, X } from 'lucide-react';
 import { getProjectPlaceholder } from '@/constants/projectPlaceholders';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PlaceholderImage from '@/components/ui/PlaceholderImage';
+import type { Locale } from '@/constants/i18n';
+import { t } from '@/lib/i18n';
 import { cinematicEase } from '@/lib/motion';
 import { withSupabaseImageTransform } from '@/lib/supabaseImage';
 import { setSiteChromeHidden } from '@/lib/siteChrome';
@@ -334,7 +336,13 @@ function ProjectLightbox({
 }
 
 /** Image-first showcase grid with full-page project lightbox. */
-export default function ProjectsGrid({ projects }: { projects: Project[] }) {
+export default function ProjectsGrid({
+  projects,
+  locale,
+}: {
+  projects: Project[];
+  locale: Locale;
+}) {
   const [activeId, setActiveId] = useState<number | null>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const activeProject = projects.find((project) => project.id === activeId) ?? null;
@@ -350,7 +358,7 @@ export default function ProjectsGrid({ projects }: { projects: Project[] }) {
   if (projects.length === 0) {
     return (
       <p className="text-sm text-stone-600">
-        Projects will appear here once they are published.
+        {t(locale, 'projects.empty')}
       </p>
     );
   }

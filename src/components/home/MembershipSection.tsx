@@ -4,13 +4,14 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import MembershipContent from '@/components/home/MembershipContent';
 import {
-  aboutDbdc,
   administrator as fallbackAdministrator,
   fallbackAppointedMembers,
   memberGroups,
 } from '@/constants/about';
 import { homeImages } from '@/constants/homeImages';
+import type { Locale } from '@/constants/i18n';
 import { getCommitteeMembers, groupDbdcMembers } from '@/lib/committees';
+import { localizeRoleTitle, t } from '@/lib/i18n';
 
 const membershipBackdrop = homeImages.membership;
 
@@ -30,14 +31,24 @@ function MembershipBackdrop() {
   );
 }
 
-export default async function MembershipSection() {
-  const members = await getCommitteeMembers('dbdc');
+type MembershipSectionProps = {
+  locale: Locale;
+};
+
+export default async function MembershipSection({
+  locale,
+}: MembershipSectionProps) {
+  const members = await getCommitteeMembers('dbdc', locale);
   const fromDb = groupDbdcMembers(members);
 
-  const leadershipGroups =
+  const leadershipGroups = (
     fromDb.leadershipGroups.length > 0
       ? fromDb.leadershipGroups
-      : memberGroups;
+      : memberGroups
+  ).map((group) => ({
+    ...group,
+    title: localizeRoleTitle(locale, group.title),
+  }));
   const appointedMembers =
     fromDb.appointedMembers.length > 0
       ? fromDb.appointedMembers
@@ -56,7 +67,6 @@ export default async function MembershipSection() {
       backdrop={<MembershipBackdrop />}
       overlayClassName="bg-transparent"
     >
-      {/* Soft asymmetric panel — blue + warm orange header hues, lowered opacity */}
       <div
         className="relative z-10 px-5 py-8 sm:px-7 sm:py-10 lg:px-9"
         style={{
@@ -75,7 +85,7 @@ export default async function MembershipSection() {
             />
             <SectionHeading
               id="membership-heading"
-              title="Membership"
+              title={t(locale, 'home.membershipTitle')}
               className="relative [&_h2]:text-4xl [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] [&_h2]:sm:text-5xl"
             />
           </div>
@@ -84,11 +94,12 @@ export default async function MembershipSection() {
             aria-hidden="true"
           />
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-700 sm:mt-6 sm:text-lg">
-            {aboutDbdc.membersIntro}
+            {t(locale, 'home.membersIntro')}
           </p>
         </ScrollReveal>
 
         <MembershipContent
+          locale={locale}
           leadershipGroups={leadershipGroups}
           appointedMembers={appointedMembers}
           administrator={administrator}
