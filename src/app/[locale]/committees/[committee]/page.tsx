@@ -121,6 +121,7 @@ export default async function CommitteeDetailPage({
               title={t(locale, 'committees.pastWork')}
               timelineLabel={t(locale, 'committees.pastWorkTimeline')}
               linkLabel={t(locale, 'committees.pastWorkLink')}
+              backToTimelineLabel={t(locale, 'committees.pastWorkBackToTimeline')}
               years={pastWork}
             />
           ) : null}
