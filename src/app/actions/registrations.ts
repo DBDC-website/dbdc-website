@@ -262,15 +262,15 @@ async function sendRegistrationEmails({
       const adminResult = await resend.emails.send({
         from: FROM_EMAIL,
         to: ADMIN_EMAILS,
-        subject: `New ${kindLabel} Registration: ${companyName}`,
+        subject: `[DBDC] New ${kindLabel} Registration — ${companyName}`,
         html: `
-          <h2>New DBDC registration submitted</h2>
-          <p><strong>Type:</strong> ${kindLabel}</p>
+          <h2>New registration submission received</h2>
+          <p>A new <strong>${kindLabel}</strong> registration has been submitted to DBDC.</p>
           <p><strong>Company:</strong> ${companyName}</p>
           <p><strong>Applicant email:</strong> ${normalizedApplicantEmail || 'Not provided'}</p>
           <p><strong>Reference ID:</strong> ${referenceId}</p>
-          <p><strong>Submitted:</strong> ${submittedAt}</p>
-          <p>Please review this submission in Supabase/Admin panel.</p>
+          <p><strong>Submitted at:</strong> ${submittedAt}</p>
+          <p>Please review this application in the DBDC Admin Panel.</p>
         `,
       });
       console.log(
@@ -290,14 +290,15 @@ async function sendRegistrationEmails({
       const applicantResult = await resend.emails.send({
         from: FROM_EMAIL,
         to: [normalizedApplicantEmail],
-        subject: 'Your DBDC Registration Has Been Received',
+        subject: `DBDC Registration Acknowledgement — ${referenceId}`,
         html: `
-          <h2>Thank you for your registration</h2>
+          <h2>Registration received</h2>
           <p>Dear ${companyName},</p>
-          <p>Your ${kindLabel.toLowerCase()} registration has been received and is currently under review.</p>
+          <p>Thank you for your submission. Your ${kindLabel.toLowerCase()} registration has been received and is now under review by the DBDC team.</p>
           <p><strong>Reference ID:</strong> ${referenceId}</p>
-          <p>If you have questions, please contact us at <a href="mailto:dbdc@catholic.org.hk">dbdc@catholic.org.hk</a>.</p>
-          <p>DBDC Office</p>
+          <p>We will contact you if any additional information is required.</p>
+          <p>If you have any questions, please email <a href="mailto:dbdc@catholic.org.hk">dbdc@catholic.org.hk</a> and quote your reference ID.</p>
+          <p>Regards,<br/>DBDC Office</p>
           <hr />
           <p style="font-size:12px;color:#666">Submitted via ${SITE_URL}</p>
         `,

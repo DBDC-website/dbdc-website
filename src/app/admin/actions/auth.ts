@@ -59,7 +59,8 @@ export async function sendAdminMagicLink(
 
   return {
     ok: true,
-    message: 'Check your inbox for the one-time link to continue.',
+    message:
+      'A secure sign-in link has been sent to your email. Please open it to continue.',
   };
 }
 
