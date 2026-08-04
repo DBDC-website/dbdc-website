@@ -68,8 +68,13 @@ export default function AdminLoginForm({ initialError }: AdminLoginFormProps) {
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" className="w-full" disabled={isPending}>
-        {isPending ? 'Sending…' : 'Send magic link'}
+      <Button
+        type="submit"
+        size="lg"
+        disabled={isPending}
+        className="w-full !bg-brand-950 !text-white hover:!bg-[#0c1320] focus-visible:!outline-brand-950"
+      >
+        {isPending ? 'Sending…' : 'Send one-time link'}
       </Button>
     </form>
   );

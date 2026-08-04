@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import DeleteRegistrationButton from '@/components/admin/DeleteRegistrationButton';
 import StatusActions from '@/components/admin/StatusActions';
 import StatusBadge from '@/components/admin/StatusBadge';
 import { isRegistrationType } from '@/constants/admin';
@@ -129,6 +130,14 @@ export default async function RegistrationDetailPage({
           role="alert"
         >
           Could not update status. Please try again.
+        </p>
+      ) : null}
+      {error === 'delete' ? (
+        <p
+          className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          role="alert"
+        >
+          Could not delete this registration. Please try again.
         </p>
       ) : null}
 
@@ -325,6 +334,21 @@ export default async function RegistrationDetailPage({
               </ul>
             )}
           </div>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-red-200 bg-red-50/50 p-5 shadow-sm sm:p-6">
+        <h2 className="text-lg font-semibold text-red-900">Delete registration</h2>
+        <p className="mt-1 text-sm text-red-800/80">
+          Permanently removes this submission, related contacts and projects, and
+          uploaded signatures and documents from storage.
+        </p>
+        <div className="mt-4">
+          <DeleteRegistrationButton
+            type={detail.type}
+            id={detail.id}
+            companyName={detail.companyName}
+          />
         </div>
       </section>
     </div>

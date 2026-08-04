@@ -23,17 +23,6 @@ export const committees: Committee[] = [
           ],
         },
       },
-      {
-        title: 'Past Work',
-        content: {
-          kind: 'list',
-          items: [
-            'Completed parish development needs assessment framework.',
-            'Prepared recommendations for long-term Diocesan facility planning.',
-            'Reviewed priority proposals for parish and school facility upgrades.',
-          ],
-        },
-      },
     ],
   },
   {

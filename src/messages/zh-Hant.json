@@ -169,6 +169,9 @@
     "notFound": "找不到小組委員會",
     "members": "成員",
     "membersEmpty": "成員名單將於發佈後在此顯示。",
+    "pastWork": "過往工作",
+    "pastWorkTimeline": "跳至年份",
+    "pastWorkLink": "開啟相關連結",
     "metaDescription": "了解教區建築及發展委員會的{name}。"
   },
   "forms": {

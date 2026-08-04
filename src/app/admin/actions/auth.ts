@@ -50,16 +50,16 @@ export async function sendAdminMagicLink(
   });
 
   if (error) {
-    console.error('Magic link send failed:', error);
+    console.error('One-time link send failed:', error);
     return {
       ok: false,
-      message: 'Could not send the magic link. Please try again.',
+      message: 'Could not send the one-time link. Please try again.',
     };
   }
 
   return {
     ok: true,
-    message: 'Check your inbox for the magic link to continue.',
+    message: 'Check your inbox for the one-time link to continue.',
   };
 }
 

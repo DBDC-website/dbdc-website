@@ -3,13 +3,12 @@ import { createClient } from '@/lib/supabase/server';
 import { isAdminEmail } from '@/constants/admin';
 
 /**
- * Magic-link / PKCE callback.
+ * One-time link / PKCE callback.
  * Supabase redirects here with ?code=... after the user clicks the email link.
  */
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
-  const next = searchParams.get('next') ?? '/admin/registrations';
 
   if (!code) {
     return NextResponse.redirect(
@@ -38,6 +37,5 @@ export async function GET(request: Request) {
     );
   }
 
-  const safeNext = next.startsWith('/admin') ? next : '/admin/registrations';
-  return NextResponse.redirect(`${origin}${safeNext}`);
+  return NextResponse.redirect(`${origin}/admin`);
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommitteeSectionAccordion from '@/components/committees/CommitteeSectionAccordion';
+import PastWorkSection from '@/components/committees/PastWorkSection';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import ScrollReveal from '@/components/motion/ScrollReveal';
 import PageHeader from '@/components/ui/PageHeader';
@@ -15,7 +16,9 @@ import {
 } from '@/lib/committees';
 import { t } from '@/lib/i18n';
 import { buildAlternates } from '@/lib/i18n/metadata';
+import { getCommitteePastWork } from '@/lib/pastWork';
 import type { CommitteeSlug } from '@/types/committee';
+import type { PastWorkCommitteeSlug } from '@/types/pastWork';
 
 type CommitteeDetailProps = {
   params: Promise<{ locale: string; committee: string }>;
@@ -66,6 +69,10 @@ export default async function CommitteeDetailPage({
 
   const members = await getCommitteeMembers(found.slug, locale);
   const sections = withMembersSection(found.sections, members, locale);
+  const pastWork = await getCommitteePastWork(
+    found.slug as PastWorkCommitteeSlug,
+    locale,
+  );
   const committees = getCommittees(locale);
   const currentIndex = committees.findIndex((item) => item.slug === found.slug);
   const nextCommittee =
@@ -108,6 +115,16 @@ export default async function CommitteeDetailPage({
           <div className="mt-5 sm:mt-6">
             <CommitteeSectionAccordion sections={sections} />
           </div>
+
+          {pastWork.length > 0 ? (
+            <PastWorkSection
+              title={t(locale, 'committees.pastWork')}
+              timelineLabel={t(locale, 'committees.pastWorkTimeline')}
+              linkLabel={t(locale, 'committees.pastWorkLink')}
+              years={pastWork}
+            />
+          ) : null}
+
           {nextCommittee ? (
             <div className="mt-6 flex justify-end sm:mt-8">
               <Link

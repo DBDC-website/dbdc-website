@@ -169,6 +169,9 @@
     "notFound": "Committee not found",
     "members": "Members",
     "membersEmpty": "Member list will appear here once published.",
+    "pastWork": "Past Work",
+    "pastWorkTimeline": "Jump to a year",
+    "pastWorkLink": "Open related link",
     "metaDescription": "Learn about the {name} of the Diocesan Building and Development Commission."
   },
   "forms": {

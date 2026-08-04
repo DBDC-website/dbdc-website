@@ -15,7 +15,8 @@ export type LocalizedField =
   | 'label'
   | 'author'
   | 'name'
-  | 'role';
+  | 'role'
+  | 'text';
 
 const LOCALE_SUFFIX: Record<Locale, string> = {
   en: 'en',

@@ -169,6 +169,9 @@
     "notFound": "找不到小组委员会",
     "members": "成员",
     "membersEmpty": "成员名单将于发布后在此显示。",
+    "pastWork": "过往工作",
+    "pastWorkTimeline": "跳至年份",
+    "pastWorkLink": "打开相关链接",
     "metaDescription": "了解教区建筑及发展委员会的{name}。"
   },
   "forms": {

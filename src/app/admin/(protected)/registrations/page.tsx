@@ -14,7 +14,14 @@ function formatDate(value: string) {
   });
 }
 
-export default async function AdminRegistrationsPage() {
+type RegistrationsPageProps = {
+  searchParams: Promise<{ deleted?: string; error?: string }>;
+};
+
+export default async function AdminRegistrationsPage({
+  searchParams,
+}: RegistrationsPageProps) {
+  const { deleted, error } = await searchParams;
   const registrations = await listRegistrations();
 
   return (
@@ -30,6 +37,23 @@ export default async function AdminRegistrationsPage() {
         </div>
         <p className="text-sm text-stone-500">{registrations.length} total</p>
       </div>
+
+      {deleted ? (
+        <p
+          className="mt-6 rounded-md border border-sage-200 bg-sage-50 px-4 py-3 text-sm text-sage-800"
+          role="status"
+        >
+          Registration deleted.
+        </p>
+      ) : null}
+      {error === 'invalid' || error === 'missing' ? (
+        <p
+          className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          role="alert"
+        >
+          Could not complete that action. Please try again.
+        </p>
+      ) : null}
 
       {registrations.length === 0 ? (
         <p className="mt-10 rounded-lg border border-cream-200 bg-white px-4 py-8 text-center text-sm text-stone-600">

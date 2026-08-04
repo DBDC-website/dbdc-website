@@ -7,6 +7,7 @@ import {
   Building2,
   ClipboardList,
   FileText,
+  History,
   Users,
 } from 'lucide-react';
 import { cinematicEase, easeOut } from '@/lib/motion';
@@ -43,6 +44,18 @@ const DESTINATIONS = [
     cta: 'Manage members',
   },
   {
+    id: 'past-work',
+    href: '/admin/past-work',
+    title: 'Past Work',
+    description:
+      'Yearly timelines and bullet points for each subcommittee detail page.',
+    icon: History,
+    accent: 'from-[#4a5c6a] to-brand-900',
+    glow: 'bg-sky-600/15',
+    statKey: 'pastWork' as const,
+    cta: 'Manage past work',
+  },
+  {
     id: 'articles',
     href: '/admin/articles',
     title: 'Articles',
@@ -71,7 +84,7 @@ const DESTINATIONS = [
 function formatStat(
   key: (typeof DESTINATIONS)[number]['statKey'],
   stats: AdminDashboardStats,
-): { primary: string; secondary: string } {
+): { primary: string; secondary?: string } {
   switch (key) {
     case 'projects':
       return {
@@ -82,6 +95,10 @@ function formatStat(
       return {
         primary: String(stats.membersTotal),
         secondary: `${stats.membersActive} active`,
+      };
+    case 'pastWork':
+      return {
+        primary: String(stats.pastWorkYears),
       };
     case 'articles':
       return {
@@ -120,7 +137,7 @@ export default function AdminHome({ email, stats }: AdminHomeProps) {
         transition={{ duration: 1.1, ease: cinematicEase }}
       >
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-600">
-          Diocesan Building Development Commission
+          Diocesan Building and Development Commission
         </p>
         <h1 className="mt-3 max-w-2xl font-serif text-4xl font-semibold leading-tight tracking-tight text-brand-950 sm:text-5xl">
           Welcome back,{' '}
@@ -182,9 +199,11 @@ export default function AdminHome({ email, stats }: AdminHomeProps) {
                     <p className="font-serif text-4xl font-semibold tabular-nums text-brand-950">
                       {primary}
                     </p>
-                    <p className="mt-1 text-xs font-medium uppercase tracking-wide text-stone-500">
-                      {secondary}
-                    </p>
+                    {secondary ? (
+                      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-stone-500">
+                        {secondary}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </Link>
