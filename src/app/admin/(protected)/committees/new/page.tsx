@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 const ERRORS: Record<string, string> = {
-  invalid: 'Name, role, and committee are required.',
+  invalid: 'English / romanised name is required.',
   save: 'Could not save the member. Try again.',
 };
 

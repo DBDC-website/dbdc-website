@@ -29,22 +29,18 @@ export const heroSlides: HeroSlide[] = [
   {
     src: websiteAsset('indoor-statue-mary.jpg'),
     alt: 'Statue of Our Lady in a chapel interior',
-    objectPosition: '28% 42%',
+    // Lower Y keeps Mary’s head in frame (image shifts slightly down).
+    objectPosition: '28% 16%',
+  },
+  {
+    src: websiteAsset('indoor-14.jpg'),
+    alt: 'Chapel interior with warm light and sacred artwork',
+    objectPosition: 'center 45%',
   },
   {
     src: websiteAsset('jesus-statue-side.jpg'),
     alt: 'Statue of Jesus on a cross with a gold and blue mosaic backdrop',
     objectPosition: 'center 35%',
-  },
-  {
-    src: websiteAsset('indoor-1.jpg'),
-    alt: 'Baptismal chapel with mosaic mural',
-    objectPosition: 'center 48%',
-  },
-  {
-    src: websiteAsset('outdoor-bridge.jpg'),
-    alt: 'White cross overlooking a coastal bridge',
-    objectPosition: 'center 42%',
   },
 ];
 
@@ -61,10 +57,8 @@ export const homeImages = {
   },
   /** About section — single photo split into halves that meet in the centre. */
   aboutMeet: {
-    src: withDefaultTransform(
-      'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/CC%28CR%29_ren2019_02.jpg',
-    ),
-    alt: 'Aerial view of a white cathedral with dark green roof in an urban setting',
+    src: websiteAsset('indoor-church.jpg'),
+    alt: 'Gothic cathedral nave looking toward the altar with stained glass and hanging crucifix',
     objectPosition: 'center 42%',
   },
   /** Default backdrop for homepage Featured projects. */
@@ -93,11 +87,11 @@ export const homeImages = {
     alt: 'Fan-ceiling chapel interior with curved wooden pews',
     objectPosition: 'center 48%',
   },
-  /** Individual committee detail pages. */
+  /** Individual committee detail pages — header band only. */
   committeeDetail: {
-    src: websiteAsset('indoor-10.jpg'),
+    src: websiteAsset('indoor-9.jpg'),
     alt: 'Modern chapel interior with wooden pews and stained glass',
-    objectPosition: 'center 42%',
+    objectPosition: 'center 38%',
   },
   /** Legal / policy pages. */
   legalPage: {

@@ -14,18 +14,22 @@ import { cn } from '@/lib/cn';
 
 type LanguageSwitcherProps = {
   locale: Locale;
+  className?: string;
 };
 
 function persistLocalePreference(nextLocale: Locale) {
   document.cookie = `${LOCALE_COOKIE}=${encodeURIComponent(nextLocale)}; path=/; max-age=31536000; samesite=lax`;
 }
 
-export default function LanguageSwitcher({ locale }: LanguageSwitcherProps) {
+export default function LanguageSwitcher({
+  locale,
+  className,
+}: LanguageSwitcherProps) {
   const pathname = usePathname() || `/${locale}`;
 
   return (
     <div
-      className="flex items-center gap-1.5 text-sm"
+      className={cn('flex items-center gap-1.5 text-sm', className)}
       role="navigation"
       aria-label={t(locale, 'chrome.languageSelection')}
     >

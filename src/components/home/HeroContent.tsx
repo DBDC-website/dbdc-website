@@ -26,7 +26,7 @@ export default function HeroContent({ locale }: HeroContentProps) {
       <motion.h1
         variants={heroEntranceItemVariants}
         id="hero-heading"
-        className="text-4xl font-semibold leading-[1.15] text-white [text-wrap:wrap] sm:text-5xl lg:text-6xl xl:text-7xl"
+        className="origin-left text-4xl font-semibold leading-[1.15] text-white [text-wrap:wrap] sm:text-5xl lg:text-6xl xl:text-7xl"
       >
         {welcome}
         <br />
@@ -34,7 +34,7 @@ export default function HeroContent({ locale }: HeroContentProps) {
       </motion.h1>
       <motion.p
         variants={heroEntranceItemVariants}
-        className="mt-8 max-w-2xl text-lg font-bold leading-relaxed text-cream-100 sm:text-xl"
+        className="origin-left mt-8 max-w-2xl text-lg font-bold leading-relaxed text-cream-100 sm:text-xl"
       >
         {description}
       </motion.p>

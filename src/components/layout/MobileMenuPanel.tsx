@@ -54,6 +54,10 @@ export default function MobileMenuPanel({
         aria-label={t(locale, 'nav.mobileAria')}
         className="flex-1 overflow-y-auto px-3 py-5"
       >
+        <div className="mb-4 border-b border-gold-200/60 px-2 pb-4">
+          <LanguageSwitcher locale={locale} />
+        </div>
+
         <ul className="flex flex-col gap-1">
           {items.map((item) => (
             <li key={item.href}>
@@ -86,10 +90,6 @@ export default function MobileMenuPanel({
           ))}
         </ul>
       </nav>
-
-      <div className="border-t border-gold-200/60 px-4 py-4">
-        <LanguageSwitcher locale={locale} />
-      </div>
     </div>
   );
 }

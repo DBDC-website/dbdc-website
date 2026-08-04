@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CommitteeMembersSortableTable from '@/components/admin/CommitteeMembersSortableTable';
 import Button from '@/components/ui/Button';
 import {
   COMMITTEE_MEMBER_OPTIONS,
@@ -16,13 +17,6 @@ const FLASH: Record<string, string> = {
   deleted: 'Member deleted.',
   invalid: 'That request was invalid.',
 };
-
-function labelFor(slug: string) {
-  return (
-    COMMITTEE_MEMBER_OPTIONS.find((option) => option.value === slug)?.label ??
-    slug
-  );
-}
 
 type PageProps = {
   searchParams: Promise<{
@@ -52,7 +46,8 @@ export default async function AdminCommitteesPage({ searchParams }: PageProps) {
             Committee members
           </h1>
           <p className="mt-1 text-sm text-stone-600">
-            People listed on the homepage and committee detail pages.
+            People listed on the homepage and committee detail pages. Drag
+            within a committee to change order.
           </p>
         </div>
         <Button href="/admin/committees/new" size="sm">
@@ -103,60 +98,33 @@ export default async function AdminCommitteesPage({ searchParams }: PageProps) {
           </Link>
           .
         </p>
+      ) : filter ? (
+        <div className="mt-8">
+          <CommitteeMembersSortableTable
+            members={members}
+            committeeSlug={filter}
+          />
+        </div>
       ) : (
-        <div className="mt-8 overflow-x-auto rounded-xl border border-cream-200 bg-white shadow-sm">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-cream-200 bg-cream-50 text-xs uppercase tracking-wide text-stone-500">
-              <tr>
-                <th className="px-4 py-3 font-semibold">Name</th>
-                <th className="px-4 py-3 font-semibold">Role</th>
-                <th className="px-4 py-3 font-semibold">Committee</th>
-                <th className="px-4 py-3 font-semibold">Order</th>
-                <th className="px-4 py-3 font-semibold">Status</th>
-                <th className="px-4 py-3 font-semibold"> </th>
-              </tr>
-            </thead>
-            <tbody>
-              {members.map((member) => (
-                <tr
-                  key={member.id}
-                  className="border-b border-cream-100 last:border-0"
-                >
-                  <td className="px-4 py-3 font-medium text-brand-900">
-                    {member.name}
-                  </td>
-                  <td className="px-4 py-3 text-stone-600">
-                    {member.role ?? '—'}
-                  </td>
-                  <td className="px-4 py-3 text-stone-600">
-                    {labelFor(member.committeeSlug)}
-                  </td>
-                  <td className="px-4 py-3 text-stone-600">
-                    {member.sortOrder}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={
-                        member.active
-                          ? 'rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-800'
-                          : 'rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600'
-                      }
-                    >
-                      {member.active ? 'Active' : 'Hidden'}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/admin/committees/${member.id}`}
-                      className="font-medium text-brand-800 hover:underline"
-                    >
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-8 space-y-10">
+          {COMMITTEE_MEMBER_OPTIONS.map((option) => {
+            const group = members.filter(
+              (member) => member.committeeSlug === option.value,
+            );
+            if (group.length === 0) return null;
+
+            return (
+              <section key={option.value}>
+                <h2 className="mb-3 text-lg font-semibold text-brand-900">
+                  {option.label}
+                </h2>
+                <CommitteeMembersSortableTable
+                  members={group}
+                  committeeSlug={option.value}
+                />
+              </section>
+            );
+          })}
         </div>
       )}
     </div>

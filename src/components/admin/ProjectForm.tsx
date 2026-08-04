@@ -12,6 +12,16 @@ const fieldClass =
 
 const labelClass = 'block text-sm font-medium text-brand-900';
 
+function storageFileName(url: string): string {
+  try {
+    const path = new URL(url).pathname;
+    const name = path.split('/').pop();
+    return name ? decodeURIComponent(name) : '';
+  } catch {
+    return '';
+  }
+}
+
 type ProjectFormProps = {
   project?: AdminProject;
 };
@@ -39,6 +49,9 @@ export default function ProjectForm({ project }: ProjectFormProps) {
               defaultValue={project?.titleEn ?? ''}
               className={fieldClass}
             />
+            <p className="mt-1 text-xs text-stone-500">
+              Only this field is required. Everything else can be filled in later.
+            </p>
           </div>
 
           <div>
@@ -184,6 +197,10 @@ export default function ProjectForm({ project }: ProjectFormProps) {
 
         <div className="rounded-lg border border-cream-200 bg-cream-50/60 p-4">
           <p className={labelClass}>Primary image</p>
+          <p className="mt-1 text-xs text-stone-500">
+            Choose an image from your computer. Replacing updates the existing
+            file instead of adding another copy.
+          </p>
           {project?.imageUrl ? (
             <div className="mt-3 overflow-hidden rounded-md border border-cream-200 bg-white">
               <Image
@@ -201,6 +218,9 @@ export default function ProjectForm({ project }: ProjectFormProps) {
           <div className="mt-4">
             <label htmlFor="image" className="text-sm text-stone-700">
               {isEdit ? 'Replace image' : 'Upload image'}
+              {isEdit ? (
+                <span className="font-normal text-stone-500"> (optional)</span>
+              ) : null}
             </label>
             <input
               id="image"
@@ -211,6 +231,29 @@ export default function ProjectForm({ project }: ProjectFormProps) {
             />
             <p className="mt-1 text-xs text-stone-500">
               JPG, PNG, or WebP · max 8MB
+            </p>
+          </div>
+
+          <div className="mt-4">
+            <label
+              htmlFor="image_filename"
+              className="text-sm font-medium text-stone-700"
+            >
+              Storage file name (optional)
+            </label>
+            <input
+              id="image_filename"
+              name="image_filename"
+              placeholder="facade.jpg"
+              defaultValue={
+                project?.imageUrl ? storageFileName(project.imageUrl) : ''
+              }
+              className={fieldClass}
+            />
+            <p className="mt-1 text-xs text-stone-500">
+              Keep this the same as the current file to overwrite it in place
+              (recommended). If you change it, the new name is used and the old
+              file is removed.
             </p>
           </div>
 
@@ -250,7 +293,8 @@ export default function ProjectForm({ project }: ProjectFormProps) {
         <div className="rounded-lg border border-red-200 bg-red-50/50 p-4">
           <p className="text-sm font-medium text-red-900">Delete project</p>
           <p className="mt-1 text-xs text-red-800/80">
-            Removes this project and its gallery rows. Storage files are kept.
+            Removes this project and its gallery rows. Primary image files in
+            storage are kept (delete unused files in Supabase Storage if needed).
           </p>
           <form action={deleteProject} className="mt-3">
             <input type="hidden" name="id" value={project.id} />

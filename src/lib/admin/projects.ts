@@ -20,7 +20,8 @@ const ADMIN_PROJECT_SELECT = `
   image_alt,
   image_alt_en,
   image_alt_zh_hant,
-  image_alt_zh_hans
+  image_alt_zh_hans,
+  sort_order
 `;
 
 export type AdminProject = {
@@ -38,6 +39,7 @@ export type AdminProject = {
   address: string | null;
   year: number | null;
   published: boolean;
+  sortOrder: number;
   imageUrl: string | null;
   imageAlt: string | null;
   imageAltEn: string | null;
@@ -65,6 +67,7 @@ function mapRow(row: ProjectRow): AdminProject {
     address: row.address,
     year: row.year,
     published: row.published,
+    sortOrder: row.sort_order ?? 0,
     imageUrl: normalizeStorageUrl(row.image_url),
     imageAlt: imageAltEn,
     imageAltEn,
@@ -78,7 +81,7 @@ export async function listAdminProjects(): Promise<AdminProject[]> {
   const { data, error } = await supabase
     .from('projects')
     .select(ADMIN_PROJECT_SELECT)
-    .order('year', { ascending: false, nullsFirst: false })
+    .order('sort_order', { ascending: true })
     .order('id', { ascending: true });
 
   if (error) {

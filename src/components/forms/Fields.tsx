@@ -121,30 +121,45 @@ export const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>
 
 type CheckboxFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
+  required?: boolean;
+  error?: string;
 };
 
 export const CheckboxField = forwardRef<HTMLInputElement, CheckboxFieldProps>(
-  function CheckboxField({ label, className, id, ...rest }, ref) {
+  function CheckboxField(
+    { label, required, error, className, id, ...rest },
+    ref,
+  ) {
     const generatedId = useId();
     const fieldId = id ?? generatedId;
+    const errorId = `${fieldId}-error`;
 
     return (
-      <label
-        htmlFor={fieldId}
-        className={cn(
-          'flex cursor-pointer items-start gap-2.5 text-sm text-brand-900',
-          className,
-        )}
-      >
-        <input
-          ref={ref}
-          id={fieldId}
-          type="checkbox"
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-cream-300 text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
-          {...rest}
-        />
-        <span className="leading-snug">{label}</span>
-      </label>
+      <div className={className}>
+        <label
+          htmlFor={fieldId}
+          className="flex cursor-pointer items-start gap-2.5 text-sm text-brand-900"
+        >
+          <input
+            ref={ref}
+            id={fieldId}
+            type="checkbox"
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-cream-300 text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+            {...rest}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? errorId : undefined}
+          />
+          <span className="leading-snug">
+            {label}
+            {required ? (
+              <span className="ml-0.5 text-red-500" aria-hidden="true">
+                *
+              </span>
+            ) : null}
+          </span>
+        </label>
+        <FieldError id={errorId} message={error} />
+      </div>
     );
   },
 );

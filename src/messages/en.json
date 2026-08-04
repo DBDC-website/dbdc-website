@@ -50,7 +50,8 @@
     "skipToContent": "Skip to main content",
     "languageSelection": "Language selection",
     "homeAria": "{name} home",
-    "dioceseLogoAria": "Catholic Diocese of Hong Kong (opens in a new tab)"
+    "dioceseLogoAria": "Catholic Diocese of Hong Kong (opens in a new tab)",
+    "backToTop": "Back to top"
   },
   "donate": {
     "ariaLabel": "Donate to the Catholic Diocese of Hong Kong (opens in a new tab)",
@@ -73,14 +74,15 @@
     "featuredEmpty": "Featured projects will appear here once they are published in the CMS.",
     "featuredPrev": "Show previous project",
     "featuredNext": "Show next project",
-    "membershipTitle": "Membership",
+    "membershipTitle": "Members of the Commission",
     "membersIntro": "Members of the Commission are appointed by the Bishop of Hong Kong for a term of two years, renewable on expiry.",
     "roleExOfficio": "Ex-officio Members",
     "roleChairperson": "Chairperson",
     "roleViceChairperson": "Vice-Chairperson",
     "roleMembers": "Members",
     "roleAdministrator": "Administrator",
-    "committeesTitle": "Committees"
+    "committeesTitle": "Sub-committees",
+    "membersExpand": "Show members of the Commission"
   },
   "common": {
     "back": "Back",
@@ -181,7 +183,7 @@
     "principals": "Principals / Directors",
     "principalsDescription": "Principals or directors authorised to sign documents on behalf of the company.",
     "portfolio": "Portfolio of major projects",
-    "portfolioDescription": "Major projects carried out in Hong Kong over the past 5 years. Please highlight any experience on Church projects. (Optional)",
+    "portfolioDescription": "Major projects carried out in Hong Kong over the past 5 years. Please highlight any experience on Church projects.",
     "remarks": "Remarks",
     "natureOfBusiness": "Nature of business",
     "natureOfBusinessConsultantHint": "Select all professional disciplines that apply.",
@@ -200,7 +202,7 @@
       "invalidPhone": "Please enter a valid phone number",
       "natureRequired": "Please select at least one nature of business",
       "submitFailed": "Submission failed. Please try again.",
-      "invalidFields": "Please correct the highlighted fields and try again.",
+      "invalidFields": "Please fill in the required fields marked with * and try again.",
       "companyNameRequired": "Company name is required",
       "contactNameRequired": "Contact name is required",
       "signatureRequired": "Please provide a signature",

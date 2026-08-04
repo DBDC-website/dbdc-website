@@ -3,10 +3,11 @@ import { cn } from '@/lib/cn';
 type MosaicHueBackdropProps = {
   className?: string;
   /**
-   * `light` — header / floating controls.
+   * `light` — header / floating controls (balanced blue–gold–warm).
+   * `sky` — same mosaic language with blue-dominant washes.
    * `dark` — page sections that should echo the same mosaic hues on a sanctuary base.
    */
-  variant?: 'light' | 'dark';
+  variant?: 'light' | 'sky' | 'dark';
 };
 
 /**
@@ -31,6 +32,26 @@ export default function MosaicHueBackdrop({
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_88%,rgba(150,58,12,0.32),transparent_55%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_95%,rgba(12,48,96,0.4),transparent_50%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.35)_0%,transparent_28%,transparent_72%,rgba(0,0,0,0.45)_100%)]" />
+      </div>
+    );
+  }
+
+  if (variant === 'sky') {
+    return (
+      <div
+        className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)}
+        aria-hidden="true"
+      >
+        {/* Navbar-like light mosaic base, blue weighted slightly more */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#e8f6fc] via-[#fff8eb] to-[#fde8d4]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_12%_18%,rgba(0,160,220,0.3),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_42%_8%,rgba(255,220,90,0.2),transparent_48%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_88%_16%,rgba(210,167,60,0.22),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_72%_88%,rgba(232,140,55,0.2),transparent_52%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_78%,rgba(186,140,210,0.16),transparent_48%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_92%_62%,rgba(235,120,120,0.14),transparent_46%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_100%,rgba(0,160,220,0.16),transparent_45%)]" />
+        <div className="absolute inset-0 bg-white/32" />
       </div>
     );
   }

@@ -9,7 +9,7 @@ type PageHeaderProps = {
     alt?: string;
     objectPosition?: string;
   };
-  theme?: 'default' | 'sanctuary' | 'cathedral';
+  theme?: 'default' | 'sanctuary' | 'cathedral' | 'sky';
   contentClassName?: string;
   align?: 'left' | 'center';
 };

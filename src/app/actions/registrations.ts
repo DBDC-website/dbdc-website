@@ -184,25 +184,29 @@ function mapContractorRegistration(data: ContractorRegistrationValues) {
 }
 
 function mapContacts(contacts: ConsultantRegistrationValues['contacts']) {
-  return contacts.map((contact) => ({
-    name: contact.name.trim(),
-    position: toNullable(contact.position),
-    telephone: toNullable(contact.telephone),
-    signature_name: null,
-    signature_url: toNullable(contact.signatureUrl),
-  }));
+  return contacts
+    .filter((contact) => contact.name.trim() || contact.signatureUrl.trim())
+    .map((contact) => ({
+      name: contact.name.trim() || '—',
+      position: toNullable(contact.position),
+      telephone: toNullable(contact.telephone),
+      signature_name: null,
+      signature_url: toNullable(contact.signatureUrl),
+    }));
 }
 
 function mapProjects(projects: ConsultantRegistrationValues['previousProjects']) {
-  return projects.map((project) => ({
-    project_name: project.projectName.trim(),
-    project_address: toNullable(project.projectAddress),
-    contract_sum: toMoney(project.contractSum),
-    start_date: toNullable(project.startDate),
-    end_date: toNullable(project.endDate),
-    client_name: toNullable(project.clientName),
-    architect_engineer: toNullable(project.architectEngineer),
-  }));
+  return projects
+    .filter((project) => project.projectName.trim())
+    .map((project) => ({
+      project_name: project.projectName.trim(),
+      project_address: toNullable(project.projectAddress),
+      contract_sum: toMoney(project.contractSum),
+      start_date: toNullable(project.startDate),
+      end_date: toNullable(project.endDate),
+      client_name: toNullable(project.clientName),
+      architect_engineer: toNullable(project.architectEngineer),
+    }));
 }
 
 type RegistrationKind = 'consultant' | 'contractor';

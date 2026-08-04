@@ -104,25 +104,14 @@ function buildRegistrationSchemas(locale: Locale) {
   });
 
   const contactSchema = z.object({
-    name: z
-      .string()
-      .trim()
-      .min(1, t(locale, 'forms.errors.contactNameRequired'))
-      .max(200),
-    position: optionalText,
-    telephone: optionalText,
-    signatureUrl: z
-      .string()
-      .trim()
-      .min(1, t(locale, 'forms.errors.signatureRequired')),
+    name: z.string().trim().max(200),
+    position: z.string().trim().max(2000),
+    telephone: z.string().trim().max(2000),
+    signatureUrl: z.string().trim().max(2000),
   });
 
   const previousProjectSchema = z.object({
-    projectName: z
-      .string()
-      .trim()
-      .min(1, t(locale, 'forms.errors.projectNameRequired'))
-      .max(300),
+    projectName: z.string().trim().max(300),
     projectAddress: optionalText,
     contractSum: optionalMoney,
     startDate: optionalDate,
@@ -131,6 +120,18 @@ function buildRegistrationSchemas(locale: Locale) {
     architectEngineer: optionalText,
   });
 
+  const requiredEmail = z
+    .string()
+    .trim()
+    .min(1, t(locale, 'forms.errors.required'))
+    .pipe(z.email(t(locale, 'forms.errors.invalidEmail')));
+
+  const requiredTelephone = z
+    .string()
+    .trim()
+    .min(1, t(locale, 'forms.errors.required'))
+    .max(80);
+
   const baseRegistrationShape = {
     companyName: z
       .string()
@@ -138,9 +139,9 @@ function buildRegistrationSchemas(locale: Locale) {
       .min(1, t(locale, 'forms.errors.companyNameRequired'))
       .max(300),
     registeredAddress: optionalText,
-    telephone: optionalText,
+    telephone: requiredTelephone,
     fax: optionalText,
-    email: optionalEmail,
+    email: requiredEmail,
     website: optionalUrl,
 
     scopeOfServices: optionalText,
@@ -155,9 +156,7 @@ function buildRegistrationSchemas(locale: Locale) {
 
     auditedAccountDocumentUrls: documentUrlsSchema,
 
-    contacts: z
-      .array(contactSchema)
-      .min(1, t(locale, 'forms.errors.contactsMin')),
+    contacts: z.array(contactSchema),
     previousProjects: z.array(previousProjectSchema),
     previousProjectUploads: z.array(previousProjectUploadEntrySchema),
 
@@ -203,9 +202,7 @@ function buildRegistrationSchemas(locale: Locale) {
 
   const consultantSchema = z.object({
     ...baseRegistrationShape,
-    natureOfBusiness: z
-      .array(z.string())
-      .min(1, t(locale, 'forms.errors.natureRequired')),
+    natureOfBusiness: z.array(z.string()),
     natureOfBusinessOther: optionalText,
     aacsbListed: z.boolean(),
     aacsbDate: optionalDate,
@@ -216,9 +213,7 @@ function buildRegistrationSchemas(locale: Locale) {
 
   const contractorSchema = z.object({
     ...baseRegistrationShape,
-    natureOfBusiness: z
-      .array(z.string())
-      .min(1, t(locale, 'forms.errors.natureRequired')),
+    natureOfBusiness: z.array(z.string()),
     natureOfBusinessOther: optionalText,
     buildingsDeptRegNo: optionalText,
     buildingsDeptDate: optionalDate,

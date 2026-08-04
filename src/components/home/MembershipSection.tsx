@@ -83,10 +83,6 @@ export default async function MembershipSection({
             glow
             className="[&_h2]:text-4xl [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_20px_rgba(255,255,255,1),0_0_42px_rgba(255,252,245,0.95),0_0_72px_rgba(255,248,235,0.85)] [&_h2]:sm:text-5xl"
           />
-          <div
-            className="relative ml-3 mt-5 h-px w-20 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent sm:ml-4"
-            aria-hidden="true"
-          />
           <p className="mt-5 max-w-3xl text-base leading-relaxed text-stone-700 sm:mt-6 sm:text-lg">
             {t(locale, 'home.membersIntro')}
           </p>

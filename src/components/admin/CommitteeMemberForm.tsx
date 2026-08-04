@@ -46,6 +46,9 @@ export default function CommitteeMemberForm({
               defaultValue={member?.name ?? ''}
               className={fieldClass}
             />
+            <p className="mt-1 text-xs text-stone-500">
+              Only this field is required. Everything else can be filled in later.
+            </p>
           </div>
 
           <div>
@@ -85,7 +88,6 @@ export default function CommitteeMemberForm({
             <select
               id="role"
               name="role"
-              required
               defaultValue={defaultRole}
               className={fieldClass}
             >
@@ -107,7 +109,6 @@ export default function CommitteeMemberForm({
             <select
               id="committee_slug"
               name="committee_slug"
-              required
               defaultValue={member?.committeeSlug ?? 'dbdc'}
               className={fieldClass}
             >

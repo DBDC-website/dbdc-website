@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import FloatingActionButtons from '@/components/layout/FloatingActionButtons';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import LocaleDocument from '@/components/layout/LocaleDocument';
@@ -6,7 +7,6 @@ import MobileMenuOverlay, {
   MOBILE_MENU_TOGGLE_ID,
 } from '@/components/layout/MobileMenuOverlay';
 import SkipLink from '@/components/layout/SkipLink';
-import FloatingDonateButton from '@/components/layout/FloatingDonateButton';
 import { isValidLocale, locales, type Locale } from '@/constants/i18n';
 import { getMainNav } from '@/lib/i18n/navigation';
 
@@ -49,7 +49,7 @@ export default async function LocaleLayout({
       >
         {children}
       </main>
-      <FloatingDonateButton locale={locale} />
+      <FloatingActionButtons locale={locale} />
       <Footer locale={locale} />
     </>
   );

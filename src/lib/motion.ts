@@ -38,19 +38,21 @@ export const staggerContainerVariants = {
   },
 };
 
+/** Timed to overlap the hero’s first horizontal image-join (~2.1s). */
 export const heroEntranceContainerVariants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.14, delayChildren: 0.5 },
+    transition: { staggerChildren: 0.2, delayChildren: 0.55 },
   },
 };
 
 export const heroEntranceItemVariants = {
-  hidden: { opacity: 0, y: 36 },
+  hidden: { opacity: 0, y: 44, scale: 0.94 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1.3, ease: cinematicEase },
+    scale: 1,
+    transition: { duration: 1.15, ease: cinematicEase },
   },
 };
 

@@ -30,7 +30,7 @@ export function mapArticleRow(
     title: pickLocalized(record, 'title', locale),
     author: row.author?.trim() ? row.author.trim() : null,
     date: row.date,
-    href: normalizeStorageUrl(row.pdf_url) ?? row.pdf_url,
+    href: normalizeStorageUrl(row.pdf_url) ?? row.pdf_url ?? '',
     sortOrder: row.sort_order,
   };
 }

@@ -13,6 +13,11 @@ import {
   moveToSortOrder,
   resolveCreateSortOrder,
 } from '@/lib/admin/committeeOrder';
+import {
+  isPermutation,
+  writeSequentialSortOrders,
+  type ReorderResult,
+} from '@/lib/admin/reorder';
 import { requireAdmin } from '@/lib/admin/requireAdmin';
 
 function readText(formData: FormData, key: string): string {
@@ -44,12 +49,16 @@ export async function createCommitteeMember(formData: FormData) {
   const requestedOrder = parseOptionalSortOrder(readText(formData, 'sort_order'));
   const active = formData.get('active') === 'on';
 
-  if (!name || !isAdminCommitteeSlug(slugRaw) || !isCommitteeRoleOption(roleRaw)) {
+  if (!name) {
     redirect('/admin/committees/new?error=invalid');
   }
 
-  const committeeSlug = slugRaw as AdminCommitteeSlug;
-  const role = roleRaw as CommitteeRoleOption;
+  const committeeSlug = (
+    isAdminCommitteeSlug(slugRaw) ? slugRaw : 'dbdc'
+  ) as AdminCommitteeSlug;
+  const role = (
+    isCommitteeRoleOption(roleRaw) ? roleRaw : 'Member'
+  ) as CommitteeRoleOption;
 
   let sortOrder: number;
   try {
@@ -101,13 +110,7 @@ export async function updateCommitteeMember(formData: FormData) {
   const requestedOrder = parseOptionalSortOrder(readText(formData, 'sort_order'));
   const active = formData.get('active') === 'on';
 
-  if (
-    !Number.isFinite(id) ||
-    id <= 0 ||
-    !name ||
-    !isAdminCommitteeSlug(slugRaw) ||
-    !isCommitteeRoleOption(roleRaw)
-  ) {
+  if (!Number.isFinite(id) || id <= 0 || !name) {
     redirect('/admin/committees?error=invalid');
   }
 
@@ -121,7 +124,12 @@ export async function updateCommitteeMember(formData: FormData) {
     redirect('/admin/committees?error=invalid');
   }
 
-  const committeeSlug = slugRaw as AdminCommitteeSlug;
+  const committeeSlug = (
+    isAdminCommitteeSlug(slugRaw) ? slugRaw : existing.committee_slug
+  ) as AdminCommitteeSlug;
+  const role = (
+    isCommitteeRoleOption(roleRaw) ? roleRaw : 'Member'
+  ) as CommitteeRoleOption;
   const previousSlug = existing.committee_slug as AdminCommitteeSlug;
   const targetOrder = requestedOrder ?? existing.sort_order;
 
@@ -145,8 +153,8 @@ export async function updateCommitteeMember(formData: FormData) {
       name,
       name_zh_hant: nameZhHant || null,
       name_zh_hans: nameZhHans || null,
-      role: roleRaw,
-      role_en: roleRaw,
+      role,
+      role_en: role,
       committee_slug: committeeSlug,
       sort_order: sortOrder,
       active,
@@ -202,4 +210,46 @@ export async function deleteCommitteeMember(formData: FormData) {
 
   revalidateCommitteePaths();
   redirect('/admin/committees?deleted=1');
+}
+
+/** Persist a new member order within one committee (drag-and-drop). */
+export async function reorderCommitteeMembers(
+  committeeSlug: string,
+  orderedIds: number[],
+): Promise<ReorderResult> {
+  const supabase = await requireAdmin();
+
+  if (!isAdminCommitteeSlug(committeeSlug)) {
+    return { ok: false, error: 'Invalid committee.' };
+  }
+
+  const { data, error } = await supabase
+    .from('committee_members')
+    .select('id')
+    .eq('committee_slug', committeeSlug)
+    .order('sort_order', { ascending: true })
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('Failed to load members for reorder:', error);
+    return { ok: false, error: 'Could not load members to reorder.' };
+  }
+
+  const expectedIds = (data ?? []).map((row) => row.id as number);
+  if (!isPermutation(orderedIds, expectedIds)) {
+    return {
+      ok: false,
+      error: 'Order is out of date. Refresh the page and try again.',
+    };
+  }
+
+  try {
+    await writeSequentialSortOrders(supabase, 'committee_members', orderedIds);
+  } catch (reorderError) {
+    console.error('Failed to reorder committee members:', reorderError);
+    return { ok: false, error: 'Could not save the new order.' };
+  }
+
+  revalidateCommitteePaths();
+  return { ok: true };
 }

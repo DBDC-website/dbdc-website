@@ -3,8 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      // Admin project image uploads (max 8MB validated in action)
-      bodySizeLimit: '9mb',
+      // Admin uploads: project images (8MB) + article PDFs (25MB)
+      bodySizeLimit: '26mb',
     },
   },
   images: {

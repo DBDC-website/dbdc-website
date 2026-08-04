@@ -51,10 +51,6 @@ export default function CommitteesSection({ locale }: CommitteesSectionProps) {
           glow
           className="[&_h2]:text-4xl [&_h2]:font-semibold [&_h2]:text-brand-950 [&_h2]:[text-shadow:0_0_22px_rgba(255,255,255,1),0_0_48px_rgba(255,252,245,0.98),0_0_80px_rgba(255,248,235,0.9)] [&_h2]:sm:text-5xl"
         />
-        <div
-          className="relative ml-3 mt-4 h-px w-16 bg-gold-400 sm:ml-4"
-          aria-hidden="true"
-        />
       </ScrollReveal>
 
       <StaggerChildren as="ul" className="mt-10 space-y-4">

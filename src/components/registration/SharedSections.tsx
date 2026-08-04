@@ -51,6 +51,7 @@ export function CompanyInfoSection({ locale }: LocaleProps) {
         />
         <TextField
           label="Telephone"
+          required
           error={errors.telephone?.message}
           {...register('telephone')}
         />
@@ -58,6 +59,7 @@ export function CompanyInfoSection({ locale }: LocaleProps) {
         <TextField
           label="Email"
           type="email"
+          required
           error={errors.email?.message}
           {...register('email')}
         />
@@ -217,7 +219,6 @@ export function ContactsSection({ locale }: LocaleProps) {
             <div className="grid gap-4 sm:grid-cols-2">
               <TextField
                 label="Name"
-                required
                 error={errors.contacts?.[index]?.name?.message}
                 {...register(`contacts.${index}.name`)}
               />
@@ -235,7 +236,6 @@ export function ContactsSection({ locale }: LocaleProps) {
             <div className="mt-4">
               <SignaturePad
                 label={t(locale, 'forms.signature')}
-                required
                 value={watch(`contacts.${index}.signatureUrl`) ?? ''}
                 onChange={(path) =>
                   setValue(`contacts.${index}.signatureUrl`, path, {
@@ -375,13 +375,10 @@ export function RemarksSection({ locale }: LocaleProps) {
         <div>
           <CheckboxField
             label={t(locale, 'forms.privacyAgreedCheckbox')}
+            required
+            error={errors.privacyAgreed?.message}
             {...register('privacyAgreed')}
           />
-          {errors.privacyAgreed?.message ? (
-            <p className="mt-2 text-xs font-medium text-red-600" role="alert">
-              {errors.privacyAgreed.message}
-            </p>
-          ) : null}
           <p className="mt-2 text-xs text-stone-500">
             <Link
               href={`/${locale}/pics`}

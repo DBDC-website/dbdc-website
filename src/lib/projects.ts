@@ -30,7 +30,8 @@ const PROJECT_LIST_SELECT = `
   building_name_zh_hans,
   image_alt_en,
   image_alt_zh_hant,
-  image_alt_zh_hans
+  image_alt_zh_hans,
+  sort_order
 `;
 
 const PROJECT_SHOWCASE_SELECT_LEGACY = `
@@ -129,7 +130,7 @@ export async function getPublishedProjects(
     .from('projects')
     .select(PROJECT_SHOWCASE_SELECT)
     .eq('published', true)
-    .order('year', { ascending: false, nullsFirst: false })
+    .order('sort_order', { ascending: true })
     .order('id', { ascending: true });
 
   const result =
@@ -162,7 +163,7 @@ export async function getFeaturedProjects(
     .from('projects')
     .select(PROJECT_LIST_SELECT)
     .eq('published', true)
-    .order('year', { ascending: false, nullsFirst: false })
+    .order('sort_order', { ascending: true })
     .order('id', { ascending: true });
 
   const result =

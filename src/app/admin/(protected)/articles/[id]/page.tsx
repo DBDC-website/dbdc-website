@@ -13,9 +13,9 @@ const MESSAGES: Record<string, string> = {
 };
 
 const ERRORS: Record<string, string> = {
-  required: 'English title, label, and date are required.',
-  pdf: 'Upload a PDF or paste a PDF URL.',
-  upload: 'PDF upload failed. Check the file type and size.',
+  required: 'English title is required.',
+  upload:
+    'PDF upload failed. Use a PDF under 25MB. If it keeps failing, ask a developer to check the articles-bucket storage policies.',
   save: 'Could not save the article. Try again.',
   delete: 'Could not delete the article.',
 };

@@ -123,7 +123,8 @@ export default function HeroParallaxBackground() {
         </motion.div>
       )}
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-950/55 via-brand-900/45 to-cream-50/25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-brand-950/55 via-brand-900/45 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-cream-50/20 to-cream-50/55 sm:h-40 lg:h-48" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(212,167,60,0.22),transparent_50%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(143,179,154,0.18),transparent_55%)]" />
     </div>

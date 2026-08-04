@@ -53,5 +53,6 @@ export type ProjectRow = {
   image_alt_en?: string | null;
   image_alt_zh_hant?: string | null;
   image_alt_zh_hans?: string | null;
+  sort_order?: number;
   project_images?: ProjectImageRow[] | null;
 };

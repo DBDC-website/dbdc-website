@@ -285,6 +285,17 @@ export default function ConsultantForm({ locale }: { locale: Locale }) {
   const natureOfBusiness = methods.watch('natureOfBusiness') ?? [];
   const othersSelected = natureOfBusiness.includes('Others');
 
+  const onInvalid = () => {
+    setSubmitError(t(locale, 'forms.errors.invalidFields'));
+    window.setTimeout(() => {
+      const firstError = document.querySelector<HTMLElement>(
+        'form [aria-invalid="true"]',
+      );
+      firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      firstError?.focus?.();
+    }, 50);
+  };
+
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
     const result = await submitConsultantRegistration(values);
@@ -294,7 +305,7 @@ export default function ConsultantForm({ locale }: { locale: Locale }) {
     } else {
       setSubmitError(result.message || t(locale, 'forms.errors.submitFailed'));
     }
-  });
+  }, onInvalid);
 
   if (submitted) {
     return (

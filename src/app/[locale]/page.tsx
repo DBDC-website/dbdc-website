@@ -1,9 +1,7 @@
 import AboutSection from '@/components/home/AboutSection';
-import CommitteesSection from '@/components/home/CommitteesSection';
 import FeaturedExperiencesSection from '@/components/home/FeaturedExperiencesSection';
 import FeaturedProjectsSection from '@/components/home/FeaturedProjectsSection';
 import HeroSection from '@/components/home/HeroSection';
-import MembershipSection from '@/components/home/MembershipSection';
 import { isValidLocale, type Locale } from '@/constants/i18n';
 import { buildPageMetadata } from '@/lib/i18n/metadata';
 import { getFeaturedProjects } from '@/lib/projects';
@@ -41,8 +39,6 @@ export default async function HomePage({ params }: HomePageProps) {
       <AboutSection locale={locale} />
       <FeaturedProjectsSection locale={locale} projects={featuredProjects} />
       <FeaturedExperiencesSection locale={locale} />
-      <MembershipSection locale={locale} />
-      <CommitteesSection locale={locale} />
     </>
   );
 }

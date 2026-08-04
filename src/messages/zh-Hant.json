@@ -50,7 +50,8 @@
     "skipToContent": "跳至主要內容",
     "languageSelection": "語言選擇",
     "homeAria": "{name}首頁",
-    "dioceseLogoAria": "天主教香港教區（於新分頁開啟）"
+    "dioceseLogoAria": "天主教香港教區（於新分頁開啟）",
+    "backToTop": "返回頂部"
   },
   "donate": {
     "ariaLabel": "捐助天主教香港教區（於新分頁開啟）",
@@ -73,14 +74,15 @@
     "featuredEmpty": "精選工程將於內容管理系統發佈後在此顯示。",
     "featuredPrev": "顯示上一個工程",
     "featuredNext": "顯示下一個工程",
-    "membershipTitle": "委員",
+    "membershipTitle": "委員會成員",
     "membersIntro": "委員會成員由香港主教委任，任期兩年，期滿可續任。",
     "roleExOfficio": "當然委員",
     "roleChairperson": "主席",
     "roleViceChairperson": "副主席",
     "roleMembers": "委員",
     "roleAdministrator": "行政主任",
-    "committeesTitle": "小組委員會"
+    "committeesTitle": "小組委員會",
+    "membersExpand": "顯示委員會成員"
   },
   "common": {
     "back": "返回",
@@ -181,7 +183,7 @@
     "principals": "負責人／董事",
     "principalsDescription": "獲授權代表公司簽署文件的負責人或董事。",
     "portfolio": "主要工程項目組合",
-    "portfolioDescription": "過去五年於香港進行的主要工程項目。請特別標示任何聖堂相關工程經驗。（可選填）",
+    "portfolioDescription": "過去五年於香港進行的主要工程項目。請特別標示任何聖堂相關工程經驗。",
     "remarks": "備註",
     "natureOfBusiness": "業務性質",
     "natureOfBusinessConsultantHint": "請選擇所有適用的專業範疇。",
@@ -200,7 +202,7 @@
       "invalidPhone": "請輸入有效的電話號碼",
       "natureRequired": "請至少選擇一項業務性質",
       "submitFailed": "提交失敗，請再試一次。",
-      "invalidFields": "請更正標示欄位後再試。",
+      "invalidFields": "請填寫標有 * 的必填欄位後再試。",
       "companyNameRequired": "請填寫公司名稱",
       "contactNameRequired": "請填寫聯絡人姓名",
       "signatureRequired": "請提供簽署",

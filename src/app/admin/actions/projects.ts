@@ -3,7 +3,32 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { PROJECT_IMAGES_BUCKET } from '@/constants/admin';
+import {
+  isPermutation,
+  writeSequentialSortOrders,
+  type ReorderResult,
+} from '@/lib/admin/reorder';
 import { requireAdmin } from '@/lib/admin/requireAdmin';
+import {
+  removeStorageObject,
+  resolveStorageBaseName,
+  storagePathFromPublicUrl,
+  uploadReplacingStorageObject,
+} from '@/lib/admin/storageUpload';
+
+async function nextProjectSortOrder(
+  supabase: Awaited<ReturnType<typeof requireAdmin>>,
+): Promise<number> {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('sort_order')
+    .order('sort_order', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error || !data) return 1;
+  return (data.sort_order as number) + 1;
+}
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set([
@@ -11,6 +36,7 @@ const ALLOWED_IMAGE_TYPES = new Set([
   'image/png',
   'image/webp',
 ]);
+const ALLOWED_EXTENSIONS = new Set(['jpg', 'jpeg', 'png', 'webp']);
 
 function slugify(value: string): string {
   const slug = value
@@ -34,20 +60,20 @@ function parseYear(raw: string): number | null {
   return year;
 }
 
-function sanitizeFileName(fileName: string): string {
-  return fileName
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-zA-Z0-9._-]/g, '')
-    .slice(-120);
-}
-
 function extensionFor(file: File): string {
   const fromName = file.name.split('.').pop()?.toLowerCase();
-  if (fromName && /^[a-z0-9]+$/.test(fromName)) return fromName;
+  if (fromName && ALLOWED_EXTENSIONS.has(fromName)) {
+    return fromName === 'jpeg' ? 'jpg' : fromName;
+  }
   if (file.type === 'image/png') return 'png';
   if (file.type === 'image/webp') return 'webp';
   return 'jpg';
+}
+
+function isAllowedImage(file: File): boolean {
+  if (ALLOWED_IMAGE_TYPES.has(file.type)) return true;
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  return Boolean(ext && ALLOWED_EXTENSIONS.has(ext));
 }
 
 function readLocalizedFields(formData: FormData) {
@@ -61,8 +87,7 @@ function readLocalizedFields(formData: FormData) {
   const imageAltZhHant = readText(formData, 'image_alt_zh_hant');
   const imageAltZhHans = readText(formData, 'image_alt_zh_hans');
 
-  const legacyImageAlt =
-    imageAltEn || buildingNameEn || titleEn;
+  const legacyImageAlt = imageAltEn || buildingNameEn || titleEn;
 
   return {
     titleEn,
@@ -82,32 +107,101 @@ async function uploadProjectImage(
   supabase: Awaited<ReturnType<typeof requireAdmin>>,
   file: File,
   slug: string,
+  preferredName: string,
+  previousUrl: string | null,
 ): Promise<{ publicUrl: string; path: string }> {
   if (file.size > MAX_IMAGE_BYTES) {
     throw new Error('Image must be 8MB or smaller.');
   }
-  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+  if (!isAllowedImage(file)) {
     throw new Error('Image must be JPG, PNG, or WebP.');
   }
 
-  const path = `${slug}/${Date.now()}-${crypto.randomUUID()}-${sanitizeFileName(file.name) || `image.${extensionFor(file)}`}`;
+  const previousPath = previousUrl
+    ? storagePathFromPublicUrl(previousUrl, PROJECT_IMAGES_BUCKET)
+    : null;
+  const previousInSlugFolder =
+    previousPath && previousPath.startsWith(`${slug}/`)
+      ? previousPath
+      : null;
 
-  const { error } = await supabase.storage
-    .from(PROJECT_IMAGES_BUCKET)
-    .upload(path, file, {
-      upsert: false,
-      contentType: file.type || undefined,
-    });
+  const baseName = resolveStorageBaseName({
+    preferredName,
+    uploadedFileName: file.name,
+    previousPath: previousInSlugFolder,
+    fallback: `image.${extensionFor(file)}`,
+    defaultExtension: `.${extensionFor(file)}`,
+  });
 
-  if (error) {
-    throw new Error(error.message);
+  const path = `${slug}/${baseName}`;
+
+  return uploadReplacingStorageObject(supabase, {
+    bucket: PROJECT_IMAGES_BUCKET,
+    file,
+    path,
+    previousUrl,
+    contentType: file.type || undefined,
+  });
+}
+
+/** Keep a single primary gallery row in sync with projects.image_url. */
+async function syncPrimaryGalleryImage(
+  supabase: Awaited<ReturnType<typeof requireAdmin>>,
+  projectId: number,
+  previousImageUrl: string | null,
+  nextImageUrl: string | null,
+  fields: ReturnType<typeof readLocalizedFields>,
+) {
+  if (!nextImageUrl) {
+    if (previousImageUrl) {
+      await supabase
+        .from('project_images')
+        .delete()
+        .eq('project_id', projectId)
+        .eq('image_url', previousImageUrl);
+    }
+    return;
   }
 
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from(PROJECT_IMAGES_BUCKET).getPublicUrl(path);
+  if (previousImageUrl) {
+    const { data: existingRows } = await supabase
+      .from('project_images')
+      .select('id')
+      .eq('project_id', projectId)
+      .eq('image_url', previousImageUrl)
+      .limit(1);
 
-  return { publicUrl, path };
+    if (existingRows && existingRows.length > 0) {
+      const { error } = await supabase
+        .from('project_images')
+        .update({
+          image_url: nextImageUrl,
+          caption: fields.legacyImageAlt,
+          caption_en: fields.legacyImageAlt,
+          caption_zh_hant: fields.imageAltZhHant || null,
+          caption_zh_hans: fields.imageAltZhHans || null,
+        })
+        .eq('id', existingRows[0].id);
+      if (error) {
+        console.error('Failed to update project_images row:', error);
+      }
+      return;
+    }
+  }
+
+  const { error } = await supabase.from('project_images').insert({
+    project_id: projectId,
+    image_url: nextImageUrl,
+    caption: fields.legacyImageAlt,
+    caption_en: fields.legacyImageAlt,
+    caption_zh_hant: fields.imageAltZhHant || null,
+    caption_zh_hans: fields.imageAltZhHans || null,
+    image_type: 'gallery',
+    sort_order: 0,
+  });
+  if (error) {
+    console.error('Failed to insert project_images row:', error);
+  }
 }
 
 function revalidatePublicSite() {
@@ -135,7 +229,14 @@ export async function createProject(formData: FormData) {
 
   try {
     if (image instanceof File && image.size > 0) {
-      const uploaded = await uploadProjectImage(supabase, image, slug);
+      const preferredName = readText(formData, 'image_filename');
+      const uploaded = await uploadProjectImage(
+        supabase,
+        image,
+        slug,
+        preferredName,
+        null,
+      );
       imageUrl = uploaded.publicUrl;
     }
   } catch (error) {
@@ -163,6 +264,7 @@ export async function createProject(formData: FormData) {
       image_alt_en: fields.imageAltEn || fields.legacyImageAlt,
       image_alt_zh_hant: fields.imageAltZhHant || null,
       image_alt_zh_hans: fields.imageAltZhHans || null,
+      sort_order: await nextProjectSortOrder(supabase),
       updated_at: new Date().toISOString(),
     })
     .select('id')
@@ -175,19 +277,7 @@ export async function createProject(formData: FormData) {
   }
 
   if (imageUrl) {
-    const { error: imageError } = await supabase.from('project_images').insert({
-      project_id: data.id,
-      image_url: imageUrl,
-      caption: fields.legacyImageAlt,
-      caption_en: fields.legacyImageAlt,
-      caption_zh_hant: fields.imageAltZhHant || null,
-      caption_zh_hans: fields.imageAltZhHans || null,
-      image_type: 'gallery',
-      sort_order: 0,
-    });
-    if (imageError) {
-      console.error('Failed to insert project_images row:', imageError);
-    }
+    await syncPrimaryGalleryImage(supabase, data.id, null, imageUrl, fields);
   }
 
   revalidatePublicSite();
@@ -225,30 +315,32 @@ export async function updateProject(formData: FormData) {
     redirect('/admin/projects?error=missing');
   }
 
-  let imageUrl: string | null = existing.image_url as string | null;
+  const previousImageUrl = existing.image_url as string | null;
+  let imageUrl: string | null = previousImageUrl;
+  let imageChanged = false;
+
   if (clearImage) {
+    const oldPath = previousImageUrl
+      ? storagePathFromPublicUrl(previousImageUrl, PROJECT_IMAGES_BUCKET)
+      : null;
+    await removeStorageObject(supabase, PROJECT_IMAGES_BUCKET, oldPath);
     imageUrl = null;
+    imageChanged = true;
   }
 
   const image = formData.get('image');
   try {
     if (image instanceof File && image.size > 0) {
-      const uploaded = await uploadProjectImage(supabase, image, slug);
+      const preferredName = readText(formData, 'image_filename');
+      const uploaded = await uploadProjectImage(
+        supabase,
+        image,
+        slug,
+        preferredName,
+        clearImage ? null : previousImageUrl,
+      );
       imageUrl = uploaded.publicUrl;
-
-      const { error: imageError } = await supabase.from('project_images').insert({
-        project_id: id,
-        image_url: imageUrl,
-        caption: fields.legacyImageAlt,
-        caption_en: fields.legacyImageAlt,
-        caption_zh_hant: fields.imageAltZhHant || null,
-        caption_zh_hans: fields.imageAltZhHans || null,
-        image_type: 'gallery',
-        sort_order: 0,
-      });
-      if (imageError) {
-        console.error('Failed to insert project_images row:', imageError);
-      }
+      imageChanged = true;
     }
   } catch (error) {
     console.error('Project image upload failed:', error);
@@ -283,6 +375,16 @@ export async function updateProject(formData: FormData) {
     console.error('Failed to update project:', error);
     const code = error.code === '23505' ? 'slug' : 'save';
     redirect(`/admin/projects/${id}?error=${code}`);
+  }
+
+  if (imageChanged) {
+    await syncPrimaryGalleryImage(
+      supabase,
+      id,
+      previousImageUrl,
+      imageUrl,
+      fields,
+    );
   }
 
   revalidatePublicSite();
@@ -348,4 +450,40 @@ export async function deleteProject(formData: FormData) {
 
   revalidatePublicSite();
   redirect('/admin/projects?deleted=1');
+}
+
+/** Persist a new projects list order (drag-and-drop). */
+export async function reorderProjects(
+  orderedIds: number[],
+): Promise<ReorderResult> {
+  const supabase = await requireAdmin();
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('id')
+    .order('sort_order', { ascending: true })
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('Failed to load projects for reorder:', error);
+    return { ok: false, error: 'Could not load projects to reorder.' };
+  }
+
+  const expectedIds = (data ?? []).map((row) => row.id as number);
+  if (!isPermutation(orderedIds, expectedIds)) {
+    return {
+      ok: false,
+      error: 'Order is out of date. Refresh the page and try again.',
+    };
+  }
+
+  try {
+    await writeSequentialSortOrders(supabase, 'projects', orderedIds);
+  } catch (reorderError) {
+    console.error('Failed to reorder projects:', reorderError);
+    return { ok: false, error: 'Could not save the new order.' };
+  }
+
+  revalidatePublicSite();
+  return { ok: true };
 }
