@@ -45,12 +45,14 @@ export default async function ConsultantRegistrationPage({ params }: PageProps) 
           src: homeImages.consultantsHeader.src,
           alt: homeImages.consultantsHeader.alt,
           objectPosition: homeImages.consultantsHeader.objectPosition,
+          scale: homeImages.consultantsHeader.scale,
         }}
       />
 
       <PageSection containerSize="narrow" spacing="default">
         <Link
-          href={`/${locale}/consultants-contractors`}
+          href={`/${locale}/consultants-contractors#registration-heading`}
+          scroll={false}
           className="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 transition-colors hover:text-brand-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />

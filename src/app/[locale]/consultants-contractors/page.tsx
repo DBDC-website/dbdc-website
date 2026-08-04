@@ -32,7 +32,7 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
   const locale = localeParam as Locale;
 
   return (
-    <div className="relative bg-[#eef6f5]">
+    <div className="relative bg-[#e8f3ee]">
       <PageHeader
         eyebrow={t(locale, 'consultants.eyebrow')}
         title={t(locale, 'consultants.title')}
@@ -44,13 +44,14 @@ export default async function ConsultantsContractorsPage({ params }: PageProps) 
           src: homeImages.consultantsHeader.src,
           alt: homeImages.consultantsHeader.alt,
           objectPosition: homeImages.consultantsHeader.objectPosition,
+          scale: homeImages.consultantsHeader.scale,
         }}
       />
 
       <div className="relative isolate">
         <MosaicHueBackdrop className="opacity-68" />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#f5fffd]/72 via-[#eef6f5]/55 to-[#f6faf9]/72"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_18%_20%,rgba(143,179,154,0.28),transparent_52%),radial-gradient(ellipse_at_82%_78%,rgba(168,196,176,0.22),transparent_48%),linear-gradient(to_bottom,rgba(245,255,250,0.7),rgba(232,243,238,0.5),rgba(246,250,249,0.72))]"
           aria-hidden="true"
         />
 

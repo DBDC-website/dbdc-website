@@ -107,15 +107,17 @@ export const homeImages = {
   },
   /** Articles page header. */
   articlesHeader: {
-    src: websiteAsset('indoor-1.jpg'),
-    alt: 'Baptismal chapel with mosaic mural',
-    objectPosition: 'center 48%',
-  },
-  /** Consultants & contractors page headers. */
-  consultantsHeader: {
     src: websiteAsset('outdoor-bridge.jpg'),
     alt: 'White cross overlooking a coastal bridge',
     objectPosition: 'center 42%',
+  },
+  /** Consultants & contractors page headers. */
+  consultantsHeader: {
+    src: websiteAsset('outdoor-statue.jpg'),
+    alt: 'White marble statue of two figures against a red wall and greenery',
+    // Push framing further left while keeping statue heads visible.
+    objectPosition: '76% 33%',
+    scale: 1.6,
   },
   /** Selected Projects page hero — bright chapel interior with mosaic altar. */
   projectsHeader: {
@@ -125,13 +127,11 @@ export const homeImages = {
     alt: 'Chapel interior with curved wooden pews and a blue-and-gold mosaic behind the altar',
     objectPosition: 'center 42%',
   },
-  /** Parish & School Corner hero — hilltop church facade. */
+  /** Parish & School Corner hero — warm indoor chapel interior. */
   parishSchoolHeader: {
-    src: withDefaultTransform(
-      'https://cgwkyszmhbwirecaxbuq.supabase.co/storage/v1/object/public/project-images/STCK%28SL%29_ren2019_01.jpg',
-    ),
-    alt: 'Colorful children playroom mural with space-themed artwork',
-    objectPosition: 'center 46%',
+    src: websiteAsset('indoor-14.jpg'),
+    alt: 'Chapel interior with warm light and sacred artwork',
+    objectPosition: 'center 45%',
   },
   renovation: {
     alt: 'Placeholder for renovation site',

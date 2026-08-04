@@ -19,8 +19,8 @@ export default function AboutMeetBackdrop() {
 
   const isInView = useInView(containerRef, {
     once: true,
-    amount: 0.35,
-    margin: '0px 0px -22% 0px',
+    amount: 0.2,
+    margin: '0px 0px -12% 0px',
   });
 
   const show = reduceMotion || isInView;

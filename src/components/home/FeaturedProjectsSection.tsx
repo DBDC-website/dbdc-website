@@ -86,6 +86,7 @@ function FeaturedBackdrop({ project }: { project: Project | null }) {
 
 function CarouselProjectCard({
   project,
+  cardKey,
   isActive,
   isHovered,
   shouldLoadImage,
@@ -94,6 +95,7 @@ function CarouselProjectCard({
   onHoverEnd,
 }: {
   project: Project;
+  cardKey: string;
   isActive: boolean;
   isHovered: boolean;
   shouldLoadImage: boolean;
@@ -106,6 +108,7 @@ function CarouselProjectCard({
 
   return (
     <motion.div
+      data-card-key={cardKey}
       onHoverStart={isTouch ? undefined : onHoverStart}
       onHoverEnd={isTouch ? undefined : onHoverEnd}
       style={
@@ -113,10 +116,7 @@ function CarouselProjectCard({
           ? undefined
           : { perspective: 1200, transformStyle: 'preserve-3d' }
       }
-      className={cn(
-        'flex h-full w-[min(92vw,32rem)] shrink-0 cursor-default flex-col sm:w-[34rem] lg:w-[38rem]',
-        (isActive || isHovered) && 'relative',
-      )}
+      className="relative flex h-full w-[min(92vw,32rem)] shrink-0 cursor-default flex-col sm:w-[34rem] lg:w-[38rem]"
     >
       <motion.div
         animate={
@@ -146,7 +146,7 @@ function CarouselProjectCard({
                   zIndex: isActive ? 10 : 1,
                 }
         }
-        transition={{ duration: isTouch ? 0.35 : 0.65, ease: cinematicEase }}
+        transition={{ duration: isTouch ? 0.3 : 0.36, ease: cinematicEase }}
         className={cn(
           'h-full origin-center overflow-hidden rounded-2xl',
           hoverLift
@@ -193,7 +193,7 @@ function FeaturedProjectsCarousel({
   const [cardWidth, setCardWidth] = useState(320);
   const [isDragging, setIsDragging] = useState(false);
   const [autoplay, setAutoplay] = useState(true);
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [hoveredCardKey, setHoveredCardKey] = useState<string | null>(null);
   const x = useMotionValue(0);
   const resumeTimerRef = useRef<number | null>(null);
 
@@ -253,7 +253,7 @@ function FeaturedProjectsCarousel({
     autoplay &&
     !reduceMotion &&
     sectionInView &&
-    hoveredId == null &&
+    hoveredCardKey == null &&
     !isDragging &&
     projectCount > 1;
 
@@ -402,15 +402,13 @@ function FeaturedProjectsCarousel({
     }
   };
 
-  const handleHoverStart = (project: Project, isActive: boolean) => {
-    setHoveredId(project.id);
-    if (isActive) {
-      onHoverProject(project);
-    }
+  const handleHoverStart = (project: Project, cardKey: string) => {
+    setHoveredCardKey(cardKey);
+    onHoverProject(project);
   };
 
   const handleHoverEnd = () => {
-    setHoveredId(null);
+    setHoveredCardKey(null);
     onHoverProject(null);
   };
 
@@ -442,21 +440,23 @@ function FeaturedProjectsCarousel({
           >
             {[...projects, ...projects, ...projects].map((project, index) => {
               const isActive = index % projectCount === activeIndex;
+              const cardKey = `${project.id}-${index}`;
               const centeredIndex = activeIndex + projectCount;
               const shouldLoad = Math.abs(index - centeredIndex) <= 1;
               return (
                 <div
-                  key={`${project.id}-${index}`}
+                  key={cardKey}
                   data-carousel-card
                   className="shrink-0"
                 >
                   <CarouselProjectCard
                     project={project}
+                    cardKey={cardKey}
                     isActive={isActive}
-                    isHovered={hoveredId === project.id && isActive}
+                    isHovered={hoveredCardKey === cardKey}
                     shouldLoadImage={shouldLoad}
                     isTouch={isTouch}
-                    onHoverStart={() => handleHoverStart(project, isActive)}
+                    onHoverStart={() => handleHoverStart(project, cardKey)}
                     onHoverEnd={handleHoverEnd}
                   />
                 </div>

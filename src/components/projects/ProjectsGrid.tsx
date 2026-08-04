@@ -74,8 +74,10 @@ function ProjectTile({
     <motion.button
       type="button"
       onClick={onOpen}
-      onHoverStart={onHoverStart}
-      onHoverEnd={onHoverEnd}
+      onMouseEnter={onHoverStart}
+      onMouseLeave={onHoverEnd}
+      onPointerEnter={onHoverStart}
+      onPointerLeave={onHoverEnd}
       onFocus={onHoverStart}
       onBlur={onHoverEnd}
       aria-label={`View ${project.title}`}
@@ -85,17 +87,17 @@ function ProjectTile({
           ? undefined
           : isHovered
             ? {
-                scale: 1.14,
-                y: -10,
+                scale: 1.06,
+                y: -6,
                 zIndex: 30,
                 boxShadow: '0 32px 56px -16px rgba(27, 39, 64, 0.45)',
               }
             : isDimmed
               ? {
-                  scale: 0.92,
-                  y: 8,
+                  scale: 0.97,
+                  y: 2,
                   zIndex: 1,
-                  opacity: 0.72,
+                  opacity: 0.88,
                   boxShadow: '0 8px 18px -10px rgba(27, 39, 64, 0.2)',
                 }
               : {
@@ -107,7 +109,7 @@ function ProjectTile({
                 }
       }
       whileTap={reduceMotion ? undefined : { scale: isHovered ? 1.1 : 0.98 }}
-      transition={{ duration: 0.45, ease: cinematicEase }}
+      transition={{ duration: 0.26, ease: cinematicEase }}
       style={{ transformOrigin: 'center center' }}
     >
       <PlaceholderImage

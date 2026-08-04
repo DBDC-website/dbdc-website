@@ -8,6 +8,8 @@ type PageHeaderProps = {
     src: string;
     alt?: string;
     objectPosition?: string;
+    /** Uniform zoom (>1) to reframe the crop without stretching. */
+    scale?: number;
   };
   theme?: 'default' | 'sanctuary' | 'cathedral' | 'sky';
   contentClassName?: string;

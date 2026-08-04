@@ -219,6 +219,7 @@ export default function FeaturedExperiencesSection({
           </div>
           <Link
             href={`/${locale}/projects#experiences-heading`}
+            scroll={false}
             className="relative hidden items-center gap-1.5 text-base font-semibold text-brand-800 transition-colors hover:text-brand-950 hover:underline sm:inline-flex sm:text-lg"
           >
             {t(locale, 'projects.viewOnProjects')}
