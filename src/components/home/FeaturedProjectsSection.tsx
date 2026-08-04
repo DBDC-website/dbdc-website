@@ -34,6 +34,8 @@ type FeaturedProjectsSectionProps = {
 const GAP = 28;
 const AUTO_MS = 3200;
 const AUTOPLAY_RESUME_MS = 5000;
+/** Ignore brief passes while scrolling; require a short dwell before hover UI. */
+const HOVER_DWELL_MS = 160;
 
 const featuredDefaultBackdrop = homeImages.featuredProjects;
 
@@ -196,11 +198,19 @@ function FeaturedProjectsCarousel({
   const [hoveredCardKey, setHoveredCardKey] = useState<string | null>(null);
   const x = useMotionValue(0);
   const resumeTimerRef = useRef<number | null>(null);
+  const hoverDwellTimerRef = useRef<number | null>(null);
 
   const clearResumeTimer = useCallback(() => {
     if (resumeTimerRef.current != null) {
       window.clearTimeout(resumeTimerRef.current);
       resumeTimerRef.current = null;
+    }
+  }, []);
+
+  const clearHoverDwellTimer = useCallback(() => {
+    if (hoverDwellTimerRef.current != null) {
+      window.clearTimeout(hoverDwellTimerRef.current);
+      hoverDwellTimerRef.current = null;
     }
   }, []);
 
@@ -229,7 +239,26 @@ function FeaturedProjectsCarousel({
     }
   }, [sectionInView, clearResumeTimer]);
 
-  useEffect(() => () => clearResumeTimer(), [clearResumeTimer]);
+  useEffect(
+    () => () => {
+      clearResumeTimer();
+      clearHoverDwellTimer();
+    },
+    [clearResumeTimer, clearHoverDwellTimer],
+  );
+
+  // Drop hover while scrolling so passing through the section does not
+  // flash the zoom / backdrop when the user is only moving past.
+  useEffect(() => {
+    if (isTouch) return;
+    const clearHover = () => {
+      clearHoverDwellTimer();
+      setHoveredCardKey(null);
+      onHoverProject(null);
+    };
+    window.addEventListener('scroll', clearHover, { passive: true });
+    return () => window.removeEventListener('scroll', clearHover);
+  }, [clearHoverDwellTimer, isTouch, onHoverProject]);
 
   const measure = useCallback(() => {
     const container = containerRef.current;
@@ -403,11 +432,21 @@ function FeaturedProjectsCarousel({
   };
 
   const handleHoverStart = (project: Project, cardKey: string) => {
-    setHoveredCardKey(cardKey);
-    onHoverProject(project);
+    clearHoverDwellTimer();
+    if (hoveredCardKey != null) {
+      setHoveredCardKey(cardKey);
+      onHoverProject(project);
+      return;
+    }
+    hoverDwellTimerRef.current = window.setTimeout(() => {
+      hoverDwellTimerRef.current = null;
+      setHoveredCardKey(cardKey);
+      onHoverProject(project);
+    }, HOVER_DWELL_MS);
   };
 
   const handleHoverEnd = () => {
+    clearHoverDwellTimer();
     setHoveredCardKey(null);
     onHoverProject(null);
   };
