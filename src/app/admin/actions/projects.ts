@@ -12,6 +12,7 @@ import { requireAdmin } from '@/lib/admin/requireAdmin';
 import {
   removeStorageObject,
   resolveStorageBaseName,
+  sanitizeStorageFileName,
   storagePathFromPublicUrl,
   uploadReplacingStorageObject,
 } from '@/lib/admin/storageUpload';
@@ -207,6 +208,31 @@ async function syncPrimaryGalleryImage(
 function revalidatePublicSite() {
   revalidatePath('/', 'layout');
   revalidatePath('/admin/projects');
+}
+
+async function writeProjectImageSortOrders(
+  supabase: Awaited<ReturnType<typeof requireAdmin>>,
+  projectId: number,
+  orderedImageIds: number[],
+): Promise<void> {
+  for (let index = 0; index < orderedImageIds.length; index += 1) {
+    const imageId = orderedImageIds[index];
+    const { error } = await supabase
+      .from('project_images')
+      .update({ sort_order: index })
+      .eq('project_id', projectId)
+      .eq('id', imageId);
+    if (error) {
+      throw new Error(error.message);
+    }
+  }
+}
+
+function galleryStoragePath(slug: string, file: File, index: number): string {
+  const ext = extensionFor(file);
+  const original = sanitizeStorageFileName(file.name.split('/').pop() ?? '');
+  const stem = original.replace(/\.[^.]+$/, '') || 'gallery';
+  return `${slug}/gallery-${Date.now()}-${index + 1}-${stem}.${ext}`;
 }
 
 export async function createProject(formData: FormData) {
@@ -431,6 +457,215 @@ export async function updateProjectImageCaptions(formData: FormData) {
   revalidatePublicSite();
   revalidatePath(`/admin/projects/${projectId}`);
   redirect(`/admin/projects/${projectId}?saved=captions`);
+}
+
+/** Uploads one or more gallery images for an existing project. */
+export async function addProjectGalleryImages(formData: FormData) {
+  const supabase = await requireAdmin();
+  const projectId = Number(readText(formData, 'project_id'));
+  if (!Number.isFinite(projectId) || projectId <= 0) {
+    redirect('/admin/projects?error=invalid');
+  }
+
+  const files = formData
+    .getAll('gallery_images')
+    .filter((value): value is File => value instanceof File && value.size > 0);
+
+  if (files.length === 0) {
+    redirect(`/admin/projects/${projectId}?error=gallery_upload`);
+  }
+
+  const { data: project, error: projectError } = await supabase
+    .from('projects')
+    .select('slug, image_alt')
+    .eq('id', projectId)
+    .maybeSingle();
+
+  if (projectError || !project) {
+    redirect('/admin/projects?error=missing');
+  }
+
+  const { data: maxRow } = await supabase
+    .from('project_images')
+    .select('sort_order')
+    .eq('project_id', projectId)
+    .order('sort_order', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  let nextSortOrder = ((maxRow?.sort_order as number | null) ?? -1) + 1;
+
+  for (let index = 0; index < files.length; index += 1) {
+    const file = files[index];
+    if (file.size > MAX_IMAGE_BYTES || !isAllowedImage(file)) {
+      redirect(`/admin/projects/${projectId}?error=gallery_upload`);
+    }
+
+    const path = galleryStoragePath(project.slug as string, file, index);
+
+    try {
+      const uploaded = await uploadReplacingStorageObject(supabase, {
+        bucket: PROJECT_IMAGES_BUCKET,
+        file,
+        path,
+        previousUrl: null,
+        contentType: file.type || undefined,
+      });
+
+      const { error } = await supabase.from('project_images').insert({
+        project_id: projectId,
+        image_url: uploaded.publicUrl,
+        caption: (project.image_alt as string | null) || null,
+        caption_en: (project.image_alt as string | null) || null,
+        caption_zh_hant: null,
+        caption_zh_hans: null,
+        image_type: 'gallery',
+        sort_order: nextSortOrder,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      nextSortOrder += 1;
+    } catch (error) {
+      console.error('Failed to upload gallery image:', error);
+      redirect(`/admin/projects/${projectId}?error=gallery_upload`);
+    }
+  }
+
+  revalidatePublicSite();
+  revalidatePath(`/admin/projects/${projectId}`);
+  redirect(`/admin/projects/${projectId}?saved=gallery`);
+}
+
+/** Delete one gallery image row and its storage object. */
+export async function deleteProjectGalleryImage(
+  projectId: number,
+  imageId: number,
+) {
+  const supabase = await requireAdmin();
+
+  if (!Number.isFinite(projectId) || projectId <= 0) {
+    redirect('/admin/projects?error=invalid');
+  }
+  if (!Number.isFinite(imageId) || imageId <= 0) {
+    redirect(`/admin/projects/${projectId}?error=image_delete`);
+  }
+
+  const { data: project, error: projectError } = await supabase
+    .from('projects')
+    .select('image_url')
+    .eq('id', projectId)
+    .maybeSingle();
+  if (projectError || !project) {
+    redirect('/admin/projects?error=missing');
+  }
+
+  const { data: imageRow, error: imageError } = await supabase
+    .from('project_images')
+    .select('id, image_url')
+    .eq('project_id', projectId)
+    .eq('id', imageId)
+    .maybeSingle();
+  if (imageError || !imageRow) {
+    redirect(`/admin/projects/${projectId}?error=image_delete`);
+  }
+
+  const imageUrl = imageRow.image_url as string | null;
+  const primaryUrl = project.image_url as string | null;
+  if (imageUrl && primaryUrl && imageUrl === primaryUrl) {
+    redirect(`/admin/projects/${projectId}?error=primary_image`);
+  }
+
+  const { error: deleteError } = await supabase
+    .from('project_images')
+    .delete()
+    .eq('project_id', projectId)
+    .eq('id', imageId);
+  if (deleteError) {
+    redirect(`/admin/projects/${projectId}?error=image_delete`);
+  }
+
+  if (imageUrl) {
+    const { count: remainingGalleryCount } = await supabase
+      .from('project_images')
+      .select('id', { count: 'exact', head: true })
+      .eq('image_url', imageUrl);
+    const { count: remainingProjectCount } = await supabase
+      .from('projects')
+      .select('id', { count: 'exact', head: true })
+      .eq('image_url', imageUrl);
+
+    if ((remainingGalleryCount ?? 0) === 0 && (remainingProjectCount ?? 0) === 0) {
+      const path = storagePathFromPublicUrl(imageUrl, PROJECT_IMAGES_BUCKET);
+      await removeStorageObject(supabase, PROJECT_IMAGES_BUCKET, path);
+    }
+  }
+
+  const { data: remainingRows } = await supabase
+    .from('project_images')
+    .select('id')
+    .eq('project_id', projectId)
+    .order('sort_order', { ascending: true })
+    .order('id', { ascending: true });
+
+  try {
+    await writeProjectImageSortOrders(
+      supabase,
+      projectId,
+      (remainingRows ?? []).map((row) => row.id as number),
+    );
+  } catch (error) {
+    console.error('Failed to resequence project images:', error);
+  }
+
+  revalidatePublicSite();
+  revalidatePath(`/admin/projects/${projectId}`);
+  redirect(`/admin/projects/${projectId}?saved=image_deleted`);
+}
+
+/** Persist drag-and-drop order for one project's gallery images. */
+export async function reorderProjectImages(
+  projectId: number,
+  orderedIds: number[],
+): Promise<ReorderResult> {
+  const supabase = await requireAdmin();
+
+  if (!Number.isFinite(projectId) || projectId <= 0) {
+    return { ok: false, error: 'Invalid project id.' };
+  }
+
+  const { data, error } = await supabase
+    .from('project_images')
+    .select('id')
+    .eq('project_id', projectId)
+    .order('sort_order', { ascending: true })
+    .order('id', { ascending: true });
+
+  if (error) {
+    console.error('Failed to load project images for reorder:', error);
+    return { ok: false, error: 'Could not load images to reorder.' };
+  }
+
+  const expectedIds = (data ?? []).map((row) => row.id as number);
+  if (!isPermutation(orderedIds, expectedIds)) {
+    return {
+      ok: false,
+      error: 'Order is out of date. Refresh and try again.',
+    };
+  }
+
+  try {
+    await writeProjectImageSortOrders(supabase, projectId, orderedIds);
+  } catch (reorderError) {
+    console.error('Failed to reorder project images:', reorderError);
+    return { ok: false, error: 'Could not save image order.' };
+  }
+
+  revalidatePublicSite();
+  revalidatePath(`/admin/projects/${projectId}`);
+  return { ok: true };
 }
 
 export async function deleteProject(formData: FormData) {

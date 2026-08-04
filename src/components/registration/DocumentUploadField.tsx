@@ -11,6 +11,13 @@ type DocumentUploadFieldProps = {
   attachNote?: string;
 };
 
+function displayDocumentName(path: string): string {
+  const lastSegment = path.split('/').pop() ?? path;
+  const decoded = decodeURIComponent(lastSegment);
+  // Stored as `${Date.now()}-${uuid}-${originalName}`; show original only.
+  return decoded.replace(/^\d{13}-[0-9a-fA-F-]{36}-/, '');
+}
+
 export default function DocumentUploadField({
   label,
   hint,
@@ -73,7 +80,9 @@ export default function DocumentUploadField({
               key={`${path}-${index}`}
               className="flex items-start justify-between gap-3 rounded-md border border-cream-200 bg-cream-50/70 px-3 py-2 text-sm"
             >
-              <span className="min-w-0 break-all text-stone-700">{path}</span>
+              <span className="min-w-0 break-all text-stone-700">
+                {displayDocumentName(path)}
+              </span>
               <button
                 type="button"
                 onClick={() => removeAt(index)}

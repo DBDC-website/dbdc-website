@@ -133,7 +133,7 @@ function ExperienceStrip({
 
   const imageBlock = (
     <motion.div
-      className="relative h-36 w-full shrink-0 overflow-hidden sm:h-40 sm:w-[42%] lg:h-44 lg:w-[46%]"
+      className="relative h-36 w-full shrink-0 overflow-hidden sm:h-40 sm:w-[42%] lg:h-46 lg:w-[46%]"
       initial={reduceMotion ? false : { opacity: 0.35, x: imageLeadX }}
       animate={show ? { opacity: 1, x: 0 } : { opacity: 0.35, x: imageLeadX }}
       transition={imageTransition}
@@ -235,6 +235,7 @@ export default function FeaturedExperiencesSection({
           imageSide="right"
           enterFrom="left"
           startDelay={0}
+          imageObjectPosition="center 62%"
         />
         <ExperienceStrip
           locale={locale}

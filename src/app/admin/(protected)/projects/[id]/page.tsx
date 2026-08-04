@@ -12,12 +12,19 @@ export const metadata: Metadata = {
 const MESSAGES: Record<string, string> = {
   '1': 'Project saved.',
   captions: 'Captions saved.',
+  gallery: 'Gallery images uploaded.',
+  image_deleted: 'Gallery image deleted.',
 };
 
 const ERRORS: Record<string, string> = {
   title: 'Title is required.',
   slug: 'That slug is already in use. Choose another.',
   upload: 'Image upload failed. Check the file type and size.',
+  gallery_upload:
+    'Gallery upload failed. Use JPG/PNG/WebP files up to 8MB each.',
+  image_delete: 'Could not delete that gallery image. Try again.',
+  primary_image:
+    'That image is the project primary image. Remove it from the Primary image section.',
   save: 'Could not save the project. Try again.',
   captions: 'Could not save the captions. Try again.',
   delete: 'Could not delete the project.',
@@ -86,7 +93,11 @@ export default async function EditProjectPage({
           Shown under each image on the public project gallery.
         </p>
         <div className="mt-5">
-          <ProjectImageCaptions projectId={project.id} images={images} />
+          <ProjectImageCaptions
+            projectId={project.id}
+            images={images}
+            primaryImageUrl={project.imageUrl}
+          />
         </div>
       </div>
     </div>
