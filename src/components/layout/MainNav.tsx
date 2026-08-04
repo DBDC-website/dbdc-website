@@ -122,11 +122,28 @@ function NavDropdown({
                 key={`${child.href}-${child.label}`}
                 href={href}
                 role="menuitem"
+                scroll={false}
                 {...(child.external
                   ? { target: '_blank', rel: 'noopener noreferrer' }
                   : {})}
                 className="block rounded-lg px-3.5 py-2.5 text-sm font-bold text-logo-grey/85 transition-colors hover:bg-cream-50 hover:text-logo-grey"
-                onClick={() => setOpen(false)}
+                onClick={() => {
+                  setOpen(false);
+                  const hashIndex = href.indexOf('#');
+                  if (hashIndex === -1) return;
+                  const path = href.slice(0, hashIndex);
+                  const id = decodeURIComponent(href.slice(hashIndex + 1));
+                  if (window.location.pathname !== path) return;
+                  requestAnimationFrame(() => {
+                    const target = document.getElementById(id);
+                    if (!target) return;
+                    const top =
+                      target.getBoundingClientRect().top +
+                      window.scrollY -
+                      96;
+                    window.scrollTo({ top, left: 0, behavior: 'smooth' });
+                  });
+                }}
               >
                 {child.label}
               </Link>

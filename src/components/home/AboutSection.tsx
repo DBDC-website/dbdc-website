@@ -166,7 +166,7 @@ export default async function AboutSection({ locale }: AboutSectionProps) {
           {/* Membership + Committees — same About box */}
           <div
             id="about-people"
-            className="border-t border-brand-900/10 pt-6 sm:pt-7"
+            className="scroll-mt-28 border-t border-brand-900/10 pt-6 sm:scroll-mt-32 sm:pt-7"
           >
             <div className="grid gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-14">
               <ScrollReveal>

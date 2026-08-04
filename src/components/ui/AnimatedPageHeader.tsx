@@ -19,6 +19,8 @@ type AnimatedPageHeaderProps = {
     src: string;
     alt?: string;
     objectPosition?: string;
+    /** Uniform zoom (>1) to reframe the crop without stretching. */
+    scale?: number;
   };
   /**
    * `sanctuary` — dark glass treatment.
@@ -121,6 +123,12 @@ export default function AnimatedPageHeader({
             className="object-cover"
             style={{
               objectPosition: backgroundImage.objectPosition ?? 'center center',
+              transform:
+                backgroundImage.scale && backgroundImage.scale !== 1
+                  ? `scale(${backgroundImage.scale})`
+                  : undefined,
+              transformOrigin:
+                backgroundImage.objectPosition ?? 'center center',
             }}
           />
           <div

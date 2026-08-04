@@ -29,9 +29,9 @@ export function RegistrationCards({ locale }: { locale: Locale }) {
     <StaggerChildren as="div" className="grid gap-8 lg:grid-cols-2 lg:gap-10">
       {registration.map(({ icon: Icon, titleKey, bodyKey, ctaKey, slug }) => (
         <StaggerItem key={slug}>
-          <Card className="h-full border-cream-200/90 bg-white/90 p-6 shadow-sm shadow-brand-900/[0.04] sm:p-8">
+          <Card className="h-full border-sage-200/70 bg-white/90 p-6 shadow-sm shadow-brand-900/[0.04] sm:p-8">
             <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-100 text-brand-700">
+              <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-sage-100 text-brand-800">
                 <Icon className="h-6 w-6" aria-hidden="true" />
               </span>
               <h3 className="text-lg font-semibold text-brand-900 sm:text-xl">

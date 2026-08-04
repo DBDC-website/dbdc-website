@@ -28,6 +28,29 @@ function resolveHref(locale: Locale, href: string) {
   return `/${locale}${href}`;
 }
 
+function scrollToHashTarget(href: string) {
+  const hashIndex = href.indexOf('#');
+  if (hashIndex === -1) return;
+  const path = href.slice(0, hashIndex);
+  const id = decodeURIComponent(href.slice(hashIndex + 1));
+  if (window.location.pathname !== path) return;
+
+  let attempts = 0;
+  const tryScroll = () => {
+    const target = document.getElementById(id);
+    if (target) {
+      const headerOffset = 96;
+      const top =
+        target.getBoundingClientRect().top + window.scrollY - headerOffset;
+      window.scrollTo({ top, left: 0, behavior: 'smooth' });
+      return;
+    }
+    attempts += 1;
+    if (attempts < 20) requestAnimationFrame(tryScroll);
+  };
+  requestAnimationFrame(tryScroll);
+}
+
 export default function MobileMenuPanel({
   locale,
   items,
@@ -63,6 +86,7 @@ export default function MobileMenuPanel({
             <li key={item.href}>
               <Link
                 href={resolveHref(locale, item.href)}
+                scroll={false}
                 onClick={() => closeMenu(toggleId)}
                 className="block rounded-md px-5 py-3 text-lg font-bold text-brand-900 transition-colors hover:bg-gold-100/55 hover:text-brand-950"
               >
@@ -70,11 +94,17 @@ export default function MobileMenuPanel({
               </Link>
               {item.children && item.children.length > 0 ? (
                 <ul className="mb-2 ml-3 space-y-0.5 border-l border-gold-200/70 pl-3">
-                  {item.children.map((child) => (
+                  {item.children.map((child) => {
+                    const href = resolveHref(locale, child.href);
+                    return (
                     <li key={`${child.href}-${child.label}`}>
                       <Link
-                        href={resolveHref(locale, child.href)}
-                        onClick={() => closeMenu(toggleId)}
+                        href={href}
+                        scroll={false}
+                        onClick={() => {
+                          closeMenu(toggleId);
+                          scrollToHashTarget(href);
+                        }}
                         {...(child.external
                           ? { target: '_blank', rel: 'noopener noreferrer' }
                           : {})}
@@ -83,7 +113,8 @@ export default function MobileMenuPanel({
                         {child.label}
                       </Link>
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               ) : null}
             </li>
