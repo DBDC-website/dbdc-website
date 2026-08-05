@@ -72,10 +72,8 @@ function NavDropdown({
         aria-haspopup="menu"
         aria-controls={menuId}
         className={cn(
-          'rounded-md px-4 py-2.5 text-base font-bold transition-colors',
-          isActive || open
-            ? 'text-logo-grey'
-            : 'text-logo-grey/80 hover:bg-white/60 hover:text-logo-grey',
+          'nav-link-polish rounded-md px-4 py-2.5 text-base font-bold',
+          isActive || open ? 'text-logo-grey' : 'text-logo-grey/80',
         )}
         onFocus={(event) => {
           // Only open for keyboard focus — mouse/programmatic focus was
@@ -126,7 +124,7 @@ function NavDropdown({
                 {...(child.external
                   ? { target: '_blank', rel: 'noopener noreferrer' }
                   : {})}
-                className="block rounded-lg px-3.5 py-2.5 text-sm font-bold text-logo-grey/85 transition-colors hover:bg-cream-50 hover:text-logo-grey"
+                className="nav-link-polish block rounded-lg px-3.5 py-2.5 text-sm font-bold text-logo-grey/85"
                 onClick={() => {
                   setOpen(false);
                   const hashIndex = href.indexOf('#');
@@ -184,10 +182,8 @@ export default function MainNav({ locale, items, className }: MainNavProps) {
                 href={href}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'rounded-md px-4 py-2.5 text-base font-bold transition-colors',
-                  isActive
-                    ? 'text-logo-grey'
-                    : 'text-logo-grey/80 hover:bg-white/60 hover:text-logo-grey',
+                  'nav-link-polish rounded-md px-4 py-2.5 text-base font-bold',
+                  isActive ? 'text-logo-grey' : 'text-logo-grey/80',
                 )}
               >
                 {item.label}
