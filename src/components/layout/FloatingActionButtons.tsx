@@ -19,7 +19,7 @@ export default function FloatingActionButtons({
   return (
     <div
       className={cn(
-        'pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-center gap-3 transition-[opacity,transform] duration-300 sm:bottom-6 sm:right-6 sm:gap-3.5',
+        'pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 transition-[opacity,transform] duration-300 sm:bottom-6 sm:right-6 sm:gap-3.5',
         chromeHidden
           ? 'translate-y-4 opacity-0'
           : 'translate-y-0 opacity-100',

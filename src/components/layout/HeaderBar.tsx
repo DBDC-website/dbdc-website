@@ -52,7 +52,7 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
 
       <div className="relative mx-auto w-full max-w-[100rem] px-4 sm:px-6 lg:px-10">
         <div className="flex h-[4.75rem] items-center justify-between gap-3 sm:h-[5.25rem] lg:h-[5.75rem]">
-          <div className="inline-flex w-fit max-w-[min(100%,18rem)] shrink items-center gap-3 sm:max-w-[min(100%,22rem)] lg:max-w-[28rem] lg:gap-4">
+          <div className="inline-flex w-fit max-w-[min(100%,19rem)] shrink items-center gap-3 sm:max-w-[min(100%,24rem)] lg:max-w-[30rem] lg:gap-4">
             <a
               href="https://catholic.org.hk/en"
               target="_blank"
@@ -71,10 +71,18 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
             </a>
             <Link
               href={`/${locale}`}
-              className="min-w-0 rounded-md font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm lg:text-[1.05rem] lg:leading-tight"
+              className="min-w-0 rounded-md px-2.5 py-1.5 font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey transition-[background-color,box-shadow,color] duration-300 hover:bg-white/75 hover:shadow-[0_0_0_1.5px_rgba(255,255,255,1),0_0_14px_rgba(255,252,245,0.7)] focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-3 sm:py-2 sm:text-sm lg:px-3.5 lg:py-2 lg:text-[1.05rem] lg:leading-tight"
               aria-label={t(locale, 'chrome.homeAria', { name: siteName })}
             >
-              {siteName}
+              {locale === 'en' ? (
+                <>
+                  Diocesan Building and
+                  <br />
+                  Development Commission
+                </>
+              ) : (
+                siteName
+              )}
             </Link>
           </div>
 
