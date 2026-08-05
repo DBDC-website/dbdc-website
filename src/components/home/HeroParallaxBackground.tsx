@@ -13,7 +13,7 @@ import { heroSlides } from '@/constants/homeImages';
 import { useTouchDevice } from '@/hooks/useTouchDevice';
 
 /** Time until the first slide change after load. */
-const FIRST_SLIDE_MS = 2800;
+const FIRST_SLIDE_MS = 900;
 /** Time between subsequent slides. */
 const SLIDE_MS = 9000;
 /** Slow, steady cross-slide duration. */

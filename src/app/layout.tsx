@@ -41,6 +41,12 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://cgwkyszmhbwirecaxbuq.supabase.co" />
         <link rel="dns-prefetch" href="https://cgwkyszmhbwirecaxbuq.supabase.co" />
+        {/* Restore scroll mode only — actual position is animated by NavigationScrollManager. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if('scrollRestoration'in history)history.scrollRestoration='manual';}catch(e){}})();`,
+          }}
+        />
       </head>
       <body className="flex min-h-screen flex-col antialiased">
         <SmoothScroll>

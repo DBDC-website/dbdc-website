@@ -1,13 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, useReducedMotion } from 'framer-motion';
 import Container from '@/components/ui/Container';
-import {
-  pageHeaderContainerVariants,
-  pageHeaderItemVariants,
-  popInVariants,
-} from '@/lib/motion';
 import { cn } from '@/lib/cn';
 
 type AnimatedPageHeaderProps = {
@@ -34,6 +28,10 @@ type AnimatedPageHeaderProps = {
   align?: 'left' | 'center';
 };
 
+/**
+ * Page hero band. Text is shown immediately (no entrance animation) to avoid
+ * first-paint lag on interior pages.
+ */
 export default function AnimatedPageHeader({
   eyebrow,
   title,
@@ -43,7 +41,6 @@ export default function AnimatedPageHeader({
   contentClassName,
   align = 'left',
 }: AnimatedPageHeaderProps) {
-  const reduceMotion = useReducedMotion();
   const isSanctuary = theme === 'sanctuary';
   const isCathedral = theme === 'cathedral';
   const isSky = theme === 'sky';
@@ -86,17 +83,6 @@ export default function AnimatedPageHeader({
           : 'mt-8 h-px w-20 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent',
     isCentered && 'mx-auto',
   );
-
-  const descriptionVariants = {
-    hidden: popInVariants.hidden,
-    visible: {
-      ...popInVariants.visible,
-      transition: {
-        ...popInVariants.visible.transition,
-        delay: 0.18,
-      },
-    },
-  };
 
   return (
     <div
@@ -179,39 +165,10 @@ export default function AnimatedPageHeader({
           contentClassName,
         )}
       >
-        {reduceMotion ? (
-          <>
-            {eyebrow ? <p className={eyebrowClass}>{eyebrow}</p> : null}
-            <h1 className={titleClass}>{title}</h1>
-            {description ? <p className={descriptionClass}>{description}</p> : null}
-            <div className={ruleClass} aria-hidden="true" />
-          </>
-        ) : (
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={pageHeaderContainerVariants}
-          >
-            {eyebrow ? (
-              <motion.p variants={pageHeaderItemVariants} className={eyebrowClass}>
-                {eyebrow}
-              </motion.p>
-            ) : null}
-            <motion.h1 variants={pageHeaderItemVariants} className={titleClass}>
-              {title}
-            </motion.h1>
-            {description ? (
-              <motion.p variants={descriptionVariants} className={descriptionClass}>
-                {description}
-              </motion.p>
-            ) : null}
-            <motion.div
-              variants={pageHeaderItemVariants}
-              className={ruleClass}
-              aria-hidden="true"
-            />
-          </motion.div>
-        )}
+        {eyebrow ? <p className={eyebrowClass}>{eyebrow}</p> : null}
+        <h1 className={titleClass}>{title}</h1>
+        {description ? <p className={descriptionClass}>{description}</p> : null}
+        <div className={ruleClass} aria-hidden="true" />
       </Container>
     </div>
   );
