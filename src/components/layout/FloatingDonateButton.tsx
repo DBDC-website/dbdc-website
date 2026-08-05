@@ -31,9 +31,34 @@ export default function FloatingDonateButton({
       className="pointer-events-auto group relative inline-flex items-center"
       initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.7, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.55, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
     >
+      {/* Soft blue hue emission — outside overflow clip so it can radiate */}
+      {!reduceMotion ? (
+        <span
+          className="pointer-events-none absolute right-0 top-1/2 h-[3.75rem] w-[3.75rem] -translate-y-1/2 sm:h-16 sm:w-16"
+          aria-hidden="true"
+        >
+          {/* Beat 1 — blue-led mosaic mix (sky + gold + warm) */}
+          <span
+            className="donate-hue-ping absolute inset-0 rounded-full"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 50%, rgba(0,190,250,0.99) 0%, rgba(40,170,230,0.7) 24%, rgba(230,175,45,0.55) 44%, rgba(240,130,70,0.35) 60%, transparent 74%)',
+            }}
+          />
+          {/* Beat 2 — warm pink/orange-led mosaic mix (amber + rose + sky) */}
+          <span
+            className="donate-hue-ping donate-hue-ping-delay absolute inset-0 rounded-full"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 50%, rgba(255,145,75,0.95) 0%, rgba(245,110,105,0.72) 24%, rgba(230,175,45,0.55) 44%, rgba(0,175,235,0.35) 60%, transparent 74%)',
+            }}
+          />
+        </span>
+      ) : null}
+
       {/* Horizontal cylinder expands left from the round mark on hover */}
       <span
         className={cn(
@@ -59,13 +84,6 @@ export default function FloatingDonateButton({
         </span>
 
         <span className="relative flex h-[3.75rem] w-[3.75rem] shrink-0 items-center justify-center sm:h-16 sm:w-16">
-          {!reduceMotion ? (
-            <span
-              className="absolute inset-0 rounded-full bg-[#00a0dc]/20 motion-safe:animate-ping"
-              aria-hidden="true"
-            />
-          ) : null}
-
           {donateConfig.logoSrc ? (
             <Image
               src={donateConfig.logoSrc}

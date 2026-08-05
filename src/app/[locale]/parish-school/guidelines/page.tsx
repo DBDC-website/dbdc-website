@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
 import ParishFlowcharts from '@/components/parish-school/ParishFlowcharts';
 import ParishGuidelinesTips from '@/components/parish-school/ParishGuidelinesTips';
+import GuidelinesBackLink from '@/components/parish-school/GuidelinesBackLink';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import PageHeader from '@/components/ui/PageHeader';
 import PageSection from '@/components/ui/PageSection';
@@ -68,14 +67,10 @@ export default async function ParishGuidelinesPage({ params }: GuidelinesPagePro
           containerSize="wide"
           className="relative z-10 !py-7 sm:!py-9 lg:!py-10"
         >
-          <Link
-            href={`/${locale}/parish-school#contact-heading`}
-            scroll={false}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-sky-200/70 bg-white/75 px-3 py-1.5 text-sm font-medium text-brand-950 shadow-sm transition-colors hover:bg-white"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            {t(locale, 'parish.guidelines.back')}
-          </Link>
+          <GuidelinesBackLink
+            locale={locale}
+            label={t(locale, 'parish.guidelines.back')}
+          />
 
           <ParishGuidelinesTips content={parishGuidelines} />
         </PageSection>

@@ -99,6 +99,7 @@ export default async function ParishSchoolPage({ params }: ParishSchoolPageProps
       </PageSection>
 
       <PageSection
+        id="contact-section"
         withBackground={false}
         overlayClassName="bg-transparent"
         spacing="compact"

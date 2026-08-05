@@ -19,14 +19,19 @@ export default function FloatingActionButtons({
   return (
     <div
       className={cn(
-        'pointer-events-none fixed bottom-5 right-5 z-30 flex flex-col items-end gap-3 transition-[opacity,transform] duration-300 sm:bottom-6 sm:right-6 sm:gap-3.5',
+        'pointer-events-none fixed bottom-5 right-5 z-30 transition-[opacity,transform] duration-300 sm:bottom-6 sm:right-6',
         chromeHidden
           ? 'translate-y-4 opacity-0'
           : 'translate-y-0 opacity-100',
       )}
     >
-      <FloatingDonateButton locale={locale} nested />
-      <FloatingBackToTop locale={locale} />
+      {/* Fixed circle-width column so the arrow stays centered under the donate mark */}
+      <div className="relative flex w-[3.75rem] flex-col items-center gap-3 sm:w-16 sm:gap-3.5">
+        <div className="relative flex w-full justify-end">
+          <FloatingDonateButton locale={locale} nested />
+        </div>
+        <FloatingBackToTop locale={locale} />
+      </div>
     </div>
   );
 }
