@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommitteeSectionAccordion from '@/components/committees/CommitteeSectionAccordion';
+import CommitteeSideNav from '@/components/committees/CommitteeSideNav';
 import PastWorkSection from '@/components/committees/PastWorkSection';
 import MosaicHueBackdrop from '@/components/layout/MosaicHueBackdrop';
 import ScrollReveal from '@/components/motion/ScrollReveal';
@@ -11,9 +12,9 @@ import { getCommittee, getCommittees } from '@/content/committees';
 import { homeImages } from '@/constants/homeImages';
 import { isValidLocale, locales, type Locale } from '@/constants/i18n';
 import {
-  getCommitteeMembers,
-  withMembersSection,
-} from '@/lib/committees';
+  buildCommitteeNavigation,
+  buildCommitteePageSections,
+} from '@/lib/committeeNav';
 import { t } from '@/lib/i18n';
 import { buildAlternates } from '@/lib/i18n/metadata';
 import { getCommitteePastWork } from '@/lib/pastWork';
@@ -67,19 +68,29 @@ export default async function CommitteeDetailPage({
     notFound();
   }
 
-  const members = await getCommitteeMembers(found.slug, locale);
-  const sections = withMembersSection(found.sections, members, locale);
-  const pastWork = await getCommitteePastWork(
-    found.slug as PastWorkCommitteeSlug,
-    locale,
-  );
+  const [sections, navigation, pastWork] = await Promise.all([
+    buildCommitteePageSections(found.slug, locale),
+    buildCommitteeNavigation(locale),
+    getCommitteePastWork(found.slug as PastWorkCommitteeSlug, locale),
+  ]);
+
   const committees = getCommittees(locale);
   const currentIndex = committees.findIndex((item) => item.slug === found.slug);
   const nextCommittee =
     currentIndex >= 0 ? committees[currentIndex + 1] : undefined;
+  const showVerse = found.slug === 'cabpag';
 
   return (
     <div className="relative bg-[#eef6fb]">
+      <CommitteeSideNav
+        locale={locale}
+        currentSlug={found.slug}
+        items={navigation}
+        title={t(locale, 'committees.sideNavTitle')}
+        openLabel={t(locale, 'committees.sideNavOpen')}
+        closeLabel={t(locale, 'committees.sideNavClose')}
+      />
+
       <PageHeader
         title={found.name}
         description={found.summary}
@@ -112,8 +123,24 @@ export default async function CommitteeDetailPage({
             </Link>
           </ScrollReveal>
 
+          {showVerse ? (
+            <ScrollReveal>
+              <blockquote className="mt-6 border-l-2 border-gold-400/70 pl-4 sm:mt-7">
+                <p className="font-serif text-base leading-relaxed text-brand-950 sm:text-lg">
+                  {t(locale, 'committees.verse')}
+                </p>
+                <p className="mt-2 text-xs font-medium uppercase tracking-[0.18em] text-stone-500">
+                  {t(locale, 'committees.verseLatin')}
+                </p>
+              </blockquote>
+            </ScrollReveal>
+          ) : null}
+
           <div className="mt-5 sm:mt-6">
-            <CommitteeSectionAccordion sections={sections} />
+            <CommitteeSectionAccordion
+              sections={sections}
+              committeeSlug={found.slug}
+            />
           </div>
 
           {pastWork.length > 0 ? (

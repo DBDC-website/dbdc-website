@@ -144,6 +144,12 @@ export default function Footer({ locale }: FooterProps) {
         <p className="text-center text-[11px] font-bold leading-tight text-logo-grey/65 sm:text-xs">
           &copy; {year} {siteName}, {tagline}. {t(locale, 'footer.rightsReserved')}
         </p>
+        <p className="mt-2 text-center text-[10px] leading-relaxed text-logo-grey/55 sm:text-[11px]">
+          <span className="block">{t(locale, 'footer.languageDisclaimerEn')}</span>
+          {locale !== 'en' ? (
+            <span className="mt-1 block">{t(locale, 'footer.languageDisclaimerZh')}</span>
+          ) : null}
+        </p>
       </Container>
     </footer>
   );

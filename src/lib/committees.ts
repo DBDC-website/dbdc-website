@@ -8,6 +8,7 @@ import type {
   CommitteeMemberRow,
   CommitteeMemberSlug,
 } from '@/types/committee';
+import type { CabpagNewsletter } from '@/types/newsletter';
 import type { MemberGroup } from '@/constants/about';
 
 const MEMBER_SELECT_LEGACY =
@@ -101,18 +102,41 @@ const PLACEHOLDER_SECTION_TITLES = new Set([
 
 const QA_SECTION_TITLES = new Set(['Q & A', '常見問題', '常见问题']);
 
+const PAST_WORK_SECTION_TITLES = new Set([
+  'Past Work',
+  '過往工作',
+  '过往工作',
+]);
+
+const NEWSLETTER_SECTION_TITLES = new Set([
+  'Newsletter',
+  '通訊',
+  '通讯',
+]);
+
+function membersSectionTitle(
+  slug: CommitteeMemberSlug,
+  locale: Locale,
+): string {
+  if (slug === 'cabpag') {
+    return t(locale, 'committees.cabpagMembers');
+  }
+  return t(locale, 'committees.members');
+}
+
 /** Drop placeholder member sections and insert live Members from Supabase. */
 export function withMembersSection(
   sections: CommitteeDetailSection[],
   members: CommitteeMember[],
   locale: Locale = defaultLocale,
+  options?: { committeeSlug?: CommitteeMemberSlug },
 ): CommitteeDetailSection[] {
   const withoutPlaceholders = sections.filter(
     (section) => !PLACEHOLDER_SECTION_TITLES.has(section.title),
   );
 
   const membersSection: CommitteeDetailSection = {
-    title: t(locale, 'committees.members'),
+    title: membersSectionTitle(options?.committeeSlug ?? 'rdc', locale),
     content: {
       kind: 'list',
       items:
@@ -135,6 +159,74 @@ export function withMembersSection(
   }
 
   return [...withoutPlaceholders, membersSection];
+}
+
+/**
+ * Insert the CaBPAG Newsletter dropdown directly below Members whenever
+ * Members exists; otherwise fall back to before Past Work / Q&A.
+ */
+export function withNewsletterSection(
+  sections: CommitteeDetailSection[],
+  newsletters: CabpagNewsletter[],
+  locale: Locale = defaultLocale,
+): CommitteeDetailSection[] {
+  const withoutExisting = sections.filter(
+    (section) => !NEWSLETTER_SECTION_TITLES.has(section.title),
+  );
+
+  const newsletterSection: CommitteeDetailSection = {
+    title: t(locale, 'committees.newsletter'),
+    collapsible: true,
+    content: {
+      kind: 'links',
+      description: t(locale, 'committees.newsletterDescription'),
+      emptyMessage: t(locale, 'committees.newsletterEmpty'),
+      items: newsletters
+        .filter((item) => Boolean(item.href))
+        .map((item) => ({
+          name: item.title,
+          dateLabel: item.dateLabel,
+          href: item.href,
+        })),
+    },
+  };
+
+  const membersIndex = withoutExisting.findIndex(
+    (section) =>
+      section.title === t(locale, 'committees.members') ||
+      section.title === t(locale, 'committees.cabpagMembers'),
+  );
+  if (membersIndex >= 0) {
+    return [
+      ...withoutExisting.slice(0, membersIndex + 1),
+      newsletterSection,
+      ...withoutExisting.slice(membersIndex + 1),
+    ];
+  }
+
+  const pastWorkIndex = withoutExisting.findIndex((section) =>
+    PAST_WORK_SECTION_TITLES.has(section.title),
+  );
+  if (pastWorkIndex >= 0) {
+    return [
+      ...withoutExisting.slice(0, pastWorkIndex),
+      newsletterSection,
+      ...withoutExisting.slice(pastWorkIndex),
+    ];
+  }
+
+  const qaIndex = withoutExisting.findIndex((section) =>
+    QA_SECTION_TITLES.has(section.title),
+  );
+  if (qaIndex >= 0) {
+    return [
+      ...withoutExisting.slice(0, qaIndex),
+      newsletterSection,
+      ...withoutExisting.slice(qaIndex),
+    ];
+  }
+
+  return [...withoutExisting, newsletterSection];
 }
 
 function normalizeRole(role: string | null): string {

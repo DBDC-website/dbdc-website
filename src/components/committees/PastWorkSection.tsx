@@ -7,6 +7,7 @@ import HeadingGlow from '@/components/ui/HeadingGlow';
 import { useSiteChromeHidden } from '@/hooks/useSiteChromeHidden';
 import { cn } from '@/lib/cn';
 import type { PastWorkYear } from '@/types/pastWork';
+import { COMMITTEE_PAST_WORK_ANCHOR } from '@/lib/committeeNav';
 
 type PastWorkSectionProps = {
   title: string;
@@ -104,7 +105,7 @@ export default function PastWorkSection({
   const showFloating = showBackToTimeline && !chromeHidden;
 
   return (
-    <section className="mt-5 sm:mt-6">
+    <section id={COMMITTEE_PAST_WORK_ANCHOR} className="mt-5 scroll-mt-28 sm:mt-6">
       <div className="overflow-hidden rounded-2xl border border-sky-200/55 bg-gradient-to-br from-[#e8f6fc]/88 via-[#fff8eb]/84 to-[#fde8d4]/88 shadow-sm shadow-brand-900/[0.06]">
         <button
           type="button"

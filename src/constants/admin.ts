@@ -1,5 +1,5 @@
 /**
- * Hardcoded allowlist for admin one-time link access.
+ * Hardcoded allowlist for admin magic-link access.
  * Prefer ADMIN_EMAILS env (comma-separated) when set; otherwise use this list.
  */
 const DEFAULT_ADMIN_EMAILS = ['maryamk3886@gmail.com'] as const;
@@ -22,6 +22,7 @@ export function isAdminEmail(email: string | null | undefined): boolean {
 export const REGISTRATION_BUCKET = 'registration-documents';
 export const PROJECT_IMAGES_BUCKET = 'project-images';
 export const ARTICLES_BUCKET = 'articles-bucket';
+export const CABPAG_NEWSLETTERS_BUCKET = 'cabpag-newsletters';
 export const PAST_WORK_BUCKET = 'committee-past-work';
 
 /** Committees that have public detail pages (Past Work CMS). */

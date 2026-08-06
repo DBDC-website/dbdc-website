@@ -8,6 +8,7 @@ import {
   ClipboardList,
   FileText,
   History,
+  Mail,
   Users,
 } from 'lucide-react';
 import { cinematicEase, easeOut } from '@/lib/motion';
@@ -56,6 +57,18 @@ const DESTINATIONS = [
     cta: 'Manage past work',
   },
   {
+    id: 'newsletters',
+    href: '/admin/newsletters',
+    title: 'CaBPAG Newsletters',
+    description:
+      'Publish annual CaBPAG newsletter PDFs and links on the committee page.',
+    icon: Mail,
+    accent: 'from-[#5a4a6a] to-brand-900',
+    glow: 'bg-violet-500/15',
+    statKey: 'newsletters' as const,
+    cta: 'Manage newsletters',
+  },
+  {
     id: 'articles',
     href: '/admin/articles',
     title: 'Articles',
@@ -84,7 +97,7 @@ const DESTINATIONS = [
 function formatStat(
   key: (typeof DESTINATIONS)[number]['statKey'],
   stats: AdminDashboardStats,
-): { primary: string; secondary?: string } {
+): { primary: string; secondary: string } {
   switch (key) {
     case 'projects':
       return {
@@ -99,6 +112,12 @@ function formatStat(
     case 'pastWork':
       return {
         primary: String(stats.pastWorkYears),
+        secondary: `${stats.pastWorkItems} items`,
+      };
+    case 'newsletters':
+      return {
+        primary: String(stats.newslettersTotal),
+        secondary: `${stats.newslettersActive} published`,
       };
     case 'articles':
       return {
@@ -137,7 +156,7 @@ export default function AdminHome({ email, stats }: AdminHomeProps) {
         transition={{ duration: 1.1, ease: cinematicEase }}
       >
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-600">
-          Diocesan Building and Development Commission
+          Diocesan Building Development Commission
         </p>
         <h1 className="mt-3 max-w-2xl font-serif text-4xl font-semibold leading-tight tracking-tight text-brand-950 sm:text-5xl">
           Welcome back,{' '}
@@ -199,11 +218,9 @@ export default function AdminHome({ email, stats }: AdminHomeProps) {
                     <p className="font-serif text-4xl font-semibold tabular-nums text-brand-950">
                       {primary}
                     </p>
-                    {secondary ? (
-                      <p className="mt-1 text-xs font-medium uppercase tracking-wide text-stone-500">
-                        {secondary}
-                      </p>
-                    ) : null}
+                    <p className="mt-1 text-xs font-medium uppercase tracking-wide text-stone-500">
+                      {secondary}
+                    </p>
                   </div>
                 </div>
               </Link>

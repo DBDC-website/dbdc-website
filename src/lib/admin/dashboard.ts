@@ -7,6 +7,8 @@ export type AdminDashboardStats = {
   membersActive: number;
   pastWorkYears: number;
   pastWorkItems: number;
+  newslettersTotal: number;
+  newslettersActive: number;
   articlesTotal: number;
   articlesTranslated: number;
   registrationsTotal: number;
@@ -23,6 +25,8 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     membersActive,
     pastWorkYears,
     pastWorkItems,
+    newslettersTotal,
+    newslettersActive,
     articlesTotal,
     articlesTranslated,
     consultantTotal,
@@ -36,6 +40,8 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     countRows(supabase, 'committee_members', { column: 'active', value: true }),
     countRows(supabase, 'committee_past_work_years'),
     countRows(supabase, 'committee_past_work_items'),
+    countRows(supabase, 'cabpag_newsletters'),
+    countRows(supabase, 'cabpag_newsletters', { column: 'active', value: true }),
     countRows(supabase, 'articles'),
     countTranslatedArticles(supabase),
     countRows(supabase, 'consultant_registrations'),
@@ -57,6 +63,8 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     membersActive,
     pastWorkYears,
     pastWorkItems,
+    newslettersTotal,
+    newslettersActive,
     articlesTotal,
     articlesTranslated,
     registrationsTotal: consultantTotal + contractorTotal,

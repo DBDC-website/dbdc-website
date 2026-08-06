@@ -1,5 +1,9 @@
 import type { Locale } from '@/constants/i18n';
 import { committees } from '@/constants/committees';
+import {
+  cabpagFaqGroupsZhHans,
+  cabpagFaqGroupsZhHant,
+} from '@/content/cabpagFaq';
 import { pickContent } from '@/lib/i18n/pickLocalized';
 import type { Committee, CommitteeSlug } from '@/types/committee';
 
@@ -125,25 +129,10 @@ const committeesZhHant: Committee[] = [
       },
       {
         title: '常見問題',
+        collapsible: true,
         content: {
-          kind: 'faq',
-          items: [
-            {
-              question: '誰可以加入 CaBPAG？',
-              answer:
-                '具備相關資歷及經驗的天主教建築專業人士，可於招募開放時申請。',
-            },
-            {
-              question: '成員是否受薪？',
-              answer:
-                '成員屬義務性質，以顧問方式貢獻其專業知識。',
-            },
-            {
-              question: '查詢如何處理？',
-              answer:
-                '堂區及學校應先聯絡教區建築及發展委員會辦事處。技術事宜可按情況轉介予 CaBPAG。',
-            },
-          ],
+          kind: 'faq-groups',
+          groups: cabpagFaqGroupsZhHant,
         },
       },
     ],
@@ -272,25 +261,10 @@ const committeesZhHans: Committee[] = [
       },
       {
         title: '常见问题',
+        collapsible: true,
         content: {
-          kind: 'faq',
-          items: [
-            {
-              question: '谁可以加入 CaBPAG？',
-              answer:
-                '具备相关资历及经验的天主教建筑专业人士，可于招募开放时申请。',
-            },
-            {
-              question: '成员是否受薪？',
-              answer:
-                '成员属义务性质，以顾问方式贡献其专业知识。',
-            },
-            {
-              question: '查询如何处理？',
-              answer:
-                '堂区及学校应先联络教区建筑及发展委员会办事处。技术事宜可按情况转介予 CaBPAG。',
-            },
-          ],
+          kind: 'faq-groups',
+          groups: cabpagFaqGroupsZhHans,
         },
       },
     ],

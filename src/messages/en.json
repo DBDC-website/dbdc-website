@@ -44,7 +44,9 @@
     "legalCopyright": "Copyright & Disclaimer",
     "legalPrivacy": "Privacy Policy Statement",
     "legalPics": "Personal Information Collection Statement",
-    "rightsReserved": "All rights reserved."
+    "rightsReserved": "All rights reserved.",
+    "languageDisclaimerEn": "Should there be any inconsistency between the English and Chinese versions, the English version prevails.",
+    "languageDisclaimerZh": "如中英文版本有任何歧異，概以英文版本為準。"
   },
   "chrome": {
     "skipToContent": "Skip to main content",
@@ -168,11 +170,20 @@
     "next": "Next: {abbr} →",
     "notFound": "Committee not found",
     "members": "Members",
+    "cabpagMembers": "CaBPAG Steering Group Members",
     "membersEmpty": "Member list will appear here once published.",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Periodical newsletters would be issued to members. The Newsletter is intended as a bridge amongst members to exchange information and as a means to keep members updated on the progress of work of various projects and matters of common interests. It also brings our attention to forthcoming events as well as providing a recap of highlights of gatherings already organized. A number of newsletters have already been issued in the past years. To enhance communication amongst members and to facilitate their exchange of information, the email address cabpag@hkdbdc.org.hk, under the supervision of the DBDC office, is available for all to share. Members are also encouraged to share their thoughts on seminars and visits, or to offer suggestions via the email address.",
+    "newsletterEmpty": "Newsletters will appear here once published.",
     "pastWork": "Past Work",
     "pastWorkTimeline": "Jump to a year",
     "pastWorkLink": "Open related link",
     "pastWorkBackToTimeline": "Back to timeline",
+    "sideNavTitle": "Committees menu",
+    "sideNavOpen": "Open committees menu",
+    "sideNavClose": "Close committees menu",
+    "verse": "Unless the Lord builds the house, those who build it labour in vain. (Psalm 127:1)",
+    "verseLatin": "Nisi Dominus frustra",
     "metaDescription": "Learn about the {name} of the Diocesan Building and Development Commission."
   },
   "forms": {

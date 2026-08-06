@@ -43,16 +43,32 @@ export type CommitteeSection = {
 /** Q&A pair used only in the CaBPAG section. */
 export type CommitteeFaqItem = {
   question: string;
-  answer: string;
+  /** Single paragraph, or bullet points when multiple strings. */
+  answer: string | string[];
+};
+
+export type CommitteeFaqGroup = {
+  title: string;
+  items: CommitteeFaqItem[];
+};
+
+export type CommitteeLinkItem = {
+  name: string;
+  dateLabel: string;
+  href: string;
 };
 
 export type CommitteeSectionContent =
   | { kind: 'list'; items: string[] }
-  | { kind: 'faq'; items: CommitteeFaqItem[] };
+  | { kind: 'faq'; items: CommitteeFaqItem[] }
+  | { kind: 'faq-groups'; groups: CommitteeFaqGroup[] }
+  | { kind: 'links'; items: CommitteeLinkItem[]; emptyMessage?: string; description?: string };
 
 export type CommitteeDetailSection = {
   title: string;
   content: CommitteeSectionContent;
+  /** When true, the section renders as a closed-by-default dropdown. */
+  collapsible?: boolean;
 };
 
 export interface Committee {
