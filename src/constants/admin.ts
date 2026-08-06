@@ -22,6 +22,23 @@ export function isAdminEmail(email: string | null | undefined): boolean {
 export const REGISTRATION_BUCKET = 'registration-documents';
 export const PROJECT_IMAGES_BUCKET = 'project-images';
 export const ARTICLES_BUCKET = 'articles-bucket';
+export const CABPAG_NEWSLETTERS_BUCKET = 'cabpag-newsletters';
+export const PAST_WORK_BUCKET = 'committee-past-work';
+
+/** Committees that have public detail pages (Past Work CMS). */
+export const PAST_WORK_COMMITTEE_OPTIONS = [
+  { value: 'rdc', label: 'R&DC' },
+  { value: 'sc', label: 'SC' },
+  { value: 'wc', label: 'WC' },
+  { value: 'cabpag', label: 'CaBPAG' },
+] as const;
+
+export type PastWorkAdminSlug =
+  (typeof PAST_WORK_COMMITTEE_OPTIONS)[number]['value'];
+
+export function isPastWorkAdminSlug(value: string): value is PastWorkAdminSlug {
+  return PAST_WORK_COMMITTEE_OPTIONS.some((option) => option.value === value);
+}
 
 export type RegistrationType = 'consultant' | 'contractor';
 export type RegistrationStatus = 'pending' | 'approved' | 'rejected';

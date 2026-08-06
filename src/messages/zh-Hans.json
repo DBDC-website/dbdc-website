@@ -44,7 +44,9 @@
     "legalCopyright": "版权及免责声明",
     "legalPrivacy": "隐私政策声明",
     "legalPics": "个人资料收集声明",
-    "rightsReserved": "版权所有。"
+    "rightsReserved": "版权所有。",
+    "languageDisclaimerEn": "Should there be any inconsistency between the English and Chinese versions, the English version prevails.",
+    "languageDisclaimerZh": "如中英文版本有任何歧異，概以英文版本為準。"
   },
   "chrome": {
     "skipToContent": "跳至主要内容",
@@ -168,7 +170,20 @@
     "next": "下一个：{abbr} →",
     "notFound": "找不到小组委员会",
     "members": "成员",
+    "cabpagMembers": "CaBPAG 督导小组成员",
     "membersEmpty": "成员名单将于发布后在此显示。",
+    "newsletter": "通讯",
+    "newsletterDescription": "小组会定期向成员发出通讯，作为成员之间交流资讯的桥梁，并让成员掌握各项目进度及共同关注事项，亦会预告即将举行的活动，以及回顾已举办聚会的精华。过去数年已发出多期通讯。为加强成员之间的沟通及促进资讯交流，在教区建筑及发展委员会办公室监督下，设有电邮地址 cabpag@hkdbdc.org.hk 供各位分享。成员亦可透过该电邮分享研讨会及参观的感想，或提出建议。",
+    "newsletterEmpty": "通讯将于发布后在此显示。",
+    "pastWork": "过往工作",
+    "pastWorkTimeline": "跳至年份",
+    "pastWorkLink": "开启相关链接",
+    "pastWorkBackToTimeline": "返回时间轴",
+    "sideNavTitle": "小组委员会选单",
+    "sideNavOpen": "开启小组选单",
+    "sideNavClose": "关闭小组选单",
+    "verse": "若不是上主兴建房屋，建筑的人是徒然劳碌。（圣咏 127:1）",
+    "verseLatin": "Nisi Dominus frustra",
     "metaDescription": "了解教区建筑及发展委员会的{name}。"
   },
   "forms": {

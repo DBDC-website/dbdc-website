@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-type ReorderTable = 'committee_members' | 'articles' | 'projects';
+type ReorderTable = 'committee_members' | 'articles' | 'projects' | 'cabpag_newsletters';
 
 export type ReorderResult = { ok: true } | { ok: false; error: string };
 

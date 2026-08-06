@@ -92,7 +92,6 @@ export default async function ParishSchoolPage({ params }: ParishSchoolPageProps
         heading={{
           id: 'faq-heading',
           title: t(locale, 'parish.faqTitle'),
-          description: t(locale, 'parish.faqHint'),
         }}
       >
         <FaqAccordion items={getFaqItems(locale)} />

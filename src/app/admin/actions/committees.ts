@@ -4,9 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import {
   isAdminCommitteeSlug,
-  isCommitteeRoleOption,
   type AdminCommitteeSlug,
-  type CommitteeRoleOption,
 } from '@/constants/admin';
 import {
   compactAfterRemoval,
@@ -56,9 +54,7 @@ export async function createCommitteeMember(formData: FormData) {
   const committeeSlug = (
     isAdminCommitteeSlug(slugRaw) ? slugRaw : 'dbdc'
   ) as AdminCommitteeSlug;
-  const role = (
-    isCommitteeRoleOption(roleRaw) ? roleRaw : 'Member'
-  ) as CommitteeRoleOption;
+  const role = roleRaw || 'Member';
 
   let sortOrder: number;
   try {
@@ -127,9 +123,7 @@ export async function updateCommitteeMember(formData: FormData) {
   const committeeSlug = (
     isAdminCommitteeSlug(slugRaw) ? slugRaw : existing.committee_slug
   ) as AdminCommitteeSlug;
-  const role = (
-    isCommitteeRoleOption(roleRaw) ? roleRaw : 'Member'
-  ) as CommitteeRoleOption;
+  const role = roleRaw || 'Member';
   const previousSlug = existing.committee_slug as AdminCommitteeSlug;
   const targetOrder = requestedOrder ?? existing.sort_order;
 

@@ -7,7 +7,6 @@ import {
 import {
   COMMITTEE_MEMBER_OPTIONS,
   COMMITTEE_ROLE_OPTIONS,
-  matchCommitteeRoleOption,
 } from '@/constants/admin';
 import type { CommitteeMember } from '@/types/committee';
 
@@ -25,7 +24,7 @@ export default function CommitteeMemberForm({
 }: CommitteeMemberFormProps) {
   const isEdit = Boolean(member);
   const action = isEdit ? updateCommitteeMember : createCommitteeMember;
-  const defaultRole = matchCommitteeRoleOption(member?.role) || 'Member';
+  const defaultRole = member?.role?.trim() || 'Member';
 
   return (
     <div className="space-y-8">
@@ -85,20 +84,24 @@ export default function CommitteeMemberForm({
             <label htmlFor="role" className={labelClass}>
               Role
             </label>
-            <select
+            <input
               id="role"
               name="role"
+              list="committee-role-options"
               defaultValue={defaultRole}
+              placeholder="Member"
               className={fieldClass}
-            >
+            />
+            <datalist id="committee-role-options">
               {COMMITTEE_ROLE_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
-            </select>
+            </datalist>
             <p className="mt-1 text-xs text-stone-500">
-              Role labels are translated automatically on the public site.
+              You can type a custom role (for example, Convenor, Deputy
+              Convenor, Hon. Secretary) or pick a suggested one.
             </p>
           </div>
 

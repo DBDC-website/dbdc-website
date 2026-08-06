@@ -1,4 +1,5 @@
 import type { Committee, CommitteeSlug } from '@/types/committee';
+import { cabpagFaqGroupsEn } from '@/content/cabpagFaq';
 
 /**
  * Static committee metadata and narrative sections.
@@ -137,25 +138,10 @@ export const committees: Committee[] = [
       },
       {
         title: 'Q & A',
+        collapsible: true,
         content: {
-          kind: 'faq',
-          items: [
-            {
-              question: 'Who can join CaBPAG?',
-              answer:
-                'Catholic building professionals with relevant qualifications and experience may apply when recruitment is open.',
-            },
-            {
-              question: 'Is membership paid?',
-              answer:
-                'Membership is voluntary. Members contribute their professional expertise on an advisory basis.',
-            },
-            {
-              question: 'How are enquiries handled?',
-              answer:
-                'Parishes and schools should contact the DBDC Office first. Technical matters may be referred to CaBPAG as appropriate.',
-            },
-          ],
+          kind: 'faq-groups',
+          groups: cabpagFaqGroupsEn,
         },
       },
     ],

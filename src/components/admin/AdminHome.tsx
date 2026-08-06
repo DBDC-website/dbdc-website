@@ -7,6 +7,8 @@ import {
   Building2,
   ClipboardList,
   FileText,
+  History,
+  Mail,
   Users,
 } from 'lucide-react';
 import { cinematicEase, easeOut } from '@/lib/motion';
@@ -41,6 +43,30 @@ const DESTINATIONS = [
     glow: 'bg-gold-500/20',
     statKey: 'committees' as const,
     cta: 'Manage members',
+  },
+  {
+    id: 'past-work',
+    href: '/admin/past-work',
+    title: 'Past Work',
+    description:
+      'Yearly timelines and bullet points for each subcommittee detail page.',
+    icon: History,
+    accent: 'from-[#4a5c6a] to-brand-900',
+    glow: 'bg-sky-600/15',
+    statKey: 'pastWork' as const,
+    cta: 'Manage past work',
+  },
+  {
+    id: 'newsletters',
+    href: '/admin/newsletters',
+    title: 'CaBPAG Newsletters',
+    description:
+      'Publish annual CaBPAG newsletter PDFs and links on the committee page.',
+    icon: Mail,
+    accent: 'from-[#5a4a6a] to-brand-900',
+    glow: 'bg-violet-500/15',
+    statKey: 'newsletters' as const,
+    cta: 'Manage newsletters',
   },
   {
     id: 'articles',
@@ -82,6 +108,16 @@ function formatStat(
       return {
         primary: String(stats.membersTotal),
         secondary: `${stats.membersActive} active`,
+      };
+    case 'pastWork':
+      return {
+        primary: String(stats.pastWorkYears),
+        secondary: `${stats.pastWorkItems} items`,
+      };
+    case 'newsletters':
+      return {
+        primary: String(stats.newslettersTotal),
+        secondary: `${stats.newslettersActive} published`,
       };
     case 'articles':
       return {

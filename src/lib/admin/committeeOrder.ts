@@ -2,7 +2,6 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import {
   matchCommitteeRoleOption,
   type AdminCommitteeSlug,
-  type CommitteeRoleOption,
 } from '@/constants/admin';
 
 type OrderRow = {
@@ -71,7 +70,7 @@ async function writeOrders(
  */
 export function suggestSortOrderForRole(
   members: OrderRow[],
-  role: CommitteeRoleOption,
+  role: string,
 ): number {
   const band = roleBand(role);
   const sameBand = members.filter((m) => roleBand(m.role) === band);
@@ -159,7 +158,7 @@ export async function compactAfterRemoval(
 export async function resolveCreateSortOrder(
   supabase: SupabaseClient,
   committeeSlug: AdminCommitteeSlug,
-  role: CommitteeRoleOption,
+  role: string,
   requestedOrder: number | null,
 ): Promise<number> {
   const members = await listOrderedMembers(supabase, committeeSlug);
