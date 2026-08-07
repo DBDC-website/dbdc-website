@@ -109,15 +109,21 @@ export default function PastWorkSection({
           type="button"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
-          className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left sm:px-5 sm:py-5"
+          className="flex w-full items-start justify-between gap-3 px-4 py-4 text-left sm:px-5 sm:py-5"
         >
-          <HeadingGlow fit="box">
-            <h2 className="text-lg font-semibold text-brand-950 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.8)] sm:text-xl">
-              {title}
-            </h2>
-          </HeadingGlow>
+          <div className="min-w-0 flex-1">
+            <HeadingGlow fit="box">
+              <h2 className="text-lg font-semibold text-brand-950 [text-shadow:0_0_14px_rgba(255,255,255,0.95),0_0_28px_rgba(255,252,245,0.8)] sm:text-xl">
+                {title}
+              </h2>
+            </HeadingGlow>
+            <div
+              className="relative mt-5 h-px w-14 bg-gradient-to-r from-gold-400 via-gold-300 to-transparent"
+              aria-hidden="true"
+            />
+          </div>
           <ChevronDown
-            className={`h-5 w-5 shrink-0 text-brand-800 transition-transform duration-300 ${
+            className={`mt-1 h-5 w-5 shrink-0 text-brand-800 transition-transform duration-300 ${
               open ? 'rotate-180' : ''
             }`}
             aria-hidden

@@ -11,7 +11,7 @@ const committeesZhHant: Committee[] = [
   {
     slug: 'rdc',
     abbreviation: 'R&DC',
-    name: '研究及發展小組',
+    name: '研究及發展委員會',
     summary:
       '研究教區牧民及社區服務需要，並制訂建築發展計劃以配合相關需要。',
     sections: [
@@ -31,7 +31,7 @@ const committeesZhHant: Committee[] = [
   {
     slug: 'sc',
     abbreviation: 'SC',
-    name: '遴選小組',
+    name: '推選委員會',
     summary:
       '維持教區建築及發展委員會認可顧問及承建商名單，並監督教區工程項目的公平、透明遴選。',
     sections: [
@@ -52,7 +52,7 @@ const committeesZhHant: Committee[] = [
   {
     slug: 'wc',
     abbreviation: 'WC',
-    name: '工程小組',
+    name: '工程委員會',
     summary:
       '監督已批核工程項目的推行，監察質素、進度及預算。',
     sections: [
@@ -72,7 +72,7 @@ const committeesZhHant: Committee[] = [
   {
     slug: 'cabpag',
     abbreviation: 'CaBPAG',
-    name: '天主教建築專業顧問小組',
+    name: '天主教建築專業咨詢小組',
     summary:
       '由天主教建築專業人士組成，義務向委員會提供技術意見。',
     sections: [
@@ -81,7 +81,7 @@ const committeesZhHant: Committee[] = [
         content: {
           kind: 'list',
           items: [
-            '天主教建築專業顧問小組（CaBPAG）成立目的，是義務向教區建築及發展委員會提供專業意見。',
+            '天主教建築專業咨詢小組（CaBPAG）成立目的，是義務向教區建築及發展委員會提供專業意見。',
             '成員為天主教建築專業人士，貢獻專長以支援堂區及教區機構。',
           ],
         },
@@ -144,7 +144,7 @@ const committeesZhHans: Committee[] = [
   {
     slug: 'rdc',
     abbreviation: 'R&DC',
-    name: '研究及发展小组',
+    name: '研究及发展委员会',
     summary:
       '研究教区牧民及社区服务需要，并制订建筑发展计划以配合相关需要。',
     sections: [
@@ -164,7 +164,7 @@ const committeesZhHans: Committee[] = [
   {
     slug: 'sc',
     abbreviation: 'SC',
-    name: '遴选小组',
+    name: '推选委员会',
     summary:
       '维持教区建筑及发展委员会认可顾问及承建商名单，并监督教区工程项目的公平、透明遴选。',
     sections: [
@@ -185,7 +185,7 @@ const committeesZhHans: Committee[] = [
   {
     slug: 'wc',
     abbreviation: 'WC',
-    name: '工程小组',
+    name: '工程委员会',
     summary:
       '监督已批核工程项目的推行，监察质量、进度及预算。',
     sections: [
@@ -205,7 +205,7 @@ const committeesZhHans: Committee[] = [
   {
     slug: 'cabpag',
     abbreviation: 'CaBPAG',
-    name: '天主教建筑专业顾问小组',
+    name: '天主教建筑专业咨询小组',
     summary:
       '由天主教建筑专业人士组成，义务向委员会提供技术意见。',
     sections: [
@@ -214,7 +214,7 @@ const committeesZhHans: Committee[] = [
         content: {
           kind: 'list',
           items: [
-            '天主教建筑专业顾问小组（CaBPAG）成立目的，是义务向教区建筑及发展委员会提供专业意见。',
+            '天主教建筑专业咨询小组（CaBPAG）成立目的，是义务向教区建筑及发展委员会提供专业意见。',
             '成员为天主教建筑专业人士，贡献专长以支援堂区及教区机构。',
           ],
         },
