@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import PastWorkYearForm from '@/components/admin/PastWorkYearForm';
+import { isPastWorkAdminSlug } from '@/constants/admin';
 
 export const metadata: Metadata = {
   title: 'New Past Work year',
@@ -13,12 +14,14 @@ const ERRORS: Record<string, string> = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; committee?: string }>;
 };
 
 export default async function NewPastWorkYearPage({ searchParams }: PageProps) {
-  const { error } = await searchParams;
+  const { error, committee } = await searchParams;
   const message = error ? ERRORS[error] ?? 'Something went wrong.' : null;
+  const defaultCommitteeSlug =
+    committee && isPastWorkAdminSlug(committee) ? committee : undefined;
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -45,7 +48,7 @@ export default async function NewPastWorkYearPage({ searchParams }: PageProps) {
       ) : null}
 
       <div className="mt-8 rounded-xl border border-cream-200 bg-white p-5 shadow-sm sm:p-6">
-        <PastWorkYearForm />
+        <PastWorkYearForm defaultCommitteeSlug={defaultCommitteeSlug} />
       </div>
     </div>
   );

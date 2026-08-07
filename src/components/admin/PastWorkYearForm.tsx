@@ -14,11 +14,23 @@ const labelClass = 'block text-sm font-medium text-brand-900';
 
 type PastWorkYearFormProps = {
   year?: Pick<AdminPastWorkYearDetail, 'id' | 'committeeSlug' | 'year'>;
+  /** Prefill committee when creating from an existing year page. */
+  defaultCommitteeSlug?: string;
 };
 
-export default function PastWorkYearForm({ year }: PastWorkYearFormProps) {
+export default function PastWorkYearForm({
+  year,
+  defaultCommitteeSlug,
+}: PastWorkYearFormProps) {
   const isEdit = Boolean(year);
   const action = isEdit ? updatePastWorkYear : createPastWorkYear;
+  const committeeDefault =
+    year?.committeeSlug ??
+    (PAST_WORK_COMMITTEE_OPTIONS.some(
+      (option) => option.value === defaultCommitteeSlug,
+    )
+      ? defaultCommitteeSlug
+      : 'rdc');
 
   return (
     <div className="space-y-8">
@@ -36,7 +48,7 @@ export default function PastWorkYearForm({ year }: PastWorkYearFormProps) {
               id="committee_slug"
               name="committee_slug"
               required
-              defaultValue={year?.committeeSlug ?? 'rdc'}
+              defaultValue={committeeDefault}
               className={fieldClass}
             >
               {PAST_WORK_COMMITTEE_OPTIONS.map((option) => (

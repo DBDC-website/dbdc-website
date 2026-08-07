@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import PastWorkItemsEditor from '@/components/admin/PastWorkItemsEditor';
 import PastWorkYearForm from '@/components/admin/PastWorkYearForm';
+import Button from '@/components/ui/Button';
 import { PAST_WORK_COMMITTEE_OPTIONS } from '@/constants/admin';
 import { getAdminPastWorkYear } from '@/lib/admin/pastWork';
 
@@ -57,21 +58,29 @@ export default async function EditPastWorkYearPage({
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
-      <div>
-        <p className="text-sm">
-          <Link
-            href="/admin/past-work"
-            className="text-brand-800 hover:underline"
-          >
-            ← Past Work
-          </Link>
-        </p>
-        <h1 className="mt-3 text-2xl font-semibold text-brand-900 sm:text-3xl">
-          {committeeLabel} · {year.year}
-        </h1>
-        <p className="mt-1 text-sm text-stone-600">
-          Edit the year, then manage bullet points below.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-sm">
+            <Link
+              href="/admin/past-work"
+              className="text-brand-800 hover:underline"
+            >
+              ← Past Work
+            </Link>
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold text-brand-900 sm:text-3xl">
+            {committeeLabel} · {year.year}
+          </h1>
+          <p className="mt-1 text-sm text-stone-600">
+            Edit the year, then manage bullet points below.
+          </p>
+        </div>
+        <Button
+          href={`/admin/past-work/new?committee=${year.committeeSlug}`}
+          size="sm"
+        >
+          Add year
+        </Button>
       </div>
 
       {success ? (
