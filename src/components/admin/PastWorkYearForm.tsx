@@ -61,21 +61,21 @@ export default function PastWorkYearForm({
 
           <div>
             <label htmlFor="year" className={labelClass}>
-              Year
+              Year / period
             </label>
             <input
               id="year"
               name="year"
-              type="number"
+              type="text"
               required
-              min={1900}
-              max={2100}
-              placeholder="2010"
+              maxLength={40}
+              placeholder="2010 or 2018-2021"
               defaultValue={year?.year ?? ''}
               className={fieldClass}
             />
             <p className="mt-1 text-xs text-stone-500">
-              Appears on the public timeline for this committee.
+              Appears on the public timeline. Use a single year or a range
+              (e.g. 2018-2021).
             </p>
           </div>
         </div>

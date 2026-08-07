@@ -12,14 +12,15 @@ export type PastWorkItem = {
 export type PastWorkYear = {
   id: number;
   committeeSlug: PastWorkCommitteeSlug;
-  year: number;
+  /** Display label, e.g. "2010" or "2018-2021". */
+  year: string;
   items: PastWorkItem[];
 };
 
 export type PastWorkYearRow = {
   id: number;
   committee_slug: PastWorkCommitteeSlug;
-  year: number;
+  year: string;
   sort_order: number;
   allows_links?: boolean;
   created_at?: string;

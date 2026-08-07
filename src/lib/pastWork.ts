@@ -35,7 +35,7 @@ export async function getCommitteePastWork(
     .from('committee_past_work_years')
     .select('id, committee_slug, year, sort_order')
     .eq('committee_slug', committeeSlug)
-    .order('year', { ascending: false });
+    .order('sort_order', { ascending: false });
 
   if (yearsError) {
     console.error('Failed to fetch past work years:', yearsError);

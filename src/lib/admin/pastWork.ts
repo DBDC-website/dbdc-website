@@ -9,7 +9,7 @@ import type {
 export type AdminPastWorkYear = {
   id: number;
   committeeSlug: PastWorkAdminSlug;
-  year: number;
+  year: string;
   allowsLinks: boolean;
   itemCount: number;
 };
@@ -28,7 +28,7 @@ export type AdminPastWorkItem = {
 export type AdminPastWorkYearDetail = {
   id: number;
   committeeSlug: PastWorkAdminSlug;
-  year: number;
+  year: string;
   allowsLinks: boolean;
   items: AdminPastWorkItem[];
 };
@@ -55,7 +55,7 @@ export async function listAdminPastWorkYears(
     .from('committee_past_work_years')
     .select('id, committee_slug, year, sort_order, allows_links')
     .order('committee_slug', { ascending: true })
-    .order('year', { ascending: false });
+    .order('sort_order', { ascending: false });
 
   if (committeeSlug) {
     query = query.eq('committee_slug', committeeSlug);

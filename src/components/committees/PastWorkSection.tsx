@@ -27,7 +27,7 @@ export default function PastWorkSection({
   const [open, setOpen] = useState(false);
   const [activeYear, setActiveYear] = useState(years[0]?.year ?? null);
   const [showBackToTimeline, setShowBackToTimeline] = useState(false);
-  const yearRefs = useRef<Map<number, HTMLElement>>(new Map());
+  const yearRefs = useRef<Map<string, HTMLElement>>(new Map());
   const timelineId = useId();
   const timelineRef = useRef<HTMLDivElement>(null);
   const yearsContainerRef = useRef<HTMLDivElement>(null);
@@ -46,10 +46,8 @@ export default function PastWorkSection({
               (b.target as HTMLElement).offsetTop,
           );
         if (visible[0]) {
-          const year = Number(
-            (visible[0].target as HTMLElement).dataset.year,
-          );
-          if (Number.isFinite(year)) setActiveYear(year);
+          const year = (visible[0].target as HTMLElement).dataset.year;
+          if (year) setActiveYear(year);
         }
       },
       { rootMargin: '-30% 0px -50% 0px', threshold: 0.2 },
@@ -92,7 +90,7 @@ export default function PastWorkSection({
     };
   }, [open, years]);
 
-  const jumpToYear = (year: number) => {
+  const jumpToYear = (year: string) => {
     setActiveYear(year);
     const el = yearRefs.current.get(year);
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' });

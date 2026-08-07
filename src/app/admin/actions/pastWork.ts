@@ -29,12 +29,25 @@ function readText(formData: FormData, key: string): string {
   return typeof value === 'string' ? value.trim() : '';
 }
 
-function parseYear(raw: string): number | null {
-  const value = Number(raw);
-  if (!Number.isFinite(value)) return null;
-  const year = Math.trunc(value);
-  if (year < 1900 || year > 2100) return null;
+function parseYear(raw: string): string | null {
+  const year = raw.trim();
+  if (!year || year.length > 40) return null;
   return year;
+}
+
+/** Prefer the first 4-digit year for timeline ordering (e.g. 2018 from 2018-2021). */
+function sortOrderFromYearLabel(year: string): number {
+  const match = year.match(/(19|20)\d{2}/);
+  if (!match) return 0;
+  return Number(match[0]);
+}
+
+function yearPathSegment(year: string): string {
+  return year
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-zA-Z0-9._-]/g, '')
+    .slice(0, 60) || 'year';
 }
 
 function parseId(raw: string): number | null {
@@ -77,7 +90,7 @@ async function uploadPastWorkFile(
   supabase: Awaited<ReturnType<typeof requireAdmin>>,
   file: File,
   committeeSlug: string,
-  year: number,
+  year: string,
   previousUrl: string,
 ): Promise<string> {
   if (file.size > MAX_FILE_BYTES) {
@@ -96,7 +109,7 @@ async function uploadPastWorkFile(
     previousPath,
     fallback: 'attachment',
   });
-  const path = `${committeeSlug}/${year}/${baseName}`;
+  const path = `${committeeSlug}/${yearPathSegment(year)}/${baseName}`;
 
   const { publicUrl } = await uploadReplacingStorageObject(supabase, {
     bucket: PAST_WORK_BUCKET,
@@ -188,7 +201,7 @@ export async function createPastWorkYear(formData: FormData) {
     .insert({
       committee_slug: committeeSlug,
       year,
-      sort_order: year,
+      sort_order: sortOrderFromYearLabel(year),
       allows_links: true,
       updated_at: new Date().toISOString(),
     })
@@ -222,7 +235,7 @@ export async function updatePastWorkYear(formData: FormData) {
     .update({
       committee_slug: committeeSlug,
       year,
-      sort_order: year,
+      sort_order: sortOrderFromYearLabel(year),
       updated_at: new Date().toISOString(),
     })
     .eq('id', id);
@@ -301,7 +314,7 @@ export async function createPastWorkItem(formData: FormData) {
         supabase,
         file,
         yearRow.committee_slug as string,
-        yearRow.year as number,
+        yearRow.year as string,
         '',
       );
     } catch (error) {
@@ -378,7 +391,7 @@ export async function updatePastWorkItem(formData: FormData) {
           supabase,
           file,
           yearRow.committee_slug as string,
-          yearRow.year as number,
+          yearRow.year as string,
           existingFileUrl,
         );
       } catch (error) {
