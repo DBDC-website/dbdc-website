@@ -8,7 +8,7 @@ import {
   isPermutation,
   type ReorderResult,
 } from '@/lib/admin/reorder';
-import { toRomanLabel } from '@/lib/admin/romanLabel';
+import { isAutoRomanLabel, toRomanLabel } from '@/lib/admin/romanLabel';
 import { requireAdmin } from '@/lib/admin/requireAdmin';
 import {
   resolveStorageBaseName,
@@ -261,7 +261,7 @@ export async function reorderArticles(
 
   const { data, error } = await supabase
     .from('articles')
-    .select('id')
+    .select('id, label, label_en, label_zh_hant, label_zh_hans')
     .order('sort_order', { ascending: true })
     .order('id', { ascending: true });
 
@@ -278,18 +278,37 @@ export async function reorderArticles(
     };
   }
 
+  const currentLabels = new Map(
+    (data ?? []).map((row) => [row.id as number, row]),
+  );
+
+  const LABEL_COLUMNS = [
+    'label',
+    'label_en',
+    'label_zh_hant',
+    'label_zh_hans',
+  ] as const;
+
   try {
     for (let index = 0; index < orderedIds.length; index += 1) {
       const id = orderedIds[index];
       const roman = toRomanLabel(index + 1);
+      const existing = currentLabels.get(id);
+
+      // Renumber auto-generated labels only; a label an editor typed is kept.
+      const labelUpdates: Record<string, string> = {};
+      for (const column of LABEL_COLUMNS) {
+        const value = existing?.[column] as string | null | undefined;
+        if (isAutoRomanLabel(value)) {
+          labelUpdates[column] = roman;
+        }
+      }
+
       const { error: updateError } = await supabase
         .from('articles')
         .update({
           sort_order: index + 1,
-          label: roman,
-          label_en: roman,
-          label_zh_hant: roman,
-          label_zh_hans: roman,
+          ...labelUpdates,
         })
         .eq('id', id);
 

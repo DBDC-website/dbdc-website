@@ -59,13 +59,6 @@ export const AUTHORIZED_PERSON_CATEGORIES = ['I', 'II', 'III'] as const;
 function buildRegistrationSchemas(locale: Locale) {
   const optionalText = z.string().trim().max(2000).optional();
 
-  const optionalEmail = z
-    .union([
-      z.literal(''),
-      z.email(t(locale, 'forms.errors.invalidEmail')),
-    ])
-    .optional();
-
   const optionalUrl = z
     .union([
       z.literal(''),
@@ -81,15 +74,6 @@ function buildRegistrationSchemas(locale: Locale) {
     .optional();
 
   const optionalCapitalText = z.string().trim().max(80).optional();
-  const optionalMoney = z
-    .string()
-    .trim()
-    .max(20)
-    .optional()
-    .refine(
-      (value) => !value || /^\d+(\.\d{1,2})?$/.test(value),
-      t(locale, 'forms.errors.invalidAmount'),
-    );
 
   const documentUrlsSchema = z.array(z.string().trim().min(1));
 
@@ -108,16 +92,6 @@ function buildRegistrationSchemas(locale: Locale) {
     position: z.string().trim().max(2000),
     telephone: z.string().trim().max(2000),
     signatureUrl: z.string().trim().max(2000),
-  });
-
-  const previousProjectSchema = z.object({
-    projectName: z.string().trim().max(300),
-    projectAddress: optionalText,
-    contractSum: optionalMoney,
-    startDate: optionalDate,
-    endDate: optionalDate,
-    clientName: optionalText,
-    architectEngineer: optionalText,
   });
 
   const requiredEmail = z
@@ -157,7 +131,7 @@ function buildRegistrationSchemas(locale: Locale) {
     auditedAccountDocumentUrls: documentUrlsSchema,
 
     contacts: z.array(contactSchema),
-    previousProjects: z.array(previousProjectSchema),
+    /** Portfolio is collected as document uploads rather than typed rows. */
     previousProjectUploads: z.array(previousProjectUploadEntrySchema),
 
     /** Required acknowledgement — not persisted as a DB column. */
@@ -251,8 +225,6 @@ export type ConsultantRegistrationValues = z.infer<typeof consultantSchema>;
 export type ContractorRegistrationValues = z.infer<typeof contractorSchema>;
 export type BaseRegistrationValues = z.infer<typeof baseRegistrationSchema>;
 export type RegistrationContact = ConsultantRegistrationValues['contacts'][number];
-export type RegistrationPreviousProject =
-  ConsultantRegistrationValues['previousProjects'][number];
 export type OtherApprovedListEntry =
   ConsultantRegistrationValues['professionalDetails']['otherApprovedListEntries'][number];
 export type OtherRegisteredProfessional =

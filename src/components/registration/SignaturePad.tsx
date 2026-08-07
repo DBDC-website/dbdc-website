@@ -1,7 +1,10 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { uploadSignatureFile } from '@/lib/registrationUploads';
+import {
+  removeUploadedFile,
+  uploadSignatureFile,
+} from '@/lib/registrationUploads';
 
 const SIGN_PAD_WIDTH = 900;
 const SIGN_PAD_HEIGHT = 260;
@@ -86,6 +89,7 @@ export default function SignaturePad({
     context.clearRect(0, 0, canvas.width, canvas.height);
     onChange('');
     setUploadError(null);
+    if (value) void removeUploadedFile(value);
   };
 
   const uploadCanvasSignature = async () => {
@@ -110,8 +114,12 @@ export default function SignaturePad({
         );
       });
       const file = new File([blob], 'signature.png', { type: 'image/png' });
+      const superseded = value;
       const path = await uploadSignatureFile(file);
       onChange(path);
+      if (superseded && superseded !== path) {
+        void removeUploadedFile(superseded);
+      }
     } catch (err) {
       setUploadError(
         err instanceof Error ? err.message : 'Failed to upload signature.',
@@ -129,8 +137,12 @@ export default function SignaturePad({
     setUploading(true);
     setUploadError(null);
     try {
+      const superseded = value;
       const path = await uploadSignatureFile(file);
       onChange(path);
+      if (superseded && superseded !== path) {
+        void removeUploadedFile(superseded);
+      }
     } catch (err) {
       setUploadError(
         err instanceof Error ? err.message : 'Failed to upload signature.',

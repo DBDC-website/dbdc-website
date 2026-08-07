@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { uploadDocumentFile } from '@/lib/registrationUploads';
+import {
+  removeUploadedFile,
+  uploadDocumentFile,
+} from '@/lib/registrationUploads';
 
 type DocumentUploadFieldProps = {
   label: string;
@@ -49,7 +52,9 @@ export default function DocumentUploadField({
   };
 
   const removeAt = (index: number) => {
+    const discarded = value[index];
     onChange(value.filter((_, idx) => idx !== index));
+    if (discarded) void removeUploadedFile(discarded);
   };
 
   return (

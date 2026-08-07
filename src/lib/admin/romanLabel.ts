@@ -1,3 +1,16 @@
+const ROMAN_LABEL_PATTERN = /^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/;
+
+/**
+ * True when a label is blank or a plain Roman numeral, i.e. auto-generated
+ * rather than typed by an editor. Reordering may overwrite these; anything
+ * else is a deliberate label and must be preserved.
+ */
+export function isAutoRomanLabel(label: string | null | undefined): boolean {
+  const trimmed = label?.trim() ?? '';
+  if (trimmed === '') return true;
+  return ROMAN_LABEL_PATTERN.test(trimmed.toUpperCase());
+}
+
 /** Convert 1-based position to a Roman numeral label (I, II, III, …). */
 export function toRomanLabel(position: number): string {
   if (!Number.isFinite(position) || position < 1) return 'I';

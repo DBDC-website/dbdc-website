@@ -195,19 +195,12 @@ function mapContacts(contacts: ConsultantRegistrationValues['contacts']) {
     }));
 }
 
-function mapProjects(projects: ConsultantRegistrationValues['previousProjects']) {
-  return projects
-    .filter((project) => project.projectName.trim())
-    .map((project) => ({
-      project_name: project.projectName.trim(),
-      project_address: toNullable(project.projectAddress),
-      contract_sum: toMoney(project.contractSum),
-      start_date: toNullable(project.startDate),
-      end_date: toNullable(project.endDate),
-      client_name: toNullable(project.clientName),
-      architect_engineer: toNullable(project.architectEngineer),
-    }));
-}
+/**
+ * The RPC accepts typed portfolio rows, but applicants supply their portfolio
+ * as document uploads instead, so no rows are written on submission. Historic
+ * rows are still read and rendered by the admin panel.
+ */
+const NO_PREVIOUS_PROJECT_ROWS: never[] = [];
 
 type RegistrationKind = 'consultant' | 'contractor';
 
@@ -336,7 +329,7 @@ export async function submitConsultantRegistration(
     {
       registration: mapConsultantRegistration(data),
       contacts: mapContacts(data.contacts),
-      projects: mapProjects(data.previousProjects),
+      projects: NO_PREVIOUS_PROJECT_ROWS,
     },
   );
 
@@ -370,7 +363,7 @@ export async function submitContractorRegistration(
     {
       registration: mapContractorRegistration(data),
       contacts: mapContacts(data.contacts),
-      projects: mapProjects(data.previousProjects),
+      projects: NO_PREVIOUS_PROJECT_ROWS,
     },
   );
 

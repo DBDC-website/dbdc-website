@@ -67,7 +67,6 @@ const defaultValues: ContractorRegistrationValues = {
     otherApprovedListEntries: [],
   },
   contacts: [{ name: '', position: '', telephone: '', signatureUrl: '' }],
-  previousProjects: [],
   previousProjectUploads: [{ documentUrls: [] }],
 };
 

@@ -68,7 +68,6 @@ const defaultValues: ConsultantRegistrationValues = {
     otherApprovedListEntries: [],
   },
   contacts: [{ name: '', position: '', telephone: '', signatureUrl: '' }],
-  previousProjects: [],
   previousProjectUploads: [{ documentUrls: [] }],
 };
 

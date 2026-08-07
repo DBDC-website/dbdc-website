@@ -68,3 +68,24 @@ export async function uploadDocumentFile(file: File): Promise<string> {
   validateDocumentFile(file);
   return uploadFile(file, 'documents');
 }
+
+/**
+ * Discard a file the applicant removed before submitting. Best effort: the
+ * storage policy only permits this for uploads made in the last 24 hours, so a
+ * refusal is expected on stale form sessions and must not block the user.
+ */
+export async function removeUploadedFile(identifier: string): Promise<void> {
+  const prefix = `${REGISTRATION_BUCKET}/`;
+  const path = identifier.startsWith(prefix)
+    ? identifier.slice(prefix.length)
+    : identifier;
+  if (!path) return;
+
+  const { error } = await supabase.storage
+    .from(REGISTRATION_BUCKET)
+    .remove([path]);
+
+  if (error) {
+    console.warn('Could not discard removed upload:', error.message);
+  }
+}

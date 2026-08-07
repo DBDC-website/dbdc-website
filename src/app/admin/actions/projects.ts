@@ -198,7 +198,7 @@ async function syncPrimaryGalleryImage(
     caption_zh_hant: fields.imageAltZhHant || null,
     caption_zh_hans: fields.imageAltZhHans || null,
     image_type: 'gallery',
-    sort_order: 0,
+    sort_order: 1,
   });
   if (error) {
     console.error('Failed to insert project_images row:', error);
@@ -219,7 +219,7 @@ async function writeProjectImageSortOrders(
     const imageId = orderedImageIds[index];
     const { error } = await supabase
       .from('project_images')
-      .update({ sort_order: index })
+      .update({ sort_order: index + 1 })
       .eq('project_id', projectId)
       .eq('id', imageId);
     if (error) {
@@ -493,7 +493,7 @@ export async function addProjectGalleryImages(formData: FormData) {
     .limit(1)
     .maybeSingle();
 
-  let nextSortOrder = ((maxRow?.sort_order as number | null) ?? -1) + 1;
+  let nextSortOrder = ((maxRow?.sort_order as number | null) ?? 0) + 1;
 
   for (let index = 0; index < files.length; index += 1) {
     const file = files[index];
