@@ -136,12 +136,8 @@ export default function PastWorkSection({
                 ref={timelineRef}
                 className="scroll-mt-28"
               >
-                <p className="text-xs font-medium uppercase tracking-wide text-stone-500">
-                  {timelineLabel}
-                </p>
-
                 <div
-                  className="mt-3 -mx-1 overflow-x-auto px-1 pb-2"
+                  className="overflow-x-auto px-1 pb-2"
                   role="tablist"
                   aria-label={timelineLabel}
                 >

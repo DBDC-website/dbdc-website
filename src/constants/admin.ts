@@ -1,8 +1,11 @@
 /**
  * Hardcoded allowlist for admin magic-link access.
- * Prefer ADMIN_EMAILS env (comma-separated) when set; otherwise use this list.
+ * Merged with ADMIN_EMAILS env (comma-separated) when that is set.
  */
-const DEFAULT_ADMIN_EMAILS = ['maryamk3886@gmail.com'] as const;
+const DEFAULT_ADMIN_EMAILS = [
+  'maryamk3886@gmail.com',
+  'maycheung@hkdbdc.org.hk',
+] as const;
 
 export function getAdminAllowlist(): string[] {
   const fromEnv = (process.env.ADMIN_EMAILS ?? '')
@@ -10,8 +13,7 @@ export function getAdminAllowlist(): string[] {
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
 
-  if (fromEnv.length > 0) return fromEnv;
-  return DEFAULT_ADMIN_EMAILS.map((email) => email.toLowerCase());
+  return [...new Set([...fromEnv, ...DEFAULT_ADMIN_EMAILS.map((email) => email.toLowerCase())])];
 }
 
 export function isAdminEmail(email: string | null | undefined): boolean {
