@@ -141,35 +141,32 @@ export default function PastWorkSection({
                 </p>
 
                 <div
-                  className="mt-3 -mx-1 flex gap-2 overflow-x-auto px-1 pb-2"
+                  className="mt-3 -mx-1 overflow-x-auto px-1 pb-2"
                   role="tablist"
                   aria-label={timelineLabel}
                 >
-                  <div className="flex min-w-full items-center gap-0">
-                    {years.map((entry, index) => {
+                  <div className="relative flex w-max min-w-full items-center gap-3 sm:gap-4">
+                    <div
+                      className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gold-300/80"
+                      aria-hidden
+                    />
+                    {years.map((entry) => {
                       const isActive = activeYear === entry.year;
                       return (
-                        <div key={entry.id} className="flex items-center">
-                          {index > 0 ? (
-                            <div
-                              className="h-px w-4 shrink-0 bg-gold-300/80 sm:w-6"
-                              aria-hidden
-                            />
-                          ) : null}
-                          <button
-                            type="button"
-                            role="tab"
-                            aria-selected={isActive}
-                            onClick={() => jumpToYear(entry.year)}
-                            className={`shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors ${
-                              isActive
-                                ? 'bg-brand-800 text-white shadow-sm'
-                                : 'bg-white/80 text-brand-900 ring-1 ring-sky-200/70 hover:bg-cream-50'
-                            }`}
-                          >
-                            {entry.year}
-                          </button>
-                        </div>
+                        <button
+                          key={entry.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          onClick={() => jumpToYear(entry.year)}
+                          className={`relative z-10 shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-colors ${
+                            isActive
+                              ? 'bg-brand-800 text-white shadow-sm'
+                              : 'bg-white/80 text-brand-900 ring-1 ring-sky-200/70 hover:bg-cream-50'
+                          }`}
+                        >
+                          {entry.year}
+                        </button>
                       );
                     })}
                   </div>

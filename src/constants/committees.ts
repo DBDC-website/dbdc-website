@@ -31,16 +31,17 @@ export const committees: Committee[] = [
     abbreviation: 'SC',
     name: 'Selection Committee',
     summary:
-      'Oversees the selection of consultants and contractors to ensure fair, transparent, and quality-driven procurement.',
+      'Maintains the DBDC approved lists of consultants and contractors, and oversees fair, transparent selection for Diocesan projects.',
     sections: [
       {
         title: 'Objectives',
         content: {
           kind: 'list',
           items: [
+            'Establish and maintain approved lists of consultants and contractors for works of the Diocesan Building and Development Commission (DBDC).',
+            'Vet and assess applications for inclusion on the DBDC approved lists of consultants and contractors.',
             'Review and shortlist consultants and contractors for Diocesan projects.',
             'Recommend appointments to the Commission in a fair and transparent manner.',
-            'Uphold quality and integrity in the selection process.',
           ],
         },
       },
