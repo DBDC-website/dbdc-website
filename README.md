@@ -52,12 +52,12 @@ The public site is fully trilingual: English (`en`), Traditional Chinese (`zh-Ha
 
 > ### Next.js 16 differs from older documentation
 >
-> `AGENTS.md` / `CLAUDE.md` flag this for AI coding tools, and it matters for people too:
+> Most Next.js material still describes v13–v15. Two differences you will hit immediately:
 >
 > 1. **Middleware is now "Proxy."** The file is `proxy.ts` at the repo root and exports a function named `proxy`.
 > 2. **Route params are async.** `params` is a `Promise`: `const { locale } = await params;`
 >
-> Before changing framework-level behaviour, read the bundled docs in `node_modules/next/dist/docs/`.
+> Version-matched guides are bundled with the framework at `node_modules/next/dist/docs/`. Prefer them over anything found online.
 
 ---
 
@@ -260,7 +260,6 @@ dbdc-website/
 ├── eslint.config.mjs           # Flat ESLint config
 ├── postcss.config.mjs          # Tailwind v4 via @tailwindcss/postcss
 ├── tsconfig.json               # strict; @/* → ./src/*
-├── AGENTS.md / CLAUDE.md       # Next.js 16 warning for AI coding agents
 │
 ├── docs/i18n-editors.md        # Translation policy — read before translating
 │
