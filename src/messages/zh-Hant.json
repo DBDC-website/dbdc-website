@@ -82,7 +82,7 @@
     "roleChairperson": "主席",
     "roleViceChairperson": "副主席",
     "roleMembers": "委員",
-    "roleAdministrator": "行政主任",
+    "roleAdministrator": "總監",
     "committeesTitle": "小組委員會",
     "membersExpand": "顯示委員會成員"
   },
@@ -241,6 +241,6 @@
     "chairman": "主席",
     "viceChairman": "副主席",
     "member": "委員",
-    "administrator": "行政主任"
+    "administrator": "總監"
   }
 }

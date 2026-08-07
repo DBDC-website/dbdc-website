@@ -82,7 +82,7 @@
     "roleChairperson": "主席",
     "roleViceChairperson": "副主席",
     "roleMembers": "委员",
-    "roleAdministrator": "行政主任",
+    "roleAdministrator": "总监",
     "committeesTitle": "小组委员会",
     "membersExpand": "显示委员会成员"
   },
@@ -241,6 +241,6 @@
     "chairman": "主席",
     "viceChairman": "副主席",
     "member": "委员",
-    "administrator": "行政主任"
+    "administrator": "总监"
   }
 }
