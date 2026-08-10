@@ -2,7 +2,7 @@
 
 Public website and content-management system for the **Diocesan Building and Development Commission (DBDC)** of the Catholic Diocese of Hong Kong.
 
-Production: `https://dbdc.catholic.org.hk`
+Vercel Production: `https://dbdc-website.vercel.app/en`
 
 **Contents:** [Overview](#project-overview) · [Tech Stack](#tech-stack) · [Architecture](#architecture) · [Features](#features) · [Project Structure](#project-structure) · [Local Development](#getting-started-local-development) · [Environment Variables](#environment-variables) · [Deployment](#deployment) · [Maintenance](#common-maintenance-tasks)
 
