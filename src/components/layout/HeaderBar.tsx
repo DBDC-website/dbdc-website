@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 import {
   motion,
   useMotionTemplate,
@@ -18,6 +19,7 @@ import { cn } from '@/lib/cn';
 import LanguageSwitcher from './LanguageSwitcher';
 import MainNav from './MainNav';
 import { MOBILE_MENU_TOGGLE_ID } from './MobileMenuOverlay';
+import SiteSearchPanel, { SiteSearchToggle } from './SiteSearch';
 
 type HeaderBarProps = {
   locale: Locale;
@@ -28,6 +30,7 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
   const { scrollY } = useScroll();
   const chromeHidden = useSiteChromeHidden();
   const siteName = t(locale, 'site.name');
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const borderOpacity = useTransform(scrollY, [0, 72], [0.35, 0.88]);
   const shadowStrength = useTransform(scrollY, [0, 72], [0.04, 0.12]);
@@ -48,62 +51,76 @@ export default function HeaderBar({ locale, items }: HeaderBarProps) {
         boxShadow,
       }}
     >
-      <MosaicHueBackdrop />
+      <div className="relative">
+        <MosaicHueBackdrop />
 
-      <div className="relative mx-auto w-full max-w-[100rem] px-4 sm:px-6 lg:px-10">
-        <div className="flex h-[4.75rem] items-center justify-between gap-3 sm:h-[5.25rem] lg:h-[5.75rem]">
-          <div className="inline-flex w-fit max-w-[min(100%,19rem)] shrink items-center gap-3 sm:max-w-[min(100%,24rem)] lg:max-w-[30rem] lg:gap-4">
-            <a
-              href="https://catholic.org.hk/en"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0 rounded-sm bg-white p-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
-              aria-label={t(locale, 'chrome.dioceseLogoAria')}
-            >
-              <Image
-                src="/logo.png"
-                alt=""
-                width={616}
-                height={774}
-                className="h-14 w-auto object-contain sm:h-16 lg:h-[4.5rem]"
-                priority
-              />
-            </a>
-            <Link
-              href={`/${locale}`}
-              className="min-w-0 rounded-md px-2.5 py-1.5 font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey transition-[background-color,box-shadow,color] duration-300 hover:bg-white/75 hover:shadow-[0_0_0_1.5px_rgba(255,255,255,1),0_0_14px_rgba(255,252,245,0.7)] focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-3 sm:py-2 sm:text-sm lg:px-3.5 lg:py-2 lg:text-[1.05rem] lg:leading-tight"
-              aria-label={t(locale, 'chrome.homeAria', { name: siteName })}
-            >
-              {locale === 'en' ? (
-                <>
-                  Diocesan Building and
-                  <br />
-                  Development Commission
-                </>
-              ) : (
-                siteName
-              )}
-            </Link>
-          </div>
-
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            <div className="hidden lg:contents">
-              <MainNav locale={locale} items={items} />
-              <div className="mx-3 h-8 w-px bg-logo-grey/25" aria-hidden="true" />
-              <LanguageSwitcher locale={locale} />
+        <div className="relative mx-auto w-full max-w-[100rem] px-4 sm:px-6 lg:px-10">
+          <div className="flex h-[4.75rem] items-center justify-between gap-3 sm:h-[5.25rem] lg:h-[5.75rem]">
+            <div className="inline-flex w-fit max-w-[min(100%,19rem)] shrink items-center gap-3 sm:max-w-[min(100%,24rem)] lg:max-w-[30rem] lg:gap-4">
+              <a
+                href="https://catholic.org.hk/en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 rounded-sm bg-white p-0.5 focus-visible:outline-2 focus-visible:outline-offset-2"
+                aria-label={t(locale, 'chrome.dioceseLogoAria')}
+              >
+                <Image
+                  src="/logo.png"
+                  alt=""
+                  width={616}
+                  height={774}
+                  className="h-14 w-auto object-contain sm:h-16 lg:h-[4.5rem]"
+                  priority
+                />
+              </a>
+              <Link
+                href={`/${locale}`}
+                className="min-w-0 rounded-md px-2.5 py-1.5 font-serif text-[0.8125rem] font-bold leading-snug tracking-wide text-logo-grey transition-[background-color,box-shadow,color] duration-300 hover:bg-white/75 hover:shadow-[0_0_0_1.5px_rgba(255,255,255,1),0_0_14px_rgba(255,252,245,0.7)] focus-visible:outline-2 focus-visible:outline-offset-2 sm:px-3 sm:py-2 sm:text-sm lg:px-3.5 lg:py-2 lg:text-[1.05rem] lg:leading-tight"
+                aria-label={t(locale, 'chrome.homeAria', { name: siteName })}
+              >
+                {locale === 'en' ? (
+                  <>
+                    Diocesan Building and
+                    <br />
+                    Development Commission
+                  </>
+                ) : (
+                  siteName
+                )}
+              </Link>
             </div>
 
-            <label
-              htmlFor={MOBILE_MENU_TOGGLE_ID}
-              className="inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-logo-grey hover:bg-white/55 active:bg-white/75 lg:hidden"
-              aria-label={t(locale, 'nav.openMenu')}
-              aria-controls="mobile-menu"
-            >
-              <Menu className="pointer-events-none h-7 w-7" aria-hidden="true" />
-            </label>
+            <div className="ml-auto flex shrink-0 items-center gap-2">
+              <div className="hidden lg:contents">
+                <MainNav locale={locale} items={items} />
+                <div className="mx-3 h-8 w-px bg-logo-grey/25" aria-hidden="true" />
+                <LanguageSwitcher locale={locale} />
+              </div>
+
+              <SiteSearchToggle
+                locale={locale}
+                open={searchOpen}
+                onOpenChange={setSearchOpen}
+              />
+
+              <label
+                htmlFor={MOBILE_MENU_TOGGLE_ID}
+                className="inline-flex h-11 w-11 cursor-pointer touch-manipulation items-center justify-center rounded-md text-logo-grey hover:bg-white/55 active:bg-white/75 lg:hidden"
+                aria-label={t(locale, 'nav.openMenu')}
+                aria-controls="mobile-menu"
+              >
+                <Menu className="pointer-events-none h-7 w-7" aria-hidden="true" />
+              </label>
+            </div>
           </div>
         </div>
       </div>
+
+      <SiteSearchPanel
+        locale={locale}
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+      />
     </motion.header>
   );
 }

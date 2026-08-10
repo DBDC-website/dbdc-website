@@ -55,6 +55,43 @@
     "dioceseLogoAria": "Catholic Diocese of Hong Kong (opens in a new tab)",
     "backToTop": "Back to top"
   },
+  "search": {
+    "open": "Open search",
+    "close": "Close search",
+    "reset": "Reset",
+    "submit": "Search",
+    "placeholder": "Search pages, past work, projects…",
+    "hotSearches": "Hot Searches:",
+    "noResults": "No matching content found.",
+    "resultsLabel": "Search results",
+    "searching": "Searching…",
+    "resultsTitle": "Search Results",
+    "resultsMetaTitle": "Search Results",
+    "resultsMetaTitleWithQuery": "Search Results — {query}",
+    "resultsMetaDescription": "Search pages, committees, past work, projects, and articles on the DBDC website.",
+    "resultsEmptyPrompt": "Enter a search term to find matching pages and content across the site.",
+    "queryTooShort": "Please enter at least 2 characters to search.",
+    "totalResults": "Total {count} Results",
+    "breadcrumbHome": "Home",
+    "breadcrumbAria": "Breadcrumb",
+    "category": {
+      "page": "Page",
+      "committee": "Committee",
+      "pastWork": "Past Work",
+      "project": "Project",
+      "article": "Article",
+      "newsletter": "Newsletter",
+      "parish": "Parish & School"
+    },
+    "hot": [
+      "Projects",
+      "Parish",
+      "Consultants",
+      "Articles",
+      "CaBPAG",
+      "Guidelines"
+    ]
+  },
   "donate": {
     "ariaLabel": "Donate to the Catholic Diocese of Hong Kong (opens in a new tab)",
     "tooltip": "Support our mission"

@@ -55,6 +55,43 @@
     "dioceseLogoAria": "天主教香港教區（於新分頁開啟）",
     "backToTop": "返回頂部"
   },
+  "search": {
+    "open": "開啟搜尋",
+    "close": "關閉搜尋",
+    "reset": "重設",
+    "submit": "搜尋",
+    "placeholder": "搜尋頁面、過往工作、工程項目…",
+    "hotSearches": "熱門搜尋：",
+    "noResults": "找不到相符內容。",
+    "resultsLabel": "搜尋結果",
+    "searching": "搜尋中…",
+    "resultsTitle": "搜尋結果",
+    "resultsMetaTitle": "搜尋結果",
+    "resultsMetaTitleWithQuery": "搜尋結果 — {query}",
+    "resultsMetaDescription": "搜尋教區建築及發展委員會網站的頁面、小組委員會、過往工作、工程項目及文章。",
+    "resultsEmptyPrompt": "請輸入關鍵字，以搜尋網站上的相關頁面及內容。",
+    "queryTooShort": "請輸入至少兩個字元以進行搜尋。",
+    "totalResults": "共 {count} 項結果",
+    "breadcrumbHome": "主頁",
+    "breadcrumbAria": "導覽路徑",
+    "category": {
+      "page": "頁面",
+      "committee": "小組委員會",
+      "pastWork": "過往工作",
+      "project": "工程項目",
+      "article": "文章",
+      "newsletter": "通訊",
+      "parish": "堂區及學校"
+    },
+    "hot": [
+      "工程項目",
+      "堂區",
+      "顧問",
+      "文章",
+      "CaBPAG",
+      "工作指引"
+    ]
+  },
   "donate": {
     "ariaLabel": "捐助天主教香港教區（於新分頁開啟）",
     "tooltip": "支持我們的使命"

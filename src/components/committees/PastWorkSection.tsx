@@ -34,6 +34,26 @@ export default function PastWorkSection({
   const chromeHidden = useSiteChromeHidden();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash;
+    if (!hash.startsWith('#past-work')) return;
+
+    setOpen(true);
+    const match = hash.match(/^#past-work-(.+)$/);
+    if (!match) return;
+
+    const yearFromHash = decodeURIComponent(match[1]);
+    if (!years.some((entry) => entry.year === yearFromHash)) return;
+
+    setActiveYear(yearFromHash);
+    window.setTimeout(() => {
+      yearRefs.current
+        .get(yearFromHash)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+  }, [years]);
+
+  useEffect(() => {
     if (!open || years.length === 0) return;
 
     const observer = new IntersectionObserver(

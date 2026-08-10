@@ -14,6 +14,7 @@ export const PUBLIC_PATHS = [
   '/consultants-contractors/consultant',
   '/consultants-contractors/contractor',
   '/articles',
+  '/search',
   '/committees/rdc',
   '/committees/sc',
   '/committees/wc',
