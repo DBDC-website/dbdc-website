@@ -95,9 +95,9 @@ export const homeImages = {
   },
   /** Legal / policy pages. */
   legalPage: {
-    src: websiteAsset('jesus-statue-side.jpg'),
-    alt: 'Statue of Jesus on a cross with a gold and blue mosaic backdrop',
-    objectPosition: 'center 38%',
+    src: websiteAsset('indoor-14.jpg'),
+    alt: 'Painted wooden crucifix hanging in a chapel with stained-glass windows',
+    objectPosition: 'center 40%',
   },
   /** Parish working guidelines page. */
   guidelinesPage: {
