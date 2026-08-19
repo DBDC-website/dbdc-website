@@ -240,9 +240,9 @@ At `/admin`. Every section follows a list → new → edit shape.
 
 All email is sent from one place: `sendRegistrationEmails()` in `src/app/actions/registrations.ts`. Two messages, both triggered by a successful registration submission:
 
-| Email | To | Subject |
+| Email | Recipients | Subject |
 |---|---|---|
-| Admin notification | `ADMIN_EMAILS` (or `ADMIN_EMAIL`) | `[DBDC] New {Consultant\|Contractor} Registration — {companyName}` |
+| Admin notification | **To** `ADMIN_EMAIL` (office inbox); **Cc** remaining addresses in `ADMIN_EMAILS` | `[DBDC] New {Consultant\|Contractor} Registration — {companyName}` |
 | Applicant acknowledgement | The address on the form | `DBDC Registration Acknowledgement — DBDC-{TYPE}-{id}` |
 
 Both send from `RESEND_FROM_EMAIL` with inline HTML. **Emails are English-only by design** — the registration forms themselves are English, so correspondence matches the submitted application. Sending is skipped silently (the submission still succeeds) if Resend is not configured or the applicant left the email field blank.
@@ -413,11 +413,11 @@ Set these in `.env.local` locally and in Vercel → Settings → Environment Var
 |---|---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Yes | Anon key. Safe to expose — RLS protects the data. |
-| `ADMIN_EMAILS` | Server | Yes | Comma-separated allowlist. Doubles as who may log in to `/admin` and who receives new-registration notifications. |
+| `ADMIN_EMAILS` | Server | Yes | Comma-separated allowlist for `/admin` login. Extra addresses (beyond `ADMIN_EMAIL`) are CC'd on new-registration notifications. |
 | `RESEND_API_KEY` | Server | Yes in production | Enables transactional email. Without it, submissions succeed but no email is sent. |
 | `RESEND_FROM_EMAIL` | Server | Yes in production | From address, e.g. `DBDC <noreply@dbdc.catholic.org.hk>`. Must be on a domain verified in Resend. |
 | `NEXT_PUBLIC_SITE_URL` | Public | Recommended | Email footer link and magic-link redirect fallback. Defaults to the production URL. |
-| `ADMIN_EMAIL` | Server | Optional | Single-address fallback for notification recipients only. Redundant once `ADMIN_EMAILS` is set. |
+| `ADMIN_EMAIL` | Server | Yes in production | Primary inbox (**To**) for new-registration notifications, e.g. `office@hkdbdc.org.hk`. Falls back to the first `ADMIN_EMAILS` address if unset. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server | Script only | Bypasses RLS; used only by `npm run link-images`. **Do not add it to Vercel** — the app never reads it. Treat as a secret. |
 
 `NEXT_PUBLIC_` variables are inlined into the client bundle at build time, so changing one requires a redeploy.
@@ -428,7 +428,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<service-role-key>   # only to run link-images
 
-ADMIN_EMAILS=person.one@dbdc.catholic.org.hk,person.two@dbdc.catholic.org.hk
+ADMIN_EMAIL=office@hkdbdc.org.hk
+ADMIN_EMAILS=office@hkdbdc.org.hk,person.one@dbdc.catholic.org.hk,person.two@dbdc.catholic.org.hk
 
 RESEND_API_KEY=<resend-api-key>
 RESEND_FROM_EMAIL=DBDC <noreply@dbdc.catholic.org.hk>
@@ -483,13 +484,13 @@ Auth settings to confirm after any project change:
 | GitHub | The DBDC organisation | Repoint the Vercel Git integration; consider branch protection on `main` |
 | Vercel | The DBDC team | Re-enter all environment variables and re-attach the custom domain |
 | Supabase | Organisation ownership to `cloud-ops@dbdc.catholic.org.hk` | Transferring the organisation preserves the project ref, URL, and keys, so no code changes are needed. Verify billing and Auth access. |
-| Resend | Company domain and mailboxes | Point `RESEND_FROM_EMAIL` at the verified domain and set `ADMIN_EMAILS` to DBDC staff |
+| Resend | Company domain and mailboxes | Point `RESEND_FROM_EMAIL` at the verified domain; set `ADMIN_EMAIL` to the office inbox and `ADMIN_EMAILS` to DBDC staff |
 
 If the Supabase **project** is ever recreated rather than transferred, the project ref appears in `next.config.ts` (`images.remotePatterns`), `src/constants/homeImages.ts` (the `ASSETS` base URL and two direct image URLs), and in `image_url` / `pdf_url` values already stored in the database.
 
 ### Launch checklist
 
-- [ ] `ADMIN_EMAILS` set to real DBDC staff addresses in Vercel Production
+- [ ] `ADMIN_EMAIL` set to the office inbox and `ADMIN_EMAILS` set to real DBDC staff addresses in Vercel Production
 - [ ] `RESEND_FROM_EMAIL` on the verified company domain
 - [ ] `NEXT_PUBLIC_SITE_URL` set to the production URL
 - [ ] Supabase Auth redirect allowlist includes the production callback URL

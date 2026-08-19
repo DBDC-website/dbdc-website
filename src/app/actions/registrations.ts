@@ -34,14 +34,17 @@ const resend = process.env.RESEND_API_KEY
   : null;
 /** Must be set in env (Vercel + local). Do not hardcode a Resend sandbox address. */
 const FROM_EMAIL = sanitizeEnvValue(process.env.RESEND_FROM_EMAIL);
-const ADMIN_EMAILS = (
-  sanitizeEnvValue(process.env.ADMIN_EMAILS) ??
-  sanitizeEnvValue(process.env.ADMIN_EMAIL) ??
-  ''
-)
+const ADMIN_EMAIL_LIST = (sanitizeEnvValue(process.env.ADMIN_EMAILS) ?? '')
   .split(',')
   .map((email) => sanitizeEnvValue(email) ?? '')
   .filter(Boolean);
+/** Primary inbox (To). Falls back to the first ADMIN_EMAILS address. */
+const PRIMARY_ADMIN_EMAIL =
+  sanitizeEnvValue(process.env.ADMIN_EMAIL) ?? ADMIN_EMAIL_LIST[0] ?? null;
+/** Remaining staff (Cc), excluding the primary inbox. */
+const ADMIN_CC_EMAILS = ADMIN_EMAIL_LIST.filter(
+  (email) => email.toLowerCase() !== PRIMARY_ADMIN_EMAIL?.toLowerCase(),
+);
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dbdc.catholic.org.hk';
 
 function toMoney(value?: string): number | null {
@@ -251,10 +254,11 @@ async function sendRegistrationEmails({
   const normalizedApplicantEmail = applicantEmail?.trim();
 
   try {
-    if (ADMIN_EMAILS.length > 0) {
+    if (PRIMARY_ADMIN_EMAIL) {
       const adminResult = await resend.emails.send({
         from: FROM_EMAIL,
-        to: ADMIN_EMAILS,
+        to: [PRIMARY_ADMIN_EMAIL],
+        ...(ADMIN_CC_EMAILS.length > 0 ? { cc: ADMIN_CC_EMAILS } : {}),
         subject: `[DBDC] New ${kindLabel} Registration — ${companyName}`,
         html: `
           <h2>New registration submission received</h2>
@@ -266,6 +270,8 @@ async function sendRegistrationEmails({
           <p>Please review this application in the DBDC Admin Panel.</p>
         `,
       });
+      console.log('Resend admin email to:', PRIMARY_ADMIN_EMAIL);
+      console.log('Resend admin email cc:', ADMIN_CC_EMAILS);
       console.log(
         'Resend admin email response:',
         JSON.stringify(adminResult, null, 2),
