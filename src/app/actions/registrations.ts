@@ -248,6 +248,7 @@ async function sendRegistrationEmails({
   const submittedAt = new Date().toLocaleString('en-HK', {
     dateStyle: 'medium',
     timeStyle: 'short',
+    timeZone: 'Asia/Hong_Kong',
   });
   const referenceId = buildReferenceId(kind, registrationId);
   const kindLabel = kind === 'consultant' ? 'Consultant' : 'Contractor';
