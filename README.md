@@ -242,7 +242,7 @@ All email is sent from one place: `sendRegistrationEmails()` in `src/app/actions
 
 | Email | Recipients | Subject |
 |---|---|---|
-| Admin notification | **To** `ADMIN_EMAIL` (office inbox); **Cc** remaining addresses in `ADMIN_EMAILS` | `[DBDC] New {Consultant\|Contractor} Registration — {companyName}` |
+| Admin notification | **To** `ADMIN_EMAIL` only (office inbox; no Cc) | `[DBDC] New {Consultant\|Contractor} Registration — {companyName}` |
 | Applicant acknowledgement | The address on the form | `DBDC Registration Acknowledgement — DBDC-{TYPE}-{id}` |
 
 Both send from `RESEND_FROM_EMAIL` with inline HTML. **Emails are English-only by design** — the registration forms themselves are English, so correspondence matches the submitted application. Sending is skipped silently (the submission still succeeds) if Resend is not configured or the applicant left the email field blank.
@@ -413,11 +413,11 @@ Set these in `.env.local` locally and in Vercel → Settings → Environment Var
 |---|---|---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Yes | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Yes | Anon key. Safe to expose — RLS protects the data. |
-| `ADMIN_EMAILS` | Server | Yes | Comma-separated allowlist for `/admin` login. Extra addresses (beyond `ADMIN_EMAIL`) are CC'd on new-registration notifications. |
+| `ADMIN_EMAILS` | Server | Yes | Comma-separated allowlist for `/admin` login only. Does not receive registration notifications. |
 | `RESEND_API_KEY` | Server | Yes in production | Enables transactional email. Without it, submissions succeed but no email is sent. |
 | `RESEND_FROM_EMAIL` | Server | Yes in production | From address, e.g. `DBDC <noreply@dbdc.catholic.org.hk>`. Must be on a domain verified in Resend. |
 | `NEXT_PUBLIC_SITE_URL` | Public | Recommended | Email footer link and magic-link redirect fallback. Defaults to the production URL. |
-| `ADMIN_EMAIL` | Server | Yes in production | Primary inbox (**To**) for new-registration notifications, e.g. `office@hkdbdc.org.hk`. Falls back to the first `ADMIN_EMAILS` address if unset. |
+| `ADMIN_EMAIL` | Server | Yes in production | Sole recipient (**To**) for new-registration notifications, e.g. `office@hkdbdc.org.hk`. Falls back to the first `ADMIN_EMAILS` address if unset. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server | Script only | Bypasses RLS; used only by `npm run link-images`. **Do not add it to Vercel** — the app never reads it. Treat as a secret. |
 
 `NEXT_PUBLIC_` variables are inlined into the client bundle at build time, so changing one requires a redeploy.
