@@ -45,8 +45,6 @@ const PRIMARY_ADMIN_EMAIL =
 const ADMIN_CC_EMAILS = ADMIN_EMAIL_LIST.filter(
   (email) => email.toLowerCase() !== PRIMARY_ADMIN_EMAIL?.toLowerCase(),
 );
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dbdc.catholic.org.hk';
-
 function toMoney(value?: string): number | null {
   if (!value) return null;
   const normalized = value.trim().toLowerCase().replace(/,/g, '');
@@ -292,15 +290,13 @@ async function sendRegistrationEmails({
         to: [normalizedApplicantEmail],
         subject: `DBDC Registration Acknowledgement — ${referenceId}`,
         html: `
-          <h2>Registration received</h2>
+          <h2>Registration Received!</h2>
           <p>Dear ${companyName},</p>
           <p>Thank you for your submission. Your ${kindLabel.toLowerCase()} registration has been received and is now under review by the DBDC team.</p>
           <p><strong>Reference ID:</strong> ${referenceId}</p>
           <p>We will contact you if any additional information is required.</p>
-          <p>If you have any questions, please email <a href="mailto:dbdc@catholic.org.hk">dbdc@catholic.org.hk</a> and quote your reference ID.</p>
-          <p>Regards,<br/>DBDC Office</p>
-          <hr />
-          <p style="font-size:12px;color:#666">Submitted via ${SITE_URL}</p>
+          <p>If you have any questions, please email <a href="mailto:office@hkdbdc.org.hk">office@hkdbdc.org.hk</a> and quote your reference ID.</p>
+          <p>Regards,<br/>HKDBDC Office</p>
         `,
       });
       console.log(
