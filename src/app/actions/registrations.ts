@@ -246,6 +246,10 @@ async function sendRegistrationEmails({
   });
   const referenceId = buildReferenceId(kind, registrationId);
   const kindLabel = kind === 'consultant' ? 'Consultant' : 'Contractor';
+  const kindLabelHighlight =
+    kind === 'consultant'
+      ? `<span style="color:#2563EB;font-weight:700;">${kindLabel}</span>`
+      : `<span style="color:#CA8A04;font-weight:700;">${kindLabel}</span>`;
   const normalizedApplicantEmail = applicantEmail?.trim();
 
   try {
@@ -256,7 +260,7 @@ async function sendRegistrationEmails({
         subject: `[DBDC] New ${kindLabel} Registration — ${companyName}`,
         html: `
           <h2>New registration submission received</h2>
-          <p>A new <strong>${kindLabel}</strong> registration has been submitted to DBDC.</p>
+          <p>A new ${kindLabelHighlight} registration has been submitted to DBDC.</p>
           <p><strong>Company:</strong> ${companyName}</p>
           <p><strong>Applicant email:</strong> ${normalizedApplicantEmail || 'Not provided'}</p>
           <p><strong>Reference ID:</strong> ${referenceId}</p>
